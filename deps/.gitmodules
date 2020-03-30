@@ -1,0 +1,7 @@
+[submodule "SortFilterProxyModel"]
+	path = SortFilterProxyModel
+	url = https://github.com/oKcerG/SortFilterProxyModel.git
+
+[submodule "HLJS"]
+	path = HLJS
+	url = https://github.com/highlightjs/highlight.js.git

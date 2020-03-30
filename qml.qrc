@@ -1,0 +1,37 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtquickcontrols2.conf</file>
+        <file>qml/main.qml</file>
+        <file>qml/NavigationSingleton.qml</file>
+        <file>qml/Welcome.qml</file>
+        <file>qml/UploadPanel.qml</file>
+        <file>qml/SettingsPage.qml</file>
+        <file>qml/LeftMenu.qml</file>
+        <file>qml/MainMenu.qml</file>
+        <file>qml/PrezInfo.qml</file>
+        <file>qml/ListViewDisplay.qml</file>
+        <file>qml/SlideInfo.qml</file>
+        <file>qml/FlatViewDisplay.qml</file>
+        <file>qml/FocusNavigator.qml</file>
+        <file>res/road-1303617_1920.jpg</file>
+        <file>res/desert-279862_1920.jpg</file>
+        <file>res/desert-790640_1920.jpg</file>
+        <file>modules/swag/CodeEditor.qml</file>
+        <file>modules/swag/Slide.qml</file>
+        <file>modules/swag/CodeRenderer.qml</file>
+        <file>modules/swag/VerticalSeparator.qml</file>
+        <file>modules/swag/GotoButton.qml</file>
+        <file>modules/swag/FAButton.qml</file>
+        <file>qml/ToolBox.qml</file>
+        <file>qml/Header.qml</file>
+        <file>qml/Footer.qml</file>
+        <file>qml/SlidesExporter.qml</file>
+        <file>modules/swag/TocElement.qml</file>
+        <file>modules/swag/Element.qml</file>
+        <file>qml/About.qml</file>
+        <file>gpl-3.0.md</file>
+        <file>res/qt.png</file>
+        <file>res/a-team.png</file>
+        <file>res/SwagLogo.iconset/icon1024.png</file>
+    </qresource>
+</RCC>

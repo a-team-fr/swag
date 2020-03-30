@@ -1,0 +1,26 @@
+module Swag
+
+CodeEditor 1.0 CodeEditor.qml
+CodeRenderer 1.0 CodeRenderer.qml
+Slide 1.0 Slide.qml
+TextElement 1.0 TextElement.qml
+GotoButton 1.0 GotoButton.qml
+VerticalSeparator 1.0 VerticalSeparator.qml
+FAButton  1.0 FAButton.qml
+SlideDumper 1.0 SlideDumper.qml
+ElementEditor 1.0 ElementEditor.qml
+CodeElement 1.0 CodeElement.qml
+ButtonElement 1.0 ButtonElement.qml
+ImageElement 1.0 ImageElement.qml
+WebElement 1.0 WebElement.qml
+InputElement 1.0 InputElement.qml
+MapElement 1.0 MapElement.qml
+FlipableElement 1.0 FlipableElement.qml
+MCQElement 1.0 MCQElement.qml
+DataElement 1.0 DataElement.qml
+DatavizElement 1.0 DatavizElement.qml
+ChartElement 1.0 ChartElement.qml
+VideoElement 1.0 VideoElement.qml
+Entity3DElement 1.0 Entity3DElement.qml
+TocElement 1.0 TocElement.qml
+PDFElement 1.0 PDFElement.qml

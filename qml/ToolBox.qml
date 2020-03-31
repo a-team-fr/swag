@@ -30,7 +30,13 @@ Frame{
     width:visible ?  80: 0
     height:parent.height
 
-    ColumnLayout{
+    Flickable {
+        contentHeight: content.childrenRect.height + 50
+        anchors.fill : parent
+        anchors.margins: 1
+        clip:true
+
+        ColumnLayout{
         id:content
         anchors.fill:parent
         FAButton{
@@ -161,5 +167,7 @@ Frame{
             ToolTip.text: qsTr("Add a 3D element")
             Layout.alignment : Qt.AlignHCenter
         }
+    }
+
     }
 }

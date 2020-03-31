@@ -1,113 +1,114 @@
-# s
-A workshop project to practice QML [(more)](https://github.com/a-team-fr/QtWorkshop/wiki)
+<center><img src="https://user-images.githubusercontent.com/9682519/78081857-cd5c3800-73b1-11ea-9ba8-ae27ec8e4b5c.png" alt="s🤘ag logo" ></center>  
 
-## purpose
-The aim of this project is to provide an application squeleton to help practicing Qt and QML during a workshop.
-The first experience will be during the QtDay2019 in Firenze. 
-It is meant to be a good way for easing any introduction to Qt/Qml workshop, have a try in your Qt meetup !
+# s🤘ag, a **free** presentation system based on QML   
+
+## Purpose
+The aim of this project is to provide a tool to easily create simple application with building blocks made in QML.  
+As s🤘ag is basically loading and interpreting QML documents, there is no reason why s🤘ag would be limited to a presentation system : it could be possible to use it to create any kind of application.
+
+There are already a number of similar projects, why create yet another one ?  
+Well... :
+1. because it is ***fun*** ! s🤘ag is the kind of project that covers lots of domain.
+1. because it is **free** ! Most of the existing mature solution I know are based on a user locking in : either because of closed license or because of SaaS mode. That's the reason why s🤘ag is GPL, to ensure users will always be free to use, study, modify or redistribute it !
+1. because **Low Tech** matters (at least to me) ! One more and more consume SaaS service for everything and whilst these demanding huge datacenter are producing lots of CO2. I am convinced that this model is not sustainable and that we should and we will move from SaaS. s🤘ag is thus an autonomous desktop solution, some very cool feature will be relying on network communication but they will remain optional and limited.
+
+## Project history ##
+For years, I was enthusiastic of speakers using their own presentation system.
+As the community manager of the Nantes Qt Meetup, I had considered a number of times to use one the existing Qt based presentation projects (such as the excellent https://github.com/qt-labs/qml-presentation-system ).  
+Quite recently during the 2020 FOSDEM last February, I have seen a stunning talk of Christophe de Dinechin made with a custom presentation system (TAO with XL langage), and this time it really convinced me that my next presentations should be made with such a system. My first need was very simple : design a training material that could show QML code and render it dynamically.  
+Following the confinement call in March, as my business stalled whilst having to stay at home I had plenty of time to design a very simple version...  
+Starting working on the project strengthen my initial feelings that such a tool is quite fun to design, very useful for creating rocking presentation and could be used for a lot more of use cases !
+
+## why Swag as name ? ##
+In french somethin "swag" is something cool, and i think s🤘ag is very cool !
+I also liked the "Sophisticated Wild Ass Guess" as something that quickly do the job.
+One can also think of fun abbreviation such as :
 
 ## How it works ?
-The application consists of a list a of _**topics candidate**_ (a.k.a. "TC") to play with (for instance playing with the camera is one TC while playng sounds is another). 
-A _**TC**_ is provided with some guidelines to help QML newbies to start with or simply with ideas about what could be done. A set of ressources is also part of the application (for instance a sounds bank, an height map...) so that implementing _**TC**_ is not spoiled with the cumbersome activity to look after suitable assets.
+![Welcome](https://user-images.githubusercontent.com/9682519/78081693-70f91880-73b1-11ea-8cb0-c1d27468816b.png)
+From the welcome page, one can either create a new s🤘ag or open and existing one.  
+A s🤘ag is currently handled as directory so you will need to select the parent folder of the s🤘ag content ( this might change in a near future).
 
-![overview](https://user-images.githubusercontent.com/9682519/53829831-54f23000-3f81-11e9-9e87-e53e99e29683.png)
+![SlideThumbnails](https://user-images.githubusercontent.com/9682519/78081707-7bb3ad80-73b1-11ea-9567-9df20ddebe70.png)
+When a s🤘ag is opened, it is possible to create a new slide or clone an existing one from the drawer menu.  
 
-A _**playground**_ is the implementation of TC for a given player.
-When the application starts (from a clean clone and build), it starts with the playground creation :
- * ask for the playground name
- * optionnaly use the camera to create a player profile picture
-Once created, the application zip and transfer the playground through a FTP on a remote location.
+Enter in "Edit mode" (with Ctrl+D or from the edit menu) to show the toolbox (at the screen right side) with the list of Element you can integrate into your slide : a Text, an Image, a chart etc...
 
-Using QtCreator, players can modify their playground QML document to implement a given topic.
+![EditMode](https://user-images.githubusercontent.com/9682519/78046008-f01d2b00-7376-11ea-91a0-92c439ecee53.png)
 
-Using QtWorkshop application, it is possible to switch from one topic to another using the toolbar or select a playground using the left drawer.
+While "Edit mode" is active, hover an element to display its bounding box with editing functions (repositioning, changing properties or deleting the element).
 
+At anytime, it is possible to trigger the "Show code" mode to inspect the current slide QML code, edit and reload the slide to see the changes without restarting s🤘ag.
 
-![drawermenu](https://user-images.githubusercontent.com/9682519/53829900-7f43ed80-3f81-11e9-889d-36ab6a6de6b2.png)
+![ShowCodeMode](https://user-images.githubusercontent.com/9682519/78081715-82422500-73b1-11ea-88c0-dde9cd81a098.png)
 
-At anytime, one can download others players playground and/or upload its playground to share its progress using the dedicated buttons on the footer menu or through the integrated playground console.
+From the Deck settings, it is possible to choose the display mode between :
+* Loader : only one slide is rendered at a time
+* ListView : to swipe from one slide to another
+* FlatView : to navigate from one element or slide to another in a similar manner than Prezi.
 
-![playgroundconsole](https://user-images.githubusercontent.com/9682519/53829872-75ba8580-3f81-11e9-87af-dd0c67df553e.png)
+![DeckSettings](https://user-images.githubusercontent.com/9682519/78081724-85d5ac00-73b1-11ea-8980-35b23d2e5e72.png)
 
-As the published playgrounds of others players are actually donwloaded locally, it is easy to browse the QML content - using QML creator, all the playgrounds documents are listed in "others files" (rerun qmake to update if required).
+### Toolbox
+* a Text element (currently only a limited set of a text properties are supported)
+* a Code element : to show code with syntax highlighting (relying on highlight.js) together with a rendered object from QML code
+* GotoButton : a button to change the current slide
+* Webview
+* Image
+* Map
+* Multiple Choice Question : each choice is made of an image and/or a text. When the MCQ is validated, each choice can be flipped to show an image and/or a text.
+* Chart
+* Dataviz
+* Video or camera
+* Entity 3D : show a 3D mesh
+* PDF : a pdf reader based on pdf.js
+One can find an example of using these elements with the "Gallery" s🤘ag.
 
-Finally, the application can show the QML content and support live editing (credits to Oleg Yadrov) 
+## Installation
+It is strongly advised to use the latest stable Qt version (Qt5.14.1 at the time of the project start).
 
-![inlineeditor](https://user-images.githubusercontent.com/9682519/53829885-7a7f3980-3f81-11e9-94e6-32200c0803dc.png)
-
-## topics candidate
-[(See the wiki)](https://github.com/a-team-fr/QtWorkshop/wiki)
-
-<table style="border:0px;" width="100%">
-<tr>
-<td><img width="342" height="295" src="https://user-images.githubusercontent.com/9682519/53829928-91be2700-3f81-11e9-86f4-ec95f4aff762.png" alt="topicmap"></td>
-<td><img width="342" height="295" src="https://user-images.githubusercontent.com/9682519/54071479-27510380-426d-11e9-9510-015179484918.png" alt="topicdataviz"></td>
-</tr>
-<tr>
-<td><img width="342" height="295" src="https://user-images.githubusercontent.com/9682519/53829926-91be2700-3f81-11e9-90e2-66e84521f8a4.png" alt="topicflickr"></td>
-<td><img width="342" height="295" src="https://user-images.githubusercontent.com/9682519/53829929-9256bd80-3f81-11e9-9dae-93057e3d7217.png" alt="topicsensors"></td>
-</tr></table>
-
-## requirements
-It is strongly advised to use the latest stable Qt version (Qt5.12.1 at the time of the project start) but an effort has been made for the project to run with Qt5.9 (untested).
-
-The remote location of playgrounds support HTTPS but only HTTP is used by default to avoid introducing a SSL requirement on local host building QtWorkshop.
-
-## how to start ?
-
-1. git clone the project
+1. git clone the project and get its submodules
 ```
 git clone https://github.com/a-team-fr/QtWorkshop.git
+git submodule update --init
 ```
 
 2. Open the project with QtCreator
 
-3. Build, run and follow the instructions
-
-## available on iOS and Android
-The app has been published but in "showcase" mode : it is not possible to create a playground, upload/download so it is way less interesting. 
-
-The sole purpose of the showcase is to give you an idea of what kind of things you could produce during the workshop.
-<center><table style="border:0px;"><tr>
- <td width="300"><a href="https://play.google.com/store/apps/details?id=fr.ateam.qtworkshop"><img height="150" src="https://user-images.githubusercontent.com/9682519/54073829-d69cd300-428b-11e9-992f-e76780767de4.jpg" alt="QtWorkshop on Google play"></a></td>
- <td width="300"><a href="https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=1454568374&mt=8"><img height="150" src="https://user-images.githubusercontent.com/9682519/54073830-d8669680-428b-11e9-9ba0-4461326dd6d3.jpg" alt="QtWorkshop on AppStore"></a></td>
- </tr></table></center>
+3. Build & run
 
 ## Roadmap
-### Version 0.1 - QtDay Firenze
- * features / improvements
-   * [x] basic squeleton : able to select topic, select a user with a few topics
-   * [x] share playground over ftp : upload / download
-   * [X] use the camera to get a profile image when creating the playground
-   * [x] add a show details for a given topic candidate to give more information (link to github wiki)
-   * [x] add an edit mode showing the QML code, enable modification and update
-   * [x] create a warmup topic
-   * [x] improve UI/UX
-   * [x] integrate basic QML syntax highlight
- * Topics
-   * [x] warmup
-   * [x] SoundBox
-   * [x] Camera
-   * [x] Map
-   * [x] TTS
-   * [x] Sensors
-   * [x] Uncharted
-   * [x] Flick'r
-   * [x] Messy (a refactoring challenge)
-   * [x] Canvas (wip)
-   * [x] Free
- * Successfully built on
-   * MacOs 
-     * [x] Qt5.12.1 
-     * [x] Qt5.9.7
-   * MS Windows 10
-     * [x] Qt5.12.1 (MSVC2017 64b)
-     * [x] Qt5.9.7 (MSVC2017 64b)
-     * [x] Qt5.9.7 (MinGW 32b)
-   * GNU/Linux (Debian Jessy)
-     * [x] Qt5.10.2
- 
- ### Version 1.0
-  * [ ] chat support
-  * [ ] polling
-  
+The project is driven using kanban.
+Its comprehensive roadmap is visible [(here)]( https://kanboard.a-team.fr/?controller=BoardViewController&action=readonly&token=c735ac4810eaf0cb8b1d34b76d0f9d91bb142c640e4682f5271861dc4d7d)
+The following is an overview of the roadmap and the current status.
+
+### Version 0.0.1 (expected in April 2020)
+**Target :** A draft with a limited feature set, incomplete and buggy.
+Just good enough to show to experienced (and imaginative) developers what s🤘ag could become.
+
+**Key features :**
+* [x] basic navigation (create, open, close ) a slide deck and a slide
+* [x] limited set of Elements
+* [x] several display modes
+* [x] publish to github
+* [ ] landing page swagsoftware.net (Work in progress but I am getting lost with WordPress :-) )
+* [ ] released with binaries for MacOs, Windows, GNU Linux (to be tested without Qt sdk installed) - would be nice to automate releases with GitHub actions if that is possible (help needed)
+
+### Version 0.1
+**Target :**  A workable solution but for a limited use : create presentation.
+
+**Key features :**
+* [ ] nice UI and great UX (help needed)
+* [ ] PDF and HTML export (Work in progress)
+* [ ] authentication, loading & saving to swagsoftware.net
+* [ ] presenter mode with a dual screen
+
+### Version 1.0
+**Target :**
+First official release containing "killer features" :-)
+
+**Key features :**
+  * [ ] mobile (iOS & Android) application that could connect to a running live presentation to support polling features
+  * [ ] export to mpeg
+  * [ ] sWaggies : sWag generator (for instance generate a sWag for project code documentation parsing Doxygen comments)
+  * [ ] support opening of media/custom file by loading a templated s🤘ag (ex : use s🤘ag as a viewer)

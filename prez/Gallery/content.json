@@ -13,7 +13,7 @@
             "height": 565,
             "rotation": 0,
             "source": "{edc0e62f-d100-449f-9383-1d4b30fc6721}.qml",
-            "title": "A TOC, a text and a button",
+            "title": "A TOC, a text, a 3D element and a button",
             "width": 1025,
             "x": 522.4260080038799,
             "y": 0
@@ -95,5 +95,5 @@
         }
     ],
     "theme": "Dark",
-    "title": "Super prez 2020 of the death"
+    "title": "Gallery"
 }

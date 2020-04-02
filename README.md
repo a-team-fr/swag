@@ -21,8 +21,12 @@ Starting working on the project strengthen my initial feelings that such a tool 
 
 ## why Swag as name ? ##
 In french somethin "swag" is something cool, and i think s🤘ag is very cool !
-I also liked the "Sophisticated Wild Ass Guess" as something that quickly do the job.
+I also liked the "Sophisticated Wild Ass Guess" as something that quickly do the job.  
+
 One can also think of fun abbreviation such as :
+* Serendipity Without A Glitch
+* Software With Awesome Generator
+* Some Would Argue Genius
 
 ## How it works ?
 ![Welcome](https://user-images.githubusercontent.com/9682519/78081693-70f91880-73b1-11ea-8cb0-c1d27468816b.png)
@@ -69,7 +73,7 @@ It is strongly advised to use the latest stable Qt version (Qt5.14.1 at the time
 
 1. git clone the project and get its submodules
 ```
-git clone https://github.com/a-team-fr/QtWorkshop.git
+git clone https://github.com/a-team-fr/swag.git
 git submodule update --init
 ```
 

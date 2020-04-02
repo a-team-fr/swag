@@ -348,8 +348,19 @@ QVariantList PrezManager::urlSlides() const
     return ret;
 }
 
+QString PrezManager::proposeNewNameAvailable(int retry) const
+{
+    QString documentName = retry > 0 ? tr("NewSwag%1").arg(retry) : tr("NewSwag");
+    QDir tmpDir( defaultPrezPath().toLocalFile() + "/" + documentName);
+    if ( tmpDir.exists() )
+        return proposeNewNameAvailable(retry++);
+    return tmpDir.path();
+}
+
 void PrezManager::create(QString url)
 {
+    if (url.isEmpty())
+        url = proposeNewNameAvailable();
     QDir tmpDir(url);
     if ( !tmpDir.exists() )
         tmpDir = QDir( QUrl(url).toLocalFile());
@@ -362,11 +373,11 @@ void PrezManager::create(QString url)
     obj.insert("author", QJsonValue::fromVariant( m_settings.value("profileAuthor").toString() ));
     obj.insert("defaultBackground", QJsonValue::fromVariant( ""));
 
-    obj.insert("materialAccent", QJsonValue::fromVariant( m_settings.value("materialAccent").toInt()));
-    obj.insert("materialBackground", QJsonValue::fromVariant( m_settings.value("materialBackground").toInt()));
+    obj.insert("materialAccent", QJsonValue::fromVariant( m_settings.value("materialAccent").value<QColor>()));
+    obj.insert("materialBackground", QJsonValue::fromVariant( m_settings.value("materialBackground").value<QColor>()));
     obj.insert("materialElevation", QJsonValue::fromVariant( m_settings.value("materialElevation").toInt()));
-    obj.insert("materialForeground", QJsonValue::fromVariant( m_settings.value("materialForeground").toInt()));
-    obj.insert("materialPrimary", QJsonValue::fromVariant( m_settings.value("materialPrimary").toInt()));
+    obj.insert("materialForeground", QJsonValue::fromVariant( m_settings.value("materialForeground").value<QColor>()));
+    obj.insert("materialPrimary", QJsonValue::fromVariant( m_settings.value("materialPrimary").value<QColor>()));
     obj.insert("materialTheme", QJsonValue::fromVariant( m_settings.value("materialTheme").toInt()));
 
 

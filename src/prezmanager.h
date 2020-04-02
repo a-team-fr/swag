@@ -118,6 +118,8 @@ public slots:
     //void printPDF_onSlideChanged();
 
     bool load(QString url){
+        if (url.isEmpty())
+            url = defaultPrezPath().toLocalFile() + "/Gallery";
         QDir tmpDir(url);
         if ( !tmpDir.exists() )
             tmpDir = QDir( QUrl(url).toLocalFile());
@@ -181,6 +183,8 @@ private:
     bool m_loaded = false;
 
     QString    m_prezFolderPath = QString();
+
+    QString proposeNewNameAvailable(int retry = 0) const;
 
     QJsonObject m_prezProperties = QJsonObject();
     int m_selectedSlide = 0;

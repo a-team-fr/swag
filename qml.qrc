@@ -25,6 +25,5 @@
         <file>src/qml/Footer.qml</file>
         <file>src/qml/FocusNavigator.qml</file>
         <file>src/qml/FlatViewDisplay.qml</file>
-        <file>small.mp4</file>
     </qresource>
 </RCC>

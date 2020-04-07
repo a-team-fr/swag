@@ -94,15 +94,17 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 QString PrezManager::installPath() const
 {
     QString ret = m_settings.value("installPath").toString();
-
+    ret = "";
     if (ret.isEmpty()) //fallback
     {
 
         QDir wd( QCoreApplication::applicationDirPath());
-        #ifdef Q_OS_MAC
+        #ifdef Q_OS_MACOS
         //application is inside swag/bin/swag.app/contents/MacOS
         //wd.cdUp(); wd.cdUp(); wd.cdUp();
-        #elif Q_OS_WIN
+        #endif
+        #ifdef Q_OS_WINDOWS
+        wd.cdUp();
         #endif
         //wd.cdUp();
 
@@ -309,7 +311,9 @@ QString PrezManager::title() const
         case Slide_Loader:
         case Slide_FlatView:
         case Slide_ListView:
-        return lstSlides()[m_selectedSlide].toObject().value("title").toString();
+            return m_selectedSlide < lstSlides().count()  ?
+                lstSlides()[m_selectedSlide].toObject().value("title").toString() :
+                QString();
 
     }
     return QString();
@@ -391,7 +395,7 @@ QUrl PrezManager::currentDisplay() const
 QUrl PrezManager::urlSlide(int idxSlide) const
 {
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
-    if (-1 == idxSlide) return QUrl();
+    if (lstSlides().count() <= idxSlide) return QUrl();
 
     QJsonObject slide = lstSlides()[idxSlide].toObject();
     QString slideSource = slide.value("source").toString();

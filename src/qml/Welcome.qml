@@ -103,7 +103,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                 id:txt
                 width:view.width
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-                font.pointSize: 20
+                font.pointSize: 14
                 textFormat: Text.MarkdownText
                 text: model.text.replace(/%REPLACE_WITH_WIDTH%/g, Number(width)).replace(/%REPLACE_WITH_HEIGHT%/g, Number(width*0.8))
 

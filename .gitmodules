@@ -1,0 +1,3 @@
+[submodule "deps/fontawesome.pri"]
+	path = deps/fontawesome.pri
+	url = https://github.com/benlau/fontawesome.pri

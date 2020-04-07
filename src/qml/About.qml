@@ -817,7 +817,7 @@ please read <https://www.gnu.org/licenses/why-not-lgpl.html>.
                     licence:"MIT"
                 }
                 ListElement{
-                    name:"FontAwesome.pri by Benlay"
+                    name:"FontAwesome.pri by Benlau"
                     version : "v1.0"
                     logo:""
                     url:"https://github.com/benlau/fontawesome.pri"

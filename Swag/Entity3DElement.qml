@@ -73,7 +73,9 @@ Element {
         return dump.slideDump;
     }
 
-    contentItem: Scene3D {
+    contentItem: Qt.platform.os === "windows" ? fallback : cmp3d
+    property var fallback : Label{ color:"red"; anchors.fill:parent; text: qsTr("Entity3dElement is not supported on this OS")}
+    property var cmp3d : Scene3D {
         id: scene3d
         focus: true
         aspects: ["input", "logic"]

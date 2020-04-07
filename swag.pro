@@ -32,7 +32,6 @@ RESOURCES += qml.qrc \
 
 TARGET.CAPABILITY += SwEvent
 
-ICON = swag.icns
 
 #enforce to build target
 DESTDIR = $$PWD/build
@@ -66,6 +65,8 @@ DEFINES += \
     VERSION=\\\"$$VERSION\\\" \
 
 macx{
+    ICON = swag.icns
+
     BUNDLED_FILES.files += $$PWD/deps \
                             $$PWD/examples \
                             $$PWD/src
@@ -82,8 +83,12 @@ macx{
     QMAKE_FRAMEWORK_VERSION = $$VERSION
 }
 else:win32{
-    #QMAKE_TARGET_COMPANY, QMAKE_TARGET_DESCRIPTION, QMAKE_TARGET_COPYRIGHT, QMAKE_TARGET_PRODUCT, RC_CODEPAGE, RC_ICONS, RC_LANG
-    #RC_FILE, RES_FILE
+    QMAKE_TARGET_COMPANY = A-Team (https://a-team.fr)
+    QMAKE_TARGET_PRODUCT = Swag software
+    QMAKE_TARGET_DESCRIPTION = A free (GPLv3) presentation system
+    QMAKE_TARGET_COPYRIGHT = Copyright(C) 2020 A-Team GPLv3
+
+    RC_ICONS = res/swag.ico
 }
 
 

@@ -35,6 +35,7 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
     if (m_settings.value("openLastPrezAtStartup").toBool())
     {
         QString pathLastPrezOpened = m_settings.value("pathLastPrezOpened").toString();
+        qDebug() << "opened last :" << pathLastPrezOpened;
         if ( !pathLastPrezOpened.isEmpty() )
             load( QDir(pathLastPrezOpened));
     }
@@ -267,6 +268,7 @@ bool PrezManager::load(QDir prezFolder)
 
     //Save path of the prezFolder in history
     m_settings.setValue("pathLastPrezOpened", m_currentSlideDeckPath);
+    qDebug() << "saving path for opening next time :" << m_currentSlideDeckPath;
 
     m_loaded = true;
     setDisplayType(Slide);

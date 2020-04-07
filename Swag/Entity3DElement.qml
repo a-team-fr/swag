@@ -47,9 +47,6 @@ Element {
     property alias upVector: camera.upVector
     property alias viewCenter: camera.position
 
-    property bool loadedFromDrawer : parent.loadedFromDrawer
-
-
     Component.onCompleted: {
         dumpedProperties.push({"name": "meshPath", "default": ""});
         dumpedProperties.push({"name": "rollAngle", "default": 0});
@@ -76,13 +73,7 @@ Element {
         return dump.slideDump;
     }
 
-    /// Waiting for closing bug QTBUG-82275 - crash when destroying a Scene3D -> this prevent displaying Slide thumbnail in drawer
-    // Bug has been fixed in incoming Qt v5.14.2 -> as a workaround one shall not create Scene3D from drawer
-    // thus the hackish nothing / scene properties
-    // FIXME : replace scene property by contentItem once QTBUG-82275 fix will be available (and remove the ugly loadedFromDrawer property in slide)
-    contentItem: (!loadedFromDrawer ) ? scene : nothing
-    property var nothing : Item{}
-    property var scene :  Scene3D {
+    contentItem: Scene3D {
         id: scene3d
         focus: true
         aspects: ["input", "logic"]

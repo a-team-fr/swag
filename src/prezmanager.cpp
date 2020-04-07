@@ -94,7 +94,7 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 QString PrezManager::installPath() const
 {
     QString ret = m_settings.value("installPath").toString();
-    ret = "";
+
     if (ret.isEmpty()) //fallback
     {
 
@@ -231,13 +231,13 @@ QUrl PrezManager::lookForLocalFile(const QString &filePath) const
     //we interpret the filePath as relative from the slide folder of the swag folder
     QString slideFolder = urlSlide().path();
     slideFolder.chop(4);//likely remove ".qml"
-    localFilePath.setFile(  slideFolder + "/" + filePath);
+    localFilePath.setFile( QUrl::fromLocalFile(  slideFolder + "/" + filePath).toLocalFile() );
 
     if (localFilePath.exists())
         return QUrl::fromLocalFile(localFilePath.filePath());
 
     //otherwise we interpret the filePath as relative from the swag folder
-    localFilePath.setFile(  m_currentSlideDeckPath+"/" + filePath);
+    localFilePath.setFile( QUrl::fromLocalFile( m_currentSlideDeckPath+"/" + filePath).toLocalFile() );
 
     if (localFilePath.exists())
         return QUrl::fromLocalFile(localFilePath.filePath());
@@ -311,7 +311,7 @@ QString PrezManager::title() const
         case Slide_Loader:
         case Slide_FlatView:
         case Slide_ListView:
-            return m_selectedSlide < lstSlides().count()  ?
+            return ( (m_selectedSlide!=-1) && ( m_selectedSlide < lstSlides().count() ) ) ?
                 lstSlides()[m_selectedSlide].toObject().value("title").toString() :
                 QString();
 
@@ -395,6 +395,7 @@ QUrl PrezManager::currentDisplay() const
 QUrl PrezManager::urlSlide(int idxSlide) const
 {
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
+    if (-1 == idxSlide) return QUrl();
     if (lstSlides().count() <= idxSlide) return QUrl();
 
     QJsonObject slide = lstSlides()[idxSlide].toObject();

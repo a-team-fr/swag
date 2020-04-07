@@ -60,10 +60,6 @@ Drawer {
                                 xScale:width / NavMan.windowWidth
                                 yScale:height / NavMan.windowHeight
                             }
-
-                            //scale:Math.min(width / NavMan.windowWidth, height / NavMan.windowHeight)
-
-                            onLoaded: item.loadedFromDrawer = true
                         }
                         width: parent.width
                         height: parent.height - parent.bottomPanel

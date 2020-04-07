@@ -31,8 +31,6 @@ Control{
     background: Qt.createQmlObject(pm.defaultBackground, parent)
     property string elementType : "Slide"
 
-    property bool loadedFromDrawer : false
-
     property var dumpedProperties:[]/*
         {"name":"x","default":0},
         {"name":"y","default":0},

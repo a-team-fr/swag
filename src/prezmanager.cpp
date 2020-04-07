@@ -25,6 +25,8 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QTimer>
+#include <QStandardPaths>
+#include <filesystem>
 
 PrezManager::PrezManager(QObject *parent) : QObject(parent)
 {
@@ -89,6 +91,28 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 
 }
 
+QString PrezManager::installPath() const
+{
+    QString ret = m_settings.value("installPath").toString();
+
+    if (ret.isEmpty()) //fallback
+    {
+
+        QDir wd( QCoreApplication::applicationDirPath());
+        #ifdef Q_OS_MAC
+        //application is inside swag/bin/swag.app/contents/MacOS
+        //wd.cdUp(); wd.cdUp(); wd.cdUp();
+        #elif Q_OS_WIN
+        #endif
+        //wd.cdUp();
+
+        ret = wd.path();//By default program working directory is supposed to be within "swag/bin" dir
+        m_settings.setValue("installPath", ret);
+
+    }
+    return ret;
+}
+
 void PrezManager::setInstallPath(QString newPath)
 {
     QDir tmpDir(newPath);
@@ -100,18 +124,40 @@ void PrezManager::setInstallPath(QString newPath)
     emit installPathChanged();
 }
 
-QString PrezManager::installPath() const
+QString PrezManager::slideDecksFolderPath() const
 {
-    QString ret = m_settings.value("installPath").toString();
-
+    QString ret = m_settings.value("slideDecksFolderPath").toString();
     if (ret.isEmpty()) //fallback
     {
-        QDir wd;
-        wd.cd("../../../../");//TODO this only for MacOS
-        ret = wd.path();//By default program working directory is supposed to be within "swag/bin" dir
+        QDir dir( QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + tr("/Swag") );
+        dir.mkpath( dir.path());
+        ret = dir.path();
+        m_settings.setValue("slideDecksFolderPath", ret);
 
     }
     return ret;
+
+}
+
+void PrezManager::setSlideDecksFolderPath(const QString& newPath)
+{
+    QDir tmpDir(newPath);
+    if ( !tmpDir.exists() )
+        tmpDir = QDir( QUrl(newPath).toLocalFile());
+    if ( !tmpDir.exists() ) return;
+
+    m_settings.setValue("slideDecksFolderPath", tmpDir.path());
+    emit slideDecksFolderPathChanged();
+}
+
+
+
+QString PrezManager::ressourcePrefix() const
+{
+    QString prefix = "qrc:/";
+    if (!installPath().isEmpty() )
+        prefix = "file:"+installPath()+"/";
+    return prefix;
 }
 
 QString PrezManager::readSlideQMLCode(int idxSlide) const
@@ -155,7 +201,7 @@ void PrezManager::writeSlideDocument(const QString& slideContent) const
 
 bool PrezManager::saveToDisk( QString folderPath, QJsonObject obj)
 {
-    if (folderPath.isEmpty()) folderPath = m_prezFolderPath;
+    if (folderPath.isEmpty()) folderPath = m_currentSlideDeckPath;
     if (obj.isEmpty()) obj = m_prezProperties;
 
     QFile file( folderPath + "/content.json" );
@@ -171,26 +217,37 @@ bool PrezManager::saveToDisk( QString folderPath, QJsonObject obj)
     return true;
 }
 
+
 QUrl PrezManager::lookForLocalFile(const QString &filePath) const
 {
-    QFileInfo localFilePath( filePath);
+    QFileInfo localFilePath( filePath );
+
+    //If the filePath represents a valid file, then go with it
     if (localFilePath.exists())
-        return QUrl( QUrl::fromLocalFile(localFilePath.filePath()));
+        return QUrl::fromLocalFile( localFilePath.filePath());
 
-    localFilePath.setFile( QDir(m_prezFolderPath) , filePath);
+    //we interpret the filePath as relative from the slide folder of the swag folder
+    QString slideFolder = urlSlide().path();
+    slideFolder.chop(4);//likely remove ".qml"
+    localFilePath.setFile(  slideFolder + "/" + filePath);
 
     if (localFilePath.exists())
-        return QUrl( QUrl::fromLocalFile(localFilePath.filePath()));
+        return QUrl::fromLocalFile(localFilePath.filePath());
 
+    //otherwise we interpret the filePath as relative from the swag folder
+    localFilePath.setFile(  m_currentSlideDeckPath+"/" + filePath);
 
+    if (localFilePath.exists())
+        return QUrl::fromLocalFile(localFilePath.filePath());
 
-    return filePath;
+    //go with the unmodified url
+
+    return QUrl(filePath);
 }
-
 
 bool PrezManager::load(QDir prezFolder)
 {
-    if (!m_prezFolderPath.isEmpty())
+    if (!m_currentSlideDeckPath.isEmpty())
         unload();
 
     QFile file( prezFolder.path() + "/content.json" );
@@ -204,10 +261,10 @@ bool PrezManager::load(QDir prezFolder)
 
 
     m_prezProperties = doc.object();
-    m_prezFolderPath = prezFolder.path();
+    m_currentSlideDeckPath = prezFolder.path();
 
     //Save path of the prezFolder in history
-    m_settings.setValue("pathLastPrezOpened", m_prezFolderPath);
+    m_settings.setValue("pathLastPrezOpened", m_currentSlideDeckPath);
 
     m_loaded = true;
     setDisplayType(Slide);
@@ -224,7 +281,8 @@ void PrezManager::unload()
         saveToDisk();
 
     m_prezProperties = QJsonObject();
-    m_prezFolderPath = QString();
+    m_currentSlideDeckPath = QString();
+    m_settings.setValue("pathLastPrezOpened", "");
     m_loaded = false;
     setDisplayType(Welcome);
     emit prezLoaded();
@@ -301,22 +359,28 @@ bool PrezManager::isSlideDisplayed() const{
             (m_displayType == Slide_FlatView) ||
             (m_displayType == Slide_Loader) );
 }
+
+bool PrezManager::isSlideFromQrc() const
+{
+    return urlSlide().scheme()!="qrc";
+}
+
 QUrl PrezManager::currentDisplay() const
 {
     QString prefix = ressourcePrefix();
     switch(m_displayType)
     {
-        case Welcome: return QUrl(prefix+"/qml/Welcome.qml");
-        case About: return QUrl(prefix+"/qml/About.qml");
-        case GlobalSettings: return QUrl(prefix+"/qml/SettingsPage.qml");
-        case PrezSettings: return QUrl(prefix+"/qml/PrezInfo.qml");
-        case SlideSettings: return QUrl(prefix+"/qml/SlideInfo.qml");
-        case SlideExport: return QUrl(prefix+"/qml/SlidesExporter.qml");
+        case Welcome: return QUrl(prefix+"src/qml/Welcome.qml");
+        case About: return QUrl(prefix+"src/qml/About.qml");
+        case GlobalSettings: return QUrl(prefix+"src/qml/SettingsPage.qml");
+        case PrezSettings: return QUrl(prefix+"src/qml/PrezInfo.qml");
+        case SlideSettings: return QUrl(prefix+"src/qml/SlideInfo.qml");
+        case SlideExport: return QUrl(prefix+"src/qml/SlidesExporter.qml");
 
         //Cases where a slide is displayed
-        case Slide_ListView:return QUrl(prefix+"/qml/ListViewDisplay.qml");
+        case Slide_ListView:return QUrl(prefix+"src/qml/ListViewDisplay.qml");
     case Slide:
-        case Slide_FlatView:return QUrl(prefix+"/qml/FlatViewDisplay.qml");
+        case Slide_FlatView:return QUrl(prefix+"src/qml/FlatViewDisplay.qml");
         case Slide_Loader: return urlSlide();
 
     }
@@ -333,7 +397,7 @@ QUrl PrezManager::urlSlide(int idxSlide) const
     QString slideSource = slide.value("source").toString();
     if (slideSource.isEmpty()) return QUrl();
 
-    QString path(m_prezFolderPath + "/" + slideSource);
+    QString path(m_currentSlideDeckPath + "/" + slideSource);
     //qDebug()<< "showing document:" << path;
     return QUrl::fromLocalFile( path);
 
@@ -351,9 +415,9 @@ QVariantList PrezManager::urlSlides() const
 QString PrezManager::proposeNewNameAvailable(int retry) const
 {
     QString documentName = retry > 0 ? tr("NewSwag%1").arg(retry) : tr("NewSwag");
-    QDir tmpDir( defaultPrezPath().toLocalFile() + "/" + documentName);
+    QDir tmpDir( slideDecksFolderPath() + "/" + documentName);
     if ( tmpDir.exists() )
-        return proposeNewNameAvailable(retry++);
+        return proposeNewNameAvailable(retry+1);
     return tmpDir.path();
 }
 
@@ -362,8 +426,9 @@ void PrezManager::create(QString url)
     if (url.isEmpty())
         url = proposeNewNameAvailable();
     QDir tmpDir(url);
+
     if ( !tmpDir.exists() )
-        tmpDir = QDir( QUrl(url).toLocalFile());
+        tmpDir.mkpath(tmpDir.path());
 
     QJsonObject obj;
 
@@ -402,8 +467,8 @@ void PrezManager::createSlide()
     QJsonObject slide;
     slide.insert("title", QJsonValue::fromVariant( tr("New slide")));
     QString newDocumentPath = QUuid::createUuid().toString()+".qml";
-    QFile orig( installPath() + "/empty.qml");
-    orig.copy( m_prezFolderPath + "/" + newDocumentPath);
+    QFile orig( installPath() + "/src/qml/empty.qml");
+    orig.copy( m_currentSlideDeckPath + "/" + newDocumentPath);
     slide.insert("source", QJsonValue::fromVariant(newDocumentPath));
     slide.insert("x", QJsonValue::fromVariant(0));
     slide.insert("y", QJsonValue::fromVariant(0));
@@ -429,8 +494,8 @@ void PrezManager::cloneSlide(int idxSlide)
     QJsonArray slides = lstSlides();
     QJsonObject slide = slides[idxSlide].toObject();
     QString newDocumentPath = QUuid::createUuid().toString()+".qml";
-    QFile orig(m_prezFolderPath + "/" + slide.value("source").toString());
-    orig.copy( m_prezFolderPath + "/" + newDocumentPath);
+    QFile orig(m_currentSlideDeckPath + "/" + slide.value("source").toString());
+    orig.copy( m_currentSlideDeckPath + "/" + newDocumentPath);
     slide.insert("source", QJsonValue::fromVariant(newDocumentPath));
 
     slides.insert(idxSlide, slide);
@@ -450,7 +515,7 @@ void PrezManager::removeSlide(int idxSlide)
     QJsonArray slides = lstSlides();
     QString documentPath = slides.takeAt(idxSlide).toObject().value("source").toString();
 
-    QFile::remove( m_prezFolderPath + "/"  + documentPath);
+    QFile::remove( m_currentSlideDeckPath + "/"  + documentPath);
     m_prezProperties.insert("slides", slides);
 
     //Save to disk
@@ -472,7 +537,7 @@ void PrezManager::editSlide(int idxSlide)
 void PrezManager::startPDFExport(){
     if (m_pPDFExporter)
         delete m_pPDFExporter;
-    m_pPDFExporter = new PDFExporter(m_prezFolderPath + "/export.pdf", this);
+    m_pPDFExporter = new PDFExporter(m_currentSlideDeckPath + "/export.pdf", this);
 
 }
 void PrezManager::addSlidePDFExport(QQuickItem* pSlide)
@@ -485,6 +550,48 @@ void PrezManager::endPDFExport(){
     if (m_pPDFExporter)
         delete m_pPDFExporter;
     setDisplayType(Slide);
+}
+
+
+void copyPath(QString src, QString dst)
+{
+    QDir dir(src);
+    if (! dir.exists())
+        return;
+
+    foreach (QString d, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
+        QString dst_path = dst + QDir::separator() + d;
+        dir.mkpath(dst_path);
+        copyPath(src+ QDir::separator() + d, dst_path);
+    }
+
+    foreach (QString f, dir.entryList(QDir::Files)) {
+        QFile::copy(src + QDir::separator() + f, dst + QDir::separator() + f);
+    }
+}
+
+
+
+bool PrezManager::loadGalleryDocument()
+{
+    QDir galleryPath( slideDecksFolderPath() + "/Gallery");
+    if (!galleryPath.exists())
+    {
+        galleryPath.mkdir( galleryPath.path());
+        //std::filesystem::copy( QString(installPath()+"examples/Gallery").toStdString(), galleryPath.path().toStdString(), std::filesystem::copy_options::recursive);
+        copyPath(installPath()+"/examples/Gallery" , galleryPath.path());
+    }
+    return load( galleryPath.path() );
+}
+
+bool PrezManager::load(QString url)
+{
+    if (url.isEmpty())
+        return loadGalleryDocument();
+    QDir tmpDir(url);
+    if ( !tmpDir.exists() )
+        tmpDir = QDir( QUrl(url).toLocalFile());
+    return load( tmpDir);
 }
 
 /*

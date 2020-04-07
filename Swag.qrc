@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/Swag"/>
+    <qresource prefix="/">
+        <file>Swag/VideoElement.qml</file>
+        <file>Swag/Entity3DElement.qml</file>
+        <file>Swag/Slide.qml</file>
+        <file>Swag/PDFElement.qml</file>
+        <file>Swag/SlideDumper.qml</file>
+        <file>Swag/WebElement.qml</file>
+        <file>Swag/VerticalSeparator.qml</file>
+        <file>Swag/TocElement.qml</file>
+        <file>Swag/TextElement.qml</file>
+        <file>Swag/MCQElement.qml</file>
+        <file>Swag/MapElement.qml</file>
+        <file>Swag/InputElement.qml</file>
+        <file>Swag/ImageElement.qml</file>
+        <file>Swag/GotoButton.qml</file>
+        <file>Swag/FlipableElement.qml</file>
+        <file>Swag/FAButton.qml</file>
+        <file>Swag/ElementEditor.qml</file>
+        <file>Swag/Element.qml</file>
+        <file>Swag/DatavizElement.qml</file>
+        <file>Swag/DataElement.qml</file>
+        <file>Swag/CodeRenderer.qml</file>
+        <file>Swag/CodeElement.qml</file>
+        <file>Swag/CodeEditor.qml</file>
+        <file>Swag/ChartElement.qml</file>
+        <file>Swag/CameraElement.qml</file>
+        <file>Swag/ButtonElement.qml</file>
+        <file>Swag/qmldir</file>
+    </qresource>
+</RCC>

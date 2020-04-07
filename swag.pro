@@ -1,6 +1,6 @@
-QT += quick multimedia location texttospeech sensors bluetooth quickcontrols2 printsupport webview charts datavisualization
+QT += quick multimedia location positioning texttospeech sensors bluetooth quickcontrols2 printsupport webview charts datavisualization
 QT += 3dcore 3drender 3dinput 3dlogic 3dquick 3danimation
-CONFIG += c++11
+CONFIG += c++17
 
 include(deps/vendor.pri)
 
@@ -14,67 +14,103 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
-        pdfexporter.cpp \
+        src/main.cpp \
+        src/pdfexporter.cpp \
         src/prezmanager.cpp
 
-RESOURCES += qml.qrc
+HEADERS += \
+    src/pdfexporter.h \
+    src/prezmanager.h \
+    src/qclearablecacheqmlengine.hpp \
+    src/qttshelper.hpp
+
+RESOURCES += qml.qrc \
+            Swag.qrc
 
 TARGET.CAPABILITY += SwEvent
 
 ICON = swag.icns
 
+#enforce to build target
+DESTDIR = $$PWD/build
+
+#$$QMAKE_COPY
+#macx {
+#    QMAKE_POST_LINK += macdeployqt $${DESTDIR}/$${TARGET}.app &
+#} else: win32 {
+#    QMAKE_POST_LINK += windeployqt $${DESTDIR}/$${TARGET}.exe &
+#}
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
-QML_IMPORT_PATH = /modules/swag/
+QML_IMPORT_PATH += $$PWD
 
 # Additional import path used to resolve QML modules just for Qt Quick Designer
 QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$$TARGET/bin
 !isEmpty(target.path): INSTALLS += target
 
-# Define PREZ_PATH to know where are the presentations files
-DEFINES += PREZ_PATH=\\\"$$PWD\\\"
 OTHER_FILES +=  $$files(prez/*.*, true) \
-                $$files(modules/swag/*.*, true)
+                $$files(swag/*.*, true)
 
 
-APPVERSION = 0.0.1
+VERSION = 0.0.1RC
+message("building version $$VERSION")
+
 DEFINES += \
-    APPVERSION=\\\"$$APPVERSION\\\" \
+    VERSION=\\\"$$VERSION\\\" \
 
-HEADERS += \
-    pdfexporter.h \
-    src/prezmanager.h \
-    src/qclearablecacheqmlengine.hpp \
-    src/qttshelper.hpp
+macx{
+    BUNDLED_FILES.files += $$PWD/deps \
+                            $$PWD/examples \
+                            $$PWD/src
+    BUNDLED_FILES.path = Contents/MacOs
+    QMAKE_BUNDLE_DATA += BUNDLED_FILES
+
+    QMAKE_INFO_PLIST = info.plist
+    #Q_PRODUCT_BUNDLE_IDENTIFIER.name = PRODUCT_BUNDLE_IDENTIFIER
+    #Q_PRODUCT_BUNDLE_IDENTIFIER.value = fr.a-team.swag
+    #QMAKE_MAC_XCODE_SETTINGS += Q_PRODUCT_BUNDLE_IDENTIFIER
+    QMAKE_TARGET_BUNDLE_PREFIX = fr.a-team.
+    QMAKE_BUNDLE = swag
+    QMAKE_FRAMEWORK_BUNDLE_NAME = swag
+    QMAKE_FRAMEWORK_VERSION = $$VERSION
+}
+else:win32{
+    #QMAKE_TARGET_COMPANY, QMAKE_TARGET_DESCRIPTION, QMAKE_TARGET_COPYRIGHT, QMAKE_TARGET_PRODUCT, RC_CODEPAGE, RC_ICONS, RC_LANG
+    #RC_FILE, RES_FILE
+}
+
+
+
+
 
 DISTFILES += \
-    modules/swag/ButtonElement.qml \
-    modules/swag/ChartElement.qml \
-    modules/swag/CodeElement.qml \
-    modules/swag/CodeRenderer.qml \
-    modules/swag/DataElement.qml \
-    modules/swag/DatavizElement.qml \
-    modules/swag/Element.qml \
-    modules/swag/ElementEditor.qml \
-    modules/swag/Entity3DElement.qml \
-    modules/swag/FlipableElement.qml \
-    modules/swag/GotoButton.qml \
-    modules/swag/ImageElement.qml \
-    modules/swag/InputElement.qml \
-    modules/swag/MCQElement.qml \
-    modules/swag/MapElement.qml \
-    modules/swag/PDFElement.qml \
-    modules/swag/Slide.qml \
-    modules/swag/SlideDumper.qml \
-    modules/swag/TextElement.qml \
-    modules/swag/TocElement.qml \
-    modules/swag/VerticalSeparator.qml \
-    modules/swag/VideoElement.qml \
-    modules/swag/WebElement.qml \
+    Swag/ButtonElement.qml \
+    Swag/ChartElement.qml \
+    Swag/CodeElement.qml \
+    Swag/CodeRenderer.qml \
+    Swag/DataElement.qml \
+    Swag/DatavizElement.qml \
+    Swag/Element.qml \
+    Swag/ElementEditor.qml \
+    Swag/Entity3DElement.qml \
+    Swag/FlipableElement.qml \
+    Swag/GotoButton.qml \
+    Swag/ImageElement.qml \
+    Swag/InputElement.qml \
+    Swag/MCQElement.qml \
+    Swag/MapElement.qml \
+    Swag/PDFElement.qml \
+    Swag/Slide.qml \
+    Swag/SlideDumper.qml \
+    Swag/TextElement.qml \
+    Swag/TocElement.qml \
+    Swag/VerticalSeparator.qml \
+    Swag/VideoElement.qml \
+    Swag/WebElement.qml \

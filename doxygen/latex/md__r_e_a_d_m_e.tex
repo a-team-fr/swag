@@ -1,0 +1,112 @@
+\begin{center}\end{center}  ~\newline
+\hypertarget{md__r_e_a_d_m_e_autotoc_md27}{}\doxysection{s🤘ag, a $<$strong$>$free$<$/strong$>$ presentation system based on Q\+ML}\label{md__r_e_a_d_m_e_autotoc_md27}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md28}{}\doxysubsection{Purpose}\label{md__r_e_a_d_m_e_autotoc_md28}
+The aim of this project is to provide a tool to easily create simple application with building blocks made in Q\+ML. ~\newline
+ As s🤘ag is basically loading and interpreting Q\+ML documents, there is no reason why s🤘ag would be limited to a presentation system \+: it could be possible to use it to create any kind of application.
+
+There are already a number of similar projects, why create yet another one ? ~\newline
+ Well... \+:
+\begin{DoxyEnumerate}
+\item because it is {\itshape {\bfseries{fun}}} ! s🤘ag is the kind of project that covers lots of domain.
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item because it is {\bfseries{free}} ! Most of the existing mature solution I know are based on a user locking in \+: either because of closed license or because of SaaS mode. That\textquotesingle{}s the reason why s🤘ag is G\+PL, to ensure users will always be free to use, study, modify or redistribute it !
+\end{DoxyEnumerate}
+\begin{DoxyEnumerate}
+\item because {\bfseries{Low Tech}} matters (at least to me) ! One more and more consume SaaS service for everything and whilst these demanding huge datacenter are producing lots of C\+O2. I am convinced that this model is not sustainable and that we should and we will move from SaaS. s🤘ag is thus an autonomous desktop solution, some very cool feature will be relying on network communication but they will remain optional and limited.
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md29}{}\doxysubsection{Project history}\label{md__r_e_a_d_m_e_autotoc_md29}
+For years, I was enthusiastic of speakers using their own presentation system. As the community manager of the Nantes Qt Meetup, I had considered a number of times to use one the existing Qt based presentation projects (such as the excellent \href{https://github.com/qt-labs/qml-presentation-system}{\texttt{ https\+://github.\+com/qt-\/labs/qml-\/presentation-\/system}} ). ~\newline
+ Quite recently during the 2020 F\+O\+S\+D\+EM last February, I have seen a stunning talk of Christophe de Dinechin made with a custom presentation system (T\+AO with XL langage), and this time it really convinced me that my next presentations should be made with such a system. My first need was very simple \+: design a training material that could show Q\+ML code and render it dynamically. ~\newline
+ Following the confinement call in March, as my business stalled whilst having to stay at home I had plenty of time to design a very simple version... ~\newline
+ Starting working on the project strengthen my initial feelings that such a tool is quite fun to design, very useful for creating rocking presentation and could be used for a lot more of use cases !\hypertarget{md__r_e_a_d_m_e_autotoc_md30}{}\doxysubsection{why Swag as name ?}\label{md__r_e_a_d_m_e_autotoc_md30}
+In french somethin \char`\"{}swag\char`\"{} is something cool, and i think s🤘ag is very cool ! I also liked the \char`\"{}\+Sophisticated Wild Ass Guess\char`\"{} as something that quickly do the job. ~\newline
+
+
+One can also think of fun abbreviation such as \+:
+\begin{DoxyItemize}
+\item Serendipity Without A Glitch
+\item Software With Awesome Generator
+\item Some Would Argue Genius
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md31}{}\doxysubsection{How it works ?}\label{md__r_e_a_d_m_e_autotoc_md31}
+ From the welcome page, one can either create a new s🤘ag or open and existing one. ~\newline
+ A s🤘ag is currently handled as directory so you will need to select the parent folder of the s🤘ag content ( this might change in a near future).
+
+ When a s🤘ag is opened, it is possible to create a new slide or clone an existing one from the drawer menu. ~\newline
+
+
+Enter in \char`\"{}\+Edit mode\char`\"{} (with Ctrl+D or from the edit menu) to show the toolbox (at the screen right side) with the list of Element you can integrate into your slide \+: a Text, an Image, a chart etc...
+
+
+
+While \char`\"{}\+Edit mode\char`\"{} is active, hover an element to display its bounding box with editing functions (repositioning, changing properties or deleting the element).
+
+At anytime, it is possible to trigger the \char`\"{}\+Show code\char`\"{} mode to inspect the current slide Q\+ML code, edit and reload the slide to see the changes without restarting s🤘ag.
+
+
+
+From the Deck settings, it is possible to choose the display mode between \+:
+\begin{DoxyItemize}
+\item Loader \+: only one slide is rendered at a time
+\item List\+View \+: to swipe from one slide to another
+\item Flat\+View \+: to navigate from one element or slide to another in a similar manner than Prezi.
+\end{DoxyItemize}
+
+\hypertarget{md__r_e_a_d_m_e_autotoc_md32}{}\doxysubsubsection{Toolbox}\label{md__r_e_a_d_m_e_autotoc_md32}
+
+\begin{DoxyItemize}
+\item a Text element (currently only a limited set of a text properties are supported)
+\item a Code element \+: to show code with syntax highlighting (relying on highlight.\+js) together with a rendered object from Q\+ML code
+\item Goto\+Button \+: a button to change the current slide
+\item Webview
+\item Image
+\item Map
+\item Multiple Choice Question \+: each choice is made of an image and/or a text. When the M\+CQ is validated, each choice can be flipped to show an image and/or a text.
+\item Chart
+\item Dataviz
+\item Video or camera
+\item Entity 3D \+: show a 3D mesh
+\item P\+DF \+: a pdf reader based on pdf.\+js One can find an example of using these elements with the \char`\"{}\+Gallery\char`\"{} s🤘ag.
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md33}{}\doxysubsection{Installation}\label{md__r_e_a_d_m_e_autotoc_md33}
+It is strongly advised to use the latest stable Qt version (Qt5.\+14.\+1 at the time of the project start).
+
+
+\begin{DoxyEnumerate}
+\item git clone the project and get its submodules 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone https://github.com/a-\/team-\/fr/swag.git}
+\DoxyCodeLine{git submodule update -\/-\/init}
+\end{DoxyCode}
+
+\item Open the project with Qt\+Creator
+\item Build \& run
+\end{DoxyEnumerate}\hypertarget{md__r_e_a_d_m_e_autotoc_md34}{}\doxysubsection{Roadmap}\label{md__r_e_a_d_m_e_autotoc_md34}
+The project is driven using kanban. Its comprehensive roadmap is visible \href{https://kanboard.a-team.fr/?controller=BoardViewController&action=readonly&token=c735ac4810eaf0cb8b1d34b76d0f9d91bb142c640e4682f5271861dc4d7d}{\texttt{ (here)}} The following is an overview of the roadmap and the current status.\hypertarget{md__r_e_a_d_m_e_autotoc_md35}{}\doxysubsubsection{Version 0.\+0.\+1 (expected in April 2020)}\label{md__r_e_a_d_m_e_autotoc_md35}
+{\bfseries{Target \+:}} A draft with a limited feature set, incomplete and buggy. Just good enough to show to experienced (and imaginative) developers what s🤘ag could become.
+
+{\bfseries{Key features \+:}}
+\begin{DoxyItemize}
+\item \mbox{[}x\mbox{]} basic navigation (create, open, close ) a slide deck and a slide
+\item \mbox{[}x\mbox{]} limited set of Elements
+\item \mbox{[}x\mbox{]} several display modes
+\item \mbox{[}x\mbox{]} publish to github
+\item \mbox{[} \mbox{]} landing page swagsoftware.\+net (Work in progress but I am getting lost with Word\+Press \+:-\/) )
+\item \mbox{[} \mbox{]} released with binaries for Mac\+Os, Windows, G\+NU Linux (to be tested without Qt sdk installed) -\/ would be nice to automate releases with Git\+Hub actions if that is possible (help needed)
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md36}{}\doxysubsubsection{Version 0.\+1}\label{md__r_e_a_d_m_e_autotoc_md36}
+{\bfseries{Target \+:}} A workable solution but for a limited use \+: create presentation.
+
+{\bfseries{Key features \+:}}
+\begin{DoxyItemize}
+\item \mbox{[} \mbox{]} nice UI and great UX (help needed)
+\item \mbox{[} \mbox{]} P\+DF and H\+T\+ML export (Work in progress)
+\item \mbox{[} \mbox{]} authentication, loading \& saving to swagsoftware.\+net
+\item \mbox{[} \mbox{]} presenter mode with a dual screen
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md37}{}\doxysubsubsection{Version 1.\+0}\label{md__r_e_a_d_m_e_autotoc_md37}
+{\bfseries{Target \+:}} First official release containing \char`\"{}killer features\char`\"{} \+:-\/)
+
+{\bfseries{Key features \+:}}
+\begin{DoxyItemize}
+\item \mbox{[} \mbox{]} mobile (i\+OS \& Android) application that could connect to a running live presentation to support polling features
+\item \mbox{[} \mbox{]} export to mpeg
+\item \mbox{[} \mbox{]} s\+Waggies \+: s\+Wag generator (for instance generate a s\+Wag for project code documentation parsing Doxygen comments)
+\item \mbox{[} \mbox{]} support opening of media/custom file by loading a templated s🤘ag (ex \+: use s🤘ag as a viewer) 
+\end{DoxyItemize}

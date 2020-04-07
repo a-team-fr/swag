@@ -1,0 +1,99 @@
+{
+    "author": "charby",
+    "defaultBackground": "import QtQuick 2.14;Image{ source:'qrc:/res/desert-790640_1920.jpg';}",
+    "displayMode": "Loader",
+    "materialAccent": "#F48FB1",
+    "materialBackground": "#303030",
+    "materialElevation": 6,
+    "materialForeground": "#ffffff",
+    "materialPrimary": "#3F51B5",
+    "materialTheme": 1,
+    "slides": [
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{edc0e62f-d100-449f-9383-1d4b30fc6721}.qml",
+            "title": "A TOC, a text, a 3D element and a button",
+            "width": 1025,
+            "x": 522.4260080038799,
+            "y": 0
+        },
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{515bc472-7fd7-46ea-a85b-39a6170cb663}.qml",
+            "title": "Example of charts",
+            "width": 1025,
+            "x": 522.4260080038799,
+            "y": 0
+        },
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{d64bf077-a318-4407-8721-114f70d1b21d}.qml",
+            "title": "Using dataviz",
+            "width": 1025,
+            "x": 522.4260080038799,
+            "y": 0
+        },
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{08074c7f-ec51-448a-b67b-a22a5892cd95}.qml",
+            "title": "A PDF viewer",
+            "width": 1025,
+            "x": 522.4260080038799,
+            "y": 0
+        },
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{c6c8877d-0e93-4f8a-806d-99755b6586a8}.qml",
+            "title": "A video (or camera)",
+            "width": 1025,
+            "x": 522.4260080038799,
+            "y": 0
+        },
+        {
+            "height": 565,
+            "rotation": 0,
+            "source": "{1f292fa1-d689-479c-a41c-e6bea959403d}.qml",
+            "title": "Test with markdown",
+            "width": 1025,
+            "x": -1385.8224953880908,
+            "y": 0
+        },
+        {
+            "source": "{501d9243-9db5-4b7b-99bf-4c605c444d6c}.qml",
+            "title": "Slide with code renderer"
+        },
+        {
+            "height": 480,
+            "rotation": 0,
+            "source": "{0f0f408f-ea31-461b-9a6d-33b5db179708}.qml",
+            "title": "Slide with a FlipableElement",
+            "width": 640,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "height": 480,
+            "rotation": 0,
+            "source": "{9be2e2a5-a1a0-404f-bb0e-4ffec1964731}.qml",
+            "title": "MCQ Element",
+            "width": 640,
+            "x": 0,
+            "y": 0
+        },
+        {
+            "source": "{e6ab9e73-680c-41cc-bcbc-ad44d2c19f57}.qml",
+            "title": "First slide actually using Slide"
+        },
+        {
+            "source": "{f580d8cd-fd71-417c-b7e3-e12185d90c87}.qml",
+            "title": "Using MapElement"
+        }
+    ],
+    "theme": "Dark",
+    "title": "Gallery"
+}

@@ -107,6 +107,9 @@ QString PrezManager::installPath() const
         #ifdef Q_OS_WINDOWS
         wd.cdUp();
         #endif
+        #ifdef Q_OS_LINUX
+        wd.cdUp();
+        #endif
         //wd.cdUp();
 
         ret = wd.path();//By default program working directory is supposed to be within "swag/bin" dir

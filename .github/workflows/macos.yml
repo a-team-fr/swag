@@ -9,14 +9,18 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
- 
+
+ env:
+  QT_VERSION: 5.14.2
+
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
   build:
     name: "macOS Latest x64"
     runs-on: macos-latest
-    
+
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,7 +31,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: '5.14.2'
+        version: '$ENV{QT_VERSION}'
         host: 'mac'
         target: 'desktop'
         dir: '${{ github.workspace }}'
@@ -36,8 +40,21 @@ jobs:
         mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
         cached: 'false'
 
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
+    - name: fetch submodule
+      run: git submodule update --init
+    - name: build swag
       run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+          qmake -spec macx-clang "CONFIG+=release"
+          make
+    - name: create dmg
+      run: |
+          chmod a+x ./deploy2mac.sh
+          set( qtroot "${{ github.workspace }}/qt/$ENV{QT_VERSION}/")
+          QT_PATH = $ENV{QTDIR}
+          QT_PATH = ${QT_PATH:0:${#QT_PATH} - 3}
+          ./deploy2mac.sh ${{ github.workspace }}
+    - name: Upload dmg
+        uses: actions/upload-artifact@v1
+        with:
+          name: swag-macos-$ENV{QT_VERSION}.dmg
+          path: ./deploy/macos/swag.dmg

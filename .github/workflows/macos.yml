@@ -49,10 +49,7 @@ jobs:
     - name: create dmg
       run: |
           chmod a+x ./deploy2mac.sh
-          set( qtroot "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/")
-          QT_PATH = $ENV{QTDIR}
-          QT_PATH = ${QT_PATH:0:${#QT_PATH} - 3}
-          ./deploy2mac.sh ${{ github.workspace }}
+          ./deploy2mac.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:

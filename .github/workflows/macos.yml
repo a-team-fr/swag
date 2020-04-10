@@ -31,7 +31,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: '$ENV{QT_VERSION}'
+        version: '${{ env.QT_VERSION }}'
         host: 'mac'
         target: 'desktop'
         dir: '${{ github.workspace }}'
@@ -49,12 +49,12 @@ jobs:
     - name: create dmg
       run: |
           chmod a+x ./deploy2mac.sh
-          set( qtroot "${{ github.workspace }}/qt/$ENV{QT_VERSION}/")
+          set( qtroot "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/")
           QT_PATH = $ENV{QTDIR}
           QT_PATH = ${QT_PATH:0:${#QT_PATH} - 3}
           ./deploy2mac.sh ${{ github.workspace }}
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:
-        name: swag-macos-$ENV{QT_VERSION}.dmg
+        name: swag-macos-${{ env.QT_VERSION }}.dmg
         path: ./deploy/macos/swag.dmg

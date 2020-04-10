@@ -11,7 +11,7 @@ then
 fi
 
 echo ******erase former deployement
-rm -rf .deploy/linux/
+rm -rf ./deploy/linux/
 
 echo ******recreate appdir
 mkdir -p ./deploy/linux/usr/bin
@@ -33,10 +33,8 @@ cp ./res/SwagLogo.iconset/Swag.iconset/icon_48x48.png ./deploy/linux/usr/share/i
 echo ******copy swag needed stuff
 
 cp -rf ./deps ./deploy/linux/usr/deps
-cp -rf ./src ./deploy/linux/usr/src 
+cp -rf ./src ./deploy/linux/usr/src
 cp -rf ./examples ./deploy/linux/usr/examples
 
 echo ******call linuxdeploy
 linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview
-
-

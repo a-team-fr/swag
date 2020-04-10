@@ -10,7 +10,7 @@ on:
   pull_request:
     branches: [ master ]
 
- env:
+env:
   QT_VERSION: 5.14.2
 
 
@@ -54,7 +54,7 @@ jobs:
           QT_PATH = ${QT_PATH:0:${#QT_PATH} - 3}
           ./deploy2mac.sh ${{ github.workspace }}
     - name: Upload dmg
-        uses: actions/upload-artifact@v1
-        with:
-          name: swag-macos-$ENV{QT_VERSION}.dmg
-          path: ./deploy/macos/swag.dmg
+      uses: actions/upload-artifact@v1
+      with:
+        name: swag-macos-$ENV{QT_VERSION}.dmg
+        path: ./deploy/macos/swag.dmg

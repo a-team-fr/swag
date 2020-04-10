@@ -26,7 +26,7 @@
 #include <QQmlContext>
 #include <QTimer>
 #include <QStandardPaths>
-#include <filesystem>
+//#include <filesystem>
 
 PrezManager::PrezManager(QObject *parent) : QObject(parent)
 {
@@ -94,9 +94,9 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 
 QString PrezManager::installPath() const
 {
-    QString ret = m_settings.value("installPath").toString();
+    //QString ret = m_settings.value("installPath").toString();
 
-    if (ret.isEmpty()) //fallback
+    if (m_installPath.isEmpty()) //fallback
     {
 
         QDir wd( QCoreApplication::applicationDirPath());
@@ -112,11 +112,11 @@ QString PrezManager::installPath() const
         #endif
         //wd.cdUp();
 
-        ret = wd.path();//By default program working directory is supposed to be within "swag/bin" dir
-        m_settings.setValue("installPath", ret);
+        m_installPath = wd.path();//By default program working directory is supposed to be within "swag/bin" dir
+        //m_settings.setValue("installPath", m_installPath);
 
     }
-    return ret;
+    return m_installPath;
 }
 
 void PrezManager::setInstallPath(QString newPath)

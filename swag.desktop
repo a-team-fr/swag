@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Application
+Version=1.0
 Name=Swag
 Comment=a free presentation system
-Exec=Swag
+Exec=swag
 Icon=swag_logo
-Categories=Graphics;
+Categories=Office;

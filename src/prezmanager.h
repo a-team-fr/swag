@@ -194,6 +194,8 @@ private:
     QEventLoop loop;
 
     PDFExporter* m_pPDFExporter = nullptr;
+
+    mutable QString m_installPath ="";
 };
 
 #endif

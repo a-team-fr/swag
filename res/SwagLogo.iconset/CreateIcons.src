@@ -2,7 +2,7 @@ rmdir Swag.iconset
 mkdir Swag.iconset
 sips -z 16 16     Icon1024.png --out Swag.iconset/icon_16x16.png
 sips -z 32 32     Icon1024.png --out Swag.iconset/icon_16x16@2x.png
-sips -z 32 32     Icon1024.png --out Swag.iconset/icon_32x32.png
+sips -z 48 48     Icon1024.png --out Swag.iconset/icon_48x48.png
 sips -z 64 64     Icon1024.png --out Swag.iconset/icon_32x32@2x.png
 sips -z 128 128   Icon1024.png --out Swag.iconset/icon_128x128.png
 sips -z 256 256   Icon1024.png --out Swag.iconset/icon_128x128@2x.png

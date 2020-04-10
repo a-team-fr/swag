@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName("A-Team");
     app.setOrganizationDomain("a-team.fr");
     app.setApplicationName("swag");
-    app.setWindowIcon(QIcon(":res/SwagLogo.iconset/icon1024Pr.png"));
+    app.setWindowIcon(QIcon(":/res/SwagLogo.iconset/icon1024.png"));
 
 
     PrezManager prezManager;

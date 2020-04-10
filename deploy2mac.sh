@@ -19,7 +19,7 @@ cp -Rf ./build/swag.app ./deploy/macos/swag.app
 #manual copy of missing qml import (don't know why macdeployqt is not doing it)
 #cp -Rf "$PATH_TO_QT"clang_64/qml/ ./macos/swag.app/Contents/Resources/qml
 
-"$PATH_TO_QT"clang_64/bin/macdeployqt ./deploy/macos/swag.app -qmlimport="$PATH_TO_QT"clang_64/qml -qmldir="../" -dmg -verbose=2
+"$PATH_TO_QT"clang_64/bin/macdeployqt ./deploy/macos/swag.app -qmlimport="$PATH_TO_QT"clang_64/qml -qmldir="./" -dmg -verbose=2
 
 #remove last generated swag.app to force full rebuild
 #rm -Rf ../build/swag.app

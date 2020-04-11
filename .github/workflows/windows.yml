@@ -59,7 +59,7 @@ jobs:
           nmake
     - name: create deploy
       run: |
-          ./deploy2win.ps1 "${{ github.workspace }}\qt\${{ env.QT_VERSION }}/"
+          ./deploy2win.ps1 "${{ github.workspace }}\qt\${{ env.QT_VERSION }}\"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:

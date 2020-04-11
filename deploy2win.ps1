@@ -5,8 +5,8 @@ param ($qtpath='C:\Qt\5.14.2')
 
 
 @echo ******set the proper env for windeploy to fetch the right vcredist
-call "C:\Program Files (x86)\Microsoft Visual Studio\VS2017CommunityEdition\VC\Auxiliary\Build\vcvars64.bat"
-
+#call "C:\Program Files (x86)\Microsoft Visual Studio\VS2017CommunityEdition\VC\Auxiliary\Build\vcvars64.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
 @echo ******erase former deployement
 rmdir -r -fo .\deploy\windows\bin\
 

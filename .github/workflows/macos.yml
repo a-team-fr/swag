@@ -53,5 +53,5 @@ jobs:
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:
-        name: swag-macos-${{ env.QT_VERSION }}.dmg
+        name: swag-macos-${{ env.QT_VERSION }}.zip
         path: ./deploy/macos/swag.dmg

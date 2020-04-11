@@ -36,6 +36,9 @@ cp -rf ./deps ./deploy/linux/usr/deps
 cp -rf ./src ./deploy/linux/usr/src
 cp -rf ./examples ./deploy/linux/usr/examples
 
+echo *** fetch libpulse-mainloop-glib.so.0
+sudo apt-get install libpulse-dev
+
 PATH="$PATH:"$PATH_TO_QT"gcc_64/bin";export PATH
 
 echo ******call linuxdeploy

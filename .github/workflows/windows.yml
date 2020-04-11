@@ -56,7 +56,7 @@ jobs:
       run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           qmake -spec win32-msvc "CONFIG+=release"
-          make
+          nmake
     - name: create deploy
       run: |
           ./deploy2win.ps1 "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"

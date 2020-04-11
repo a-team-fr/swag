@@ -37,4 +37,4 @@ cp -rf ./src ./deploy/linux/usr/src
 cp -rf ./examples ./deploy/linux/usr/examples
 
 echo ******call linuxdeploy
-linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview
+./linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview

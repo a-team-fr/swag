@@ -55,10 +55,12 @@ jobs:
       run: |
           qmake "CONFIG+=release"
           make
-    - name: create appimage
+    - name: download linuxdeployqt
       run: |
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    - name: create appimage
+      run: |
           chmod a+x ./deploy2lin.sh
           ./deploy2lin.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
     - name: Upload

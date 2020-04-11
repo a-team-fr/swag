@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  QT_VERSION: 5.14.2
+
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  build:
+    name: "windows Latest x64"
+    runs-on: windows-latest
+
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Runs a single command using the runners shell
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: '${{ env.QT_VERSION }}'
+        host: 'windows'
+        arch: 'win64_msvc2017_64'
+        target: 'desktop'
+        dir: '${{ github.workspace }}'
+        install-deps: 'true'
+        modules: 'qtcharts qtdatavis3d qtwebengine'
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
+        cached: 'false'
+
+    - name: fetch submodule
+      run: git submodule update --init
+    - name: build swag
+      run: |
+          qmake "CONFIG+=release"
+          make
+    - name: create deploy
+      run: |
+          ./deploy2win.ps1 "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
+    - name: Upload dmg
+      uses: actions/upload-artifact@v1
+      with:
+        name: swag-win64-${{ env.QT_VERSION }}.zip
+        path: ./swag_windows_v0.0.1.zip

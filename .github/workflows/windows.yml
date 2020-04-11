@@ -53,7 +53,7 @@ jobs:
       run: git submodule update --init
     - name: build swag
       run: |
-          qmake -spec win64-msvc "CONFIG+=release"
+          qmake.exe swag.pro -spec win32-msvc "CONFIG+=release"
           make
     - name: create deploy
       run: |

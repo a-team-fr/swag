@@ -36,5 +36,7 @@ cp -rf ./deps ./deploy/linux/usr/deps
 cp -rf ./src ./deploy/linux/usr/src
 cp -rf ./examples ./deploy/linux/usr/examples
 
+PATH="$PATH:"$PATH_TO_QT"gcc_64/bin";export PATH
+
 echo ******call linuxdeploy
 ./linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview

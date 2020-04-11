@@ -57,6 +57,8 @@ jobs:
           make
     - name: create appimage
       run: |
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
           chmod a+x ./deploy2lin.sh
           ./deploy2lin.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
     - name: Upload

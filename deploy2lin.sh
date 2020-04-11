@@ -40,6 +40,7 @@ echo *** fetch libpulse-mainloop-glib.so.0
 sudo apt-get install libpulse-dev
 sudo apt-get install libxkbcommon-dev
 sudo apt-get install libxkbcommon-x11-dev
+sudo apt-get install libgstreamer-plugins-base1.0-0
 
 PATH="$PATH:"$PATH_TO_QT"gcc_64/bin";export PATH
 

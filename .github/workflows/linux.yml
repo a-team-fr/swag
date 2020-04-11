@@ -57,10 +57,10 @@ jobs:
           make
     - name: create appimage
       run: |
-          chmod a+x ./deploy/deploy2lin.sh
-          ./deploy/deploy2lin.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
+          chmod a+x ./deploy2lin.sh
+          ./deploy2lin.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
     - name: Upload
       uses: actions/upload-artifact@v1
       with:
         name: swag-linux-${{ env.QT_VERSION }}.zip
-        path: ./deploy/macos/swag.dmg
+        path: ./swag*.AppImage*

@@ -26,8 +26,8 @@ env:
 jobs:
 
   build:
-    name: "macOS Latest x64"
-    runs-on: macos-latest
+    name: "linux Latest x64"
+    runs-on: linux-latest
 
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -39,8 +39,8 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
-        version: '${{ env.QT_VERSION }}'
-        host: 'mac'
+        version: '$ENV{QT_VERSION}'
+        host: 'linux'
         target: 'desktop'
         dir: '${{ github.workspace }}'
         install-deps: 'true'
@@ -48,18 +48,19 @@ jobs:
         mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
         cached: 'false'
 
+    # Runs a set of commands using the runners shella
     - name: fetch submodule
       run: git submodule update --init
     - name: build swag
       run: |
           qmake -spec macx-clang "CONFIG+=release"
           make
-    - name: create dmg
+    - name: create appimage
       run: |
-          chmod a+x ./deploy2mac.sh
-          ./deploy2mac.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
-    - name: Upload dmg
+          chmod a+x ./deploy/deploy2lin.sh
+          ./deploy/deploy2lin.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
+    - name: Upload
       uses: actions/upload-artifact@v1
       with:
-        name: swag-macos-${{ env.QT_VERSION }}.zip
+        name: swag-linux-${{ env.QT_VERSION }}.zip
         path: ./deploy/macos/swag.dmg

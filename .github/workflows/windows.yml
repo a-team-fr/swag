@@ -12,6 +12,10 @@ on:
       - '.gitignore'
     branches: [ master ]
   pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - '.gitignore'
     branches: [ master ]
 
 env:

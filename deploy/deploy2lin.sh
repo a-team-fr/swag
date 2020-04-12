@@ -1,8 +1,8 @@
 #!/bin/bash
 #deploy script for Linux
 #description : copy swag to deploy directory and launch lindeployqt
-#usage : .\deploy2lin.sh
-
+#usage : ./deploy/deploy2lin.sh  from swag root
+#produce : ./Swag.AppImage (swag root dir)
 PATH_TO_QT=$1
 if [ -z "$PATH_TO_QT" ]
 then
@@ -24,7 +24,7 @@ echo ******copy the newly build
 cp ./build/swag ./deploy/linux/usr/bin/
 
 echo ******copy desktop file
-cp ./swag.desktop ./deploy/linux/usr/share/applications/
+cp ./deploy/swag.desktop ./deploy/linux/usr/share/applications/
 
 echo ******copy appicons
 cp ./res/SwagLogo.iconset/Swag.iconset/icon_512x512.png ./deploy/linux/usr/share/icons/hicolor/512x512/swag_logo.png
@@ -44,5 +44,8 @@ sudo apt-get install libgstreamer-plugins-base1.0-0
 
 PATH="$PATH:"$PATH_TO_QT"gcc_64/bin";export PATH
 
+VERSION=$(cat ./Version.def); export VERSION
+
 echo ******call linuxdeploy
 ./linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview
+mv ./Swag-$VERSION.AppImage ./Swag.AppImage

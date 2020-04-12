@@ -64,7 +64,7 @@ jobs:
           chmod a+x ./deploy/deploy2lin.sh
           ./deploy/deploy2lin.sh "${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/"
     - name: Upload
-      uses: actions/upload-artifact@v2-preview
+      uses: actions/upload-artifact@v1
       with:
-        name: swag-linux-${{ env.QT_VERSION }}.zip
-        path: ./Swag*.AppImage*
+        name: swag-v${{ env.VERSION }}-linux-${{ env.QT_VERSION }}
+        path: ./Swag.AppImage

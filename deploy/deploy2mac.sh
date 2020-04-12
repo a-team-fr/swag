@@ -1,7 +1,8 @@
 #!/bin/bash
 # deploy script for MacOs
 # description : copy swag.app to deploy directory and launch macdeployqt
-# usage : source ./deploy2mac.src
+# usage : .deploy/deploy2mac.sh from swag root
+#produce : ./Swag.dmg (swag root dir)
 
 PATH_TO_QT=$1
 if [ -z "$PATH_TO_QT" ]
@@ -11,7 +12,7 @@ then
 fi
 
 rm -Rf ./deploy/macos/swag.app
-rm -Rf ./deploy/macos/swag.dmg
+rm -Rf ./swag.dmg
 
 mkdir -p ./deploy/macos
 cp -Rf ./build/swag.app ./deploy/macos/swag.app
@@ -20,6 +21,7 @@ cp -Rf ./build/swag.app ./deploy/macos/swag.app
 #cp -Rf "$PATH_TO_QT"clang_64/qml/ ./macos/swag.app/Contents/Resources/qml
 
 "$PATH_TO_QT"clang_64/bin/macdeployqt ./deploy/macos/swag.app -qmlimport="$PATH_TO_QT"clang_64/qml -qmldir="./" -dmg -verbose=2
-
+VERSION=$(cat ./Version.def); export VERSION
+mv ./deploy/macos/swag.dmg ./swag.dmg
 #remove last generated swag.app to force full rebuild
 #rm -Rf ../build/swag.app

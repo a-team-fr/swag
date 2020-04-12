@@ -64,5 +64,5 @@ jobs:
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:
-        name: swag-win64-${{ env.QT_VERSION }}
-        path: ./swag_windows_v0.0.1.zip
+        name: swag-v${{ env.VERSION }}-win64-${{ env.QT_VERSION }}
+        path: ./swag.zip

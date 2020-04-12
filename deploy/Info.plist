@@ -13,9 +13,9 @@
 	<key>CFBundleIdentifier</key>
 	<string>fr.a-team.swag</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.1RC</string>
+	<string>${DYLIB_CURRENT_VERSION}</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.1RC</string>
+	<string>${DYLIB_CURRENT_VERSION}</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>

@@ -58,11 +58,11 @@ OTHER_FILES +=  $$files(prez/*.*, true) \
                 $$files(swag/*.*, true)
 
 
-VERSION = 0.0.1RC
+VERSION = "$$cat($$PWD/Version.def)"
 message("building version $$VERSION")
 
 DEFINES += \
-    VERSION=\\\"$$VERSION\\\" \
+    VERSION=\\\"$${VERSION}\\\" \
 
 macx{
     ICON = swag.icns
@@ -73,7 +73,7 @@ macx{
     BUNDLED_FILES.path = Contents/MacOs
     QMAKE_BUNDLE_DATA += BUNDLED_FILES
 
-    QMAKE_INFO_PLIST = info.plist
+    QMAKE_INFO_PLIST = deploy/info.plist
     #Q_PRODUCT_BUNDLE_IDENTIFIER.name = PRODUCT_BUNDLE_IDENTIFIER
     #Q_PRODUCT_BUNDLE_IDENTIFIER.value = fr.a-team.swag
     #QMAKE_MAC_XCODE_SETTINGS += Q_PRODUCT_BUNDLE_IDENTIFIER

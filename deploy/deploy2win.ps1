@@ -21,5 +21,7 @@ robocopy .\deps .\deploy\windows\deps /MIR
 robocopy .\src .\deploy\windows\src /MIR
 robocopy .\examples .\deploy\windows\examples /MIR
 
+VERSION=$(cat ./Version.def); export VERSION
+
 echo ******create new zip
-Compress-Archive -path .\deploy\windows -destinationpath .\swag_windows_v0.0.1.zip -compressionlevel optimal
+Compress-Archive -path .\deploy\windows -destinationpath .\swag.zip -compressionlevel optimal

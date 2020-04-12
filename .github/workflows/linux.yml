@@ -1,13 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: build linux AppImage
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
     paths-ignore:
-      - '*.*' # deactive script for the time being
       - '*.md'
       - 'LICENSE'
       - '.gitignore'
@@ -62,8 +61,8 @@ jobs:
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
     - name: create appimage
       run: |
-          chmod a+x ./deploy2lin.sh
-          ./deploy2lin.sh "${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/"
+          chmod a+x ./deploy/deploy2lin.sh
+          ./deploy/deploy2lin.sh "${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/"
     - name: Upload
       uses: actions/upload-artifact@v2-preview
       with:

@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build windows zip
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -60,9 +60,9 @@ jobs:
     - name: create deploy
       shell: cmd
       run: |
-          call deploy2win.ps1 "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
+          call .\deploy\deploy2win.bat "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:
-        name: swag-win64-${{ env.QT_VERSION }}.zip
+        name: swag-win64-${{ env.QT_VERSION }}
         path: ./swag_windows_v0.0.1.zip

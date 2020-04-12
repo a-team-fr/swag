@@ -54,13 +54,14 @@ jobs:
     - name: build swag
       shell: cmd
       run: |
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           qmake -spec win32-msvc "CONFIG+=release"
           nmake
     - name: create deploy
       shell: pwsh
       run: |
-          .\deploy\deploy2win.ps1 "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
+          .\deploy\deploy2win.bat "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:

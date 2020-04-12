@@ -53,6 +53,7 @@ jobs:
       run: git submodule update --init
     - name: build swag
       run: |
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
           qmake "CONFIG+=release"
           make
     - name: download linuxdeployqt

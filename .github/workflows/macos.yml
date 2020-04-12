@@ -52,6 +52,7 @@ jobs:
       run: git submodule update --init
     - name: build swag
       run: |
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
           qmake -spec macx-clang "CONFIG+=release"
           make
     - name: create dmg

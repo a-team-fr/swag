@@ -58,9 +58,9 @@ jobs:
           qmake -spec win32-msvc "CONFIG+=release"
           nmake
     - name: create deploy
-      shell: cmd
+      shell: pwsh
       run: |
-          call .\deploy\deploy2win.ps1 "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
+          .\deploy\deploy2win.ps1 "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:

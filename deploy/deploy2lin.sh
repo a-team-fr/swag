@@ -48,4 +48,4 @@ VERSION=$(cat ./Version.def); export VERSION
 
 echo ******call linuxdeploy
 ./linuxdeployqt-continuous-x86_64.AppImage ./deploy/linux/usr/share/applications/swag.desktop -qmake="$PATH_TO_QT"gcc_64/bin/qmake -appimage -qmldir=./ -extra-plugins=iconengines,platformthemes,geometryloaders,geoservices,sceneparsers,webview
-mv ./Swag-$VERSION.AppImage ./Swag.AppImage
+mv ./Swag-$VERSION-x86_64.AppImage ./Swag.AppImage

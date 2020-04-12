@@ -1,4 +1,4 @@
-# s🤘ag  ![Build status](https://github.com/a-team-fr/swag/workflows/CI/badge.svg)
+# s🤘ag  ![build linux AppImage](https://github.com/a-team-fr/swag/workflows/build%20linux%20AppImage/badge.svg) ![Build windows zip](https://github.com/a-team-fr/swag/workflows/Build%20windows%20zip/badge.svg) ![Build macOS dmg](https://github.com/a-team-fr/swag/workflows/Build%20macOS%20dmg/badge.svg)
 A **free** presentation system based on QML  
 Swag is an effort to create a presentation system in QML.  
   * [Purpose and history](https://github.com/a-team-fr/swag/wiki) 

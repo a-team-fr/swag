@@ -56,10 +56,10 @@ jobs:
           make
     - name: create dmg
       run: |
-          chmod a+x ./deploy2mac.sh
-          ./deploy2mac.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
+          chmod a+x ./deploy/deploy2mac.sh
+          ./deploy/deploy2mac.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
     - name: Upload dmg
       uses: actions/upload-artifact@v1
       with:
-        name: swag-macos-${{ env.QT_VERSION }}.zip
+        name: swag-macos-${{ env.QT_VERSION }}
         path: ./deploy/macos/swag.dmg

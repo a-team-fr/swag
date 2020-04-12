@@ -1,6 +1,7 @@
 #deploy script for Windows
 #description : copy swag.exe to deploy directory and launch windeployqt
-#usage : .\deploy2win.bat
+#usage : powershell.exe -noprofile -executionpolicy bypass -file ".\deploy\deploy2win.ps1" (from swag root)
+#produce : ./Swag.AppImage (swag root dir)
 
 param ($qtpath='C:\Qt\5.14.2')
 
@@ -11,6 +12,7 @@ Start-Process "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC
 
 echo "******erase former deployement"
 Remove-Item ".\deploy\windows\bin\" -Recurse -ErrorAction Ignore
+Remove-Item ".\deploy\Output\" -Recurse -ErrorAction Ignore
 
 echo "******copy the newly build"
 New-Item -ItemType File -Path ".\deploy\windows\bin\swag.exe" -Force
@@ -25,4 +27,14 @@ copy-item .\src .\deploy\windows\src -Recurse -Force
 copy-item .\examples .\deploy\windows\examples -Recurse -Force
 
 echo "******create new zip"
-Compress-Archive -path .\deploy\windows -destinationpath .\swag.zip -compressionlevel optimal -Force
+#Compress-Archive -path .\deploy\windows -destinationpath .\swag.zip -compressionlevel optimal -Force
+
+
+echo "******create innosetup installer"
+$version = [IO.File]::ReadAllText("./Version.def")
+$issFile = ".\deploy\innoSetup.iss"
+(get-content $issFile).Replace('%%%VERSION%%%',$version) | Set-Content $issFile
+
+& "C:\Program Files (x86)\Inno Setup 6\iscc.exe" ".\deploy\innoSetup.iss"
+New-Item -ItemType File -Path ".\swag-setup.exe" -Force
+copy-item ".\deploy\Output\setup.exe" ".\swag-setup.exe" -Force

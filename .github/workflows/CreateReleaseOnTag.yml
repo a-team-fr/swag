@@ -11,8 +11,6 @@ jobs:
   release:
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
-    needs: build
-
     steps:
     - name: Create Release
       id: create_release

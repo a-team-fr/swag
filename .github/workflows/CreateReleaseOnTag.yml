@@ -1,0 +1,204 @@
+name: Release on Tag
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+env:
+  QT_VERSION: 5.14.2
+
+jobs:
+  release:
+    if: contains(github.ref, 'tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Store Release url
+      run: |
+        echo "${{ steps.create_release.outputs.upload_url }}" > ./upload_url
+
+    - uses: actions/upload-artifact@v1
+      with:
+        path: ./upload_url
+        name: upload_url
+  # GH is not offering a way to download artefact from other workflow runs
+  # hence the build_%OS% jobs are copy of dedicated workflows (windows.yml; macos.yml and linux.yml)
+  build_Linux:
+    needs: release
+    name: "linux Latest x64"
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: '${{ env.QT_VERSION }}'
+        host: 'linux'
+        target: 'desktop'
+        dir: '${{ github.workspace }}'
+        install-deps: 'true'
+        modules: 'qtcharts qtdatavis3d qtwebengine'
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
+        cached: 'false'
+    - name: fetch submodule
+      run: git submodule update --init
+    - name: build swag
+      run: |
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
+          qmake "CONFIG+=release"
+          make
+    - name: download linuxdeployqt
+      run: |
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+    - name: create appimage
+      run: |
+          chmod a+x ./deploy/deploy2lin.sh
+          ./deploy/deploy2lin.sh "${{ github.workspace }}/Qt/${{ env.QT_VERSION }}/"
+    #upload assets to release
+    - name: Download URL
+      uses: actions/download-artifact@v1
+      with:
+        name: upload_url
+        path: ./
+    - id: set_upload_url
+      run: |
+        upload_url=`cat ./upload_url`
+        echo ::set-output name=upload_url::$upload_url
+
+    - name: Upload to Release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./Swag.AppImage
+        asset_name: swag-v${{ env.VERSION }}-linux-${{ env.QT_VERSION }}.AppImage
+        asset_content_type: application/x-gtar
+
+  build_windows:
+    needs: release
+    name: "windows Latest x64"
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: '${{ env.QT_VERSION }}'
+        host: 'windows'
+        arch: 'win64_msvc2017_64'
+        target: 'desktop'
+        dir: '${{ github.workspace }}'
+        install-deps: 'true'
+        modules: 'qtcharts qtdatavis3d qtwebengine'
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
+        cached: 'false'
+    - name: fetch submodule
+      run: |
+          git submodule update --init
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
+    - name: build swag
+      shell: cmd
+      run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          qmake -spec win32-msvc "CONFIG+=release"
+          nmake
+    - name: create deploy
+      shell: pwsh
+      run: |
+          powershell.exe -noprofile -executionpolicy bypass -file ".\deploy\deploy2win.ps1" "${{ github.workspace }}\Qt\${{ env.QT_VERSION }}\"
+    - name: Upload dmg
+      uses: actions/upload-artifact@v1
+      with:
+        name: swag-v${{ env.VERSION }}-win64-${{ env.QT_VERSION }}
+        path: ./swag-setup.exe
+    #upload assets to release
+    - name: Download URL
+      uses: actions/download-artifact@v1
+      with:
+        name: upload_url
+        path: ./
+    - id: set_upload_url
+      run: |
+        upload_url=`cat ./upload_url`
+        echo ::set-output name=upload_url::$upload_url
+
+    - name: Upload to Release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./swag-setup.exe
+        asset_name: swag-v${{ env.VERSION }}-win64-${{ env.QT_VERSION }}.exe
+        asset_content_type: application/x-gtar
+
+  build_macos:
+    needs: release
+    name: "macOS Latest x64"
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: '${{ env.QT_VERSION }}'
+        host: 'mac'
+        target: 'desktop'
+        dir: '${{ github.workspace }}'
+        install-deps: 'true'
+        modules: 'qtcharts qtdatavis3d qtwebengine'
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
+        cached: 'false'
+
+    - name: fetch submodule
+      run: git submodule update --init
+    - name: build swag
+      run: |
+          echo "::set-env name=VERSION::$(cat ./Version.def)"
+          qmake -spec macx-clang "CONFIG+=release"
+          make
+    - name: create dmg
+      run: |
+          chmod a+x ./deploy/deploy2mac.sh
+          ./deploy/deploy2mac.sh "${{ github.workspace }}/qt/${{ env.QT_VERSION }}/"
+    - name: Upload dmg
+      uses: actions/upload-artifact@v1
+      with:
+        name: swag-v${{ env.VERSION }}-macos-${{ env.QT_VERSION }}
+        path: ./swag.dmg
+
+    #upload assets to release
+    - name: Download URL
+      uses: actions/download-artifact@v1
+      with:
+        name: upload_url
+        path: ./
+    - id: set_upload_url
+      run: |
+        upload_url=`cat ./upload_url`
+        echo ::set-output name=upload_url::$upload_url
+
+    - name: Upload to Release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./swag.dmg
+        asset_name: swag-v${{ env.VERSION }}-macos-${{ env.QT_VERSION }}
+        asset_content_type: application/x-gtar
+  

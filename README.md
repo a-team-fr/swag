@@ -61,4 +61,4 @@ git submodule update --init
 * **v0.1.0** : good enough to create presentation. First official version using a somewhat standardized document format. Swag contains all classic presentation features together with advanced features. Swag might be used to experiment others application (dynamic report, book, training support...). This milestone should be reached somewhere around April 2021.
 * **v1.0.0** : good enough to create any kind of application. Swag is a mature solution to handle a number of uses cases, backed with a generous toolbox it can be used to generate easily anykind of application. This milestone might be reached somewhere around April 2030.
 
-Feel free to review and contribute to the [project roadmap](https://github.com/a-team-fr/swag/projects).
+Feel free to review and contribute to the [project roadmap](https://github.com/a-team-fr/swag/wiki/Roadmap).

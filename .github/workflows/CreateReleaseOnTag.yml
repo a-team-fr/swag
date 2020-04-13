@@ -86,7 +86,7 @@ jobs:
         upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
         asset_path: ./Swag.AppImage
         asset_name: swag-v${{ env.VERSION }}-linux-${{ env.QT_VERSION }}.AppImage
-        asset_content_type: application/x-gtar
+        asset_content_type: application/x-iso9660-image
 
   build_windows:
     needs: release
@@ -144,7 +144,7 @@ jobs:
         upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
         asset_path: ./swag-setup.exe
         asset_name: swag-v${{ env.VERSION }}-win64-${{ env.QT_VERSION }}.exe
-        asset_content_type: application/x-gtar
+        asset_content_type: application/x-executable
 
   build_macos:
     needs: release
@@ -200,5 +200,4 @@ jobs:
         upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
         asset_path: ./swag.dmg
         asset_name: swag-v${{ env.VERSION }}-macos-${{ env.QT_VERSION }}
-        asset_content_type: application/x-gtar
-  
+        asset_content_type: application/x-iso9660-image

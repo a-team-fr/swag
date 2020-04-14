@@ -12,7 +12,7 @@ Here are some important resources:
   * Chat: [Mattermost on Framateam](https://framateam.org/signup_user_complete/?id=qi4a83iynjrwu8b7r91sa631cr).
   * [Wiki](https://github.com/a-team-fr/swag/wiki)
   * Faq : [Question2Answer](https://faq.swagsoftware.net)
-  * [Doxygen](https://github.com/a-team-fr/swag/wiki)
+  * [Doxygen](https://a-team-fr.github.io/swag/html/)
   
 
 

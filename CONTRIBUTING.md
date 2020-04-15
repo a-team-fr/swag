@@ -26,7 +26,7 @@ Here are some important resources:
   * [Pull Requests](#pull-requests)
   
 ## Code of Conduct
-This project and everyone participating in it is governed by the [Swag Code of Conduct](CODE_OF_CONDUCT.md). 
+This project and everyone participating in it is governed by the [Swag Code of Conduct](https://github.com/a-team-fr/swag/blob/master/CODE_OF_CONDUCT.md). 
 By participating, you are expected to uphold this code. 
 Please report unacceptable behavior to [gcharbonnier@a-team.fr](mailto:gcharbonnier@a-team.fr).
 

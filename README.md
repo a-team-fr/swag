@@ -33,11 +33,12 @@ The following platforms are supported:
 ## Compiling Swag  
 
 <details><summary>prerequisite</summary>
+
  * Qt Sdk installed (>Qt5.14.2) with QtWebView module. Depending of Swag content, optional modules such as QtCharts, QtDataViz, QtWebView might be required.
- * build tools
-   * MacOs : install XCode
-   * Windows : install MSVisualStudio or MinGW
-   * Linux : apt-get install build-essentials
+ * build tools  
+   * MacOs : install XCode  
+   * Windows : install MSVisualStudio or MinGW  
+   * Linux : apt-get install build-essentials  
 </details>
 
 1. git clone the project and get its submodules

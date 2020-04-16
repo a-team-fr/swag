@@ -24,7 +24,7 @@ The following platforms are supported:
   * Launch
 </details>
 
-* macOS <details><summary>(installation details)</summary>
+* macOS >=10.13 <details><summary>(installation details)</summary>
   * From the [release page](https://github.com/a-team-fr/swag/releases/latest), download the DMG container.
   * Open the container and move the Swap.app into your applications folder
   * Authorize execution of swag from the security panel of the sytem settings

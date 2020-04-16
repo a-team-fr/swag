@@ -1,0 +1,39 @@
+Font\+Awesome.\+pri bundle Font\+Awesome font and icon table into a single module for Q\+ML project.\hypertarget{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Features}\label{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md1}
+
+\begin{DoxyEnumerate}
+\item Installable by qpm
+\item Work well with Qt Quick Designer. Able to show icons in \char`\"{}\+Design\char`\"{} mode
+\item Auto completion of icon name works in Qt Creator.
+\end{DoxyEnumerate}\hypertarget{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md2}{}\doxysection{Example}\label{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md2}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{import QtQuick 2.0}
+\DoxyCodeLine{import FontAwesome 1.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{Text \{}
+\DoxyCodeLine{  // The font will be loaded once the singleton object, FontAwesome, is referred in the application.}
+\DoxyCodeLine{  text: FontAwesome.addressBook}
+\DoxyCodeLine{  font.family: FontAwesome.fontFamily }
+\DoxyCodeLine{\}}
+\end{DoxyCode}
+
+
+\hypertarget{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md3}{}\doxysection{Installation}\label{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md3}
+Install Font\+Awesome.\+pri by qpm\+: \begin{DoxyVerb}qpm install font.awesome.pri
+\end{DoxyVerb}
+
+
+Add \char`\"{}qrc\+://\char`\"{} to your Q\+ML import path \begin{DoxyVerb}engine.addImportPath("qrc:///"); // QQmlEngine
+\end{DoxyVerb}
+\hypertarget{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md4}{}\doxysection{A\+PI}\label{md_build_swag_8app__contents__mac_os_deps_fontawesome_8pri__r_e_a_d_m_e_autotoc_md4}
+{\bfseries{Font\+Awesome}}
+
+Font\+Awesome is a signleton object. Once it is referred in your code, it will load the font into memory. Then it will be available for all other components. Therefore, it is recommended to refer it on main.\+qml.
+
+{\bfseries{Font\+Awesome.\+font\+Family}}
+
+It hold the font name. You may pass to the {\ttfamily font.\+family} in Text component
+
+{\bfseries{Icon Table}}
+
+Moreover, Font\+Awesome object also hold a icon table. For complete icon list, please check the source of \href{https://github.com/benlau/fontawesome.pri/blob/master/FontAwesome/FontAwesome.qml}{\texttt{ Font\+Awesome.\+qml}} file. 

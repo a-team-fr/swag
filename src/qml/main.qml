@@ -72,7 +72,7 @@ ApplicationWindow {
         width:parent.width - x - elementToolBox.width
         height:parent.height
 
-        showEditor:NavMan.showDocumentCode && NavMan.isCodeShowable
+        showEditor:NavMan.showDocumentCode
         style : NavMan.settings.defaultSyntaxHighlightingStyle
         code : pm.readSlideQMLCode( pm.slideSelected)
         rendererSource : pm.displayUrl
@@ -86,16 +86,6 @@ ApplicationWindow {
                 NavMan.currentDocument = renderedItem
         }
 
-        function forceReload(){
-            rendererSource =""
-            qmlEngine.clearCache();
-            rendererSource = Qt.binding(function(){ return pm.displayUrl;})
-        }
-
-        Connections{
-            target:NavMan
-            onForceReload:renderer.forceReload()
-        }
     }
 
     Button{
@@ -105,7 +95,7 @@ ApplicationWindow {
         visible:renderer.showEditor
         onClicked: {
             pm.writeDocument(pm.urlSlide(), renderer.code)
-            renderer.forceReload()
+            pm.reload()
         }
     }
 

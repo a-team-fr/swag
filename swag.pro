@@ -64,6 +64,13 @@ message("building version $$VERSION")
 DEFINES += \
     VERSION=\\\"$${VERSION}\\\" \
 
+SRCDIR =
+CONFIG(debug, debug|release) {
+    SRCDIR = $$PWD
+} else {
+}
+DEFINES += SRCDIR=\\\"$${SRCDIR}\\\" \
+
 macx{
     ICON = swag.icns
 

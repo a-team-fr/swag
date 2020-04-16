@@ -21,12 +21,9 @@
 ****************************************************************************/
 #include <QGuiApplication>
 #include <QApplication>
-#include <QQmlContext>
 #include <QDebug>
 #include <QIcon>
-#include "src/qttshelper.hpp"
 #include "src/prezmanager.h"
-#include "src/qclearablecacheqmlengine.hpp"
 
 
 int main(int argc, char *argv[])
@@ -41,25 +38,6 @@ int main(int argc, char *argv[])
 
 
     PrezManager prezManager;
-    QClearableCacheQmlEngine engine;
-    engine.addImportPath( "qrc:/");
-    qDebug() << engine.importPathList();
-
-    engine.rootContext()->setContextProperty("appVersion", QString(VERSION)); //QMake defined
-    engine.rootContext()->setContextProperty("qmlEngine", &engine);
-    QTTSHelper tts( engine.rootContext() );
-    qmlRegisterUncreatableType<PrezManager>("fr.ateam.swag", 1, 0, "PM","uncreatable type, only for enum");
-
-    engine.rootContext()->setContextProperty("pm", &prezManager);
-    qmlRegisterSingletonType( QUrl("qrc:/src/qml/NavigationSingleton.qml"),"fr.ateam.swag", 1, 0,"NavMan");
-
-    const QUrl url(QStringLiteral("qrc:/src/qml/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
 
     return app.exec();
 }

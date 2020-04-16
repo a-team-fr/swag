@@ -32,6 +32,9 @@
 #include <QDebug>
 #include <QEventLoop>
 #include "pdfexporter.h"
+#include <QQmlContext>
+#include <QTimer>
+#include "src/qclearablecacheqmlengine.hpp"
 
 /**
  * @brief The PrezManager class (the Swag C++ backend, available in QML engine as "pm")
@@ -41,14 +44,26 @@ class PrezManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString installPath READ installPath WRITE setInstallPath  NOTIFY installPathChanged)                                        ///root of the installation : default applicationDirectory
-    Q_PROPERTY(QString slideDecksFolderPath READ slideDecksFolderPath WRITE setSlideDecksFolderPath  NOTIFY slideDecksFolderPathChanged)    ///where the swag documents are stored : default DocumentsLocation/swag
-
-    Q_PROPERTY(bool loaded MEMBER m_loaded NOTIFY prezLoaded)                                                                               ///when a swag is load (currentSlideDeckPath is not empty)
+    /**
+     * @brief root of the installation : default applicationDirectory
+     */
+    Q_PROPERTY(QString installPath READ installPath WRITE setInstallPath  NOTIFY installPathChanged)
+    /**
+     * @brief where the swag documents are stored : default DocumentsLocation/swag
+     */
+    Q_PROPERTY(QString slideDecksFolderPath READ slideDecksFolderPath WRITE setSlideDecksFolderPath  NOTIFY slideDecksFolderPathChanged)
+    /**
+     * @brief when a swag is loaded (i.e currentSlideDeckPath is not empty)
+     */
+    Q_PROPERTY(bool loaded MEMBER m_loaded NOTIFY prezLoaded)
+    /**
+     * @brief
+     */
     Q_PROPERTY(bool pendingChanges MEMBER m_pendingChanges NOTIFY pendingChangesChanged)
-
-    Q_PROPERTY(QString currentSlideDeckPath MEMBER m_currentSlideDeckPath NOTIFY prezLoaded)                                                //full path to the currently opened swag document
-
+    /**
+     * @brief full path to the currently opened swag document
+     */
+    Q_PROPERTY(QString currentSlideDeckPath MEMBER m_currentSlideDeckPath NOTIFY prezLoaded)
     Q_PROPERTY(QJsonArray lstSlides READ lstSlides NOTIFY slidesReordered)
     Q_PROPERTY(QJsonObject prezProperties MEMBER m_prezProperties NOTIFY prezLoaded)
     Q_PROPERTY(QString defaultBackground READ defaultBackround NOTIFY prezLoaded)
@@ -57,8 +72,6 @@ class PrezManager : public QObject
     Q_PROPERTY(QString title READ title NOTIFY slideChanged)
     Q_PROPERTY(QUrl displayUrl READ currentDisplay NOTIFY slideChanged)
     Q_PROPERTY(bool isSlideDisplayed READ isSlideDisplayed NOTIFY slideChanged)
-
-    Q_PROPERTY(bool isSlideFromQrc READ isSlideFromQrc NOTIFY slideChanged)
 
     Q_PROPERTY(DisplayType displayType READ displayType WRITE setDisplayType NOTIFY displayTypeChanged)
 
@@ -76,6 +89,11 @@ public:
     explicit PrezManager(QObject *parent = nullptr);
     ~PrezManager();
 
+    /**
+     * @brief startSwagApp create the QMLEngine and load main.qml document
+     */
+    void startSwagApp();
+
 signals:
     void prezLoaded();
     void slideChanged();
@@ -86,7 +104,10 @@ signals:
     void slideExported();
     void slideDecksFolderPathChanged();
 
+
 public slots:
+    void reload();
+
     /**
      * @brief readDocument - low level document reading
      * @param documentPath
@@ -137,17 +158,22 @@ public slots:
 
     /**
      * @brief lookForLocalFile
-     *
      * @param url of the file as entered by the user
-     * @return the file path possibly transformed
+     * @return url of the local file path possibly transformed
      */
     QUrl lookForLocalFile(const QString& url) const;
+
 
 
 
 private:
     QString installPath() const;
     void setInstallPath(QString newPath) ;
+    /**
+     * @brief documentUrl
+     * @return return a local file path
+     */
+    QUrl documentUrl(const QString& docName, const QString& dir = "src/qml/") const;
 
     QString slideDecksFolderPath() const;
     void setSlideDecksFolderPath(const QString& newPath);
@@ -155,25 +181,14 @@ private:
     QJsonArray lstSlides() const{ return m_prezProperties.value("slides").toArray();}
 
 
-    /**
-     * @brief ressourcePrefix
-     * @return return either a file path or qrc uri
-     */
-    QString ressourcePrefix() const;
 
-    DisplayType m_displayType = Welcome;
-    void  setDisplayType(DisplayType request);
+
+    DisplayType m_displayType = Welcome;                    /// cached value of the displayType member
+    void  setDisplayType(DisplayType request);              ///
     DisplayType displayType() const;
 
     QUrl currentDisplay() const;
     bool isSlideDisplayed() const;
-
-    /**
-     * @brief isSlideFromQrc
-     * @return true if url starts with "qrc"
-     */
-    bool isSlideFromQrc()const;
-
 
     QString title() const;
     QString defaultBackround() const;
@@ -196,6 +211,10 @@ private:
     PDFExporter* m_pPDFExporter = nullptr;
 
     mutable QString m_installPath ="";
+
+    QClearableCacheQmlEngine* m_pEngine = nullptr;
+
+    bool m_isDevelopmentPhase = !QString(SRCDIR).isEmpty();     //
 };
 
 #endif

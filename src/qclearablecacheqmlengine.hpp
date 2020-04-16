@@ -23,16 +23,52 @@
 #define QCLEARABLECACHEQMLENGINE_HPP
 
 #include <QQmlApplicationEngine>
+#include <QQuickWindow>
 
 class QClearableCacheQmlEngine : public QQmlApplicationEngine
 {
     Q_OBJECT
-public:
 
+public slots:
 
-    Q_INVOKABLE void clearCache(){
+    void load(const QString& filePath) {
+        QQmlApplicationEngine::load(filePath);
+        m_url = QUrl::fromLocalFile( filePath );
+    }
+
+    void load(const QUrl& url) {
+        QQmlApplicationEngine::load(url);
+        m_url = url;
+    }
+
+    void close()
+    {
+        QObject* pRootObject = rootObjects().first();
+        Q_ASSERT( pRootObject != NULL );
+        QQuickWindow* pMainWindow = qobject_cast<QQuickWindow*>(pRootObject);
+        Q_ASSERT( pMainWindow );
+        pMainWindow->close();
+        for (auto obj : rootObjects())
+            obj->deleteLater();
+    }
+
+    void reload()
+    {
+
+        close();
+
+        clearComponentCache();
+
+        load(m_url);
+    }
+
+    void clearCache()
+    {
         clearComponentCache();
     }
+
+private:
+    QUrl m_url;
 
 };
 

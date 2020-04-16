@@ -61,7 +61,7 @@ Item {
     signal sigPrevious(bool ForcetoSlide);
     signal sigNext(bool ForcetoSlide);
     signal navigationFocusChanged(var item );
-    signal forceReload()
+
     //signal rebuildNavigationFocusList( );
     //signal triggerElementPositionner(var element); //root is to be an Element item
 
@@ -83,7 +83,7 @@ Item {
         {
             currentSlide.saveDocument( );
             if (reloadIfNeeded)
-                forceReload();
+                pm.reload();
         }
     }
 
@@ -149,7 +149,7 @@ Item {
     Shortcut {
         sequence: "Ctrl+R"
         context: Qt.ApplicationShortcut
-        onActivated: actionReloadSlide(true)
+        onActivated: pm.reload();
     }
     Shortcut {
         sequence: "Ctrl+S"
@@ -186,7 +186,6 @@ Item {
                 kinda output (usefull properties with readonly binding)
     ------------------------------------------------------------------------------------------*/
     //readonly property string idAliasRoleName : "fileName"
-    readonly property bool isCodeShowable : pm.isSlideFromQrc
 
 
 

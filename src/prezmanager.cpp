@@ -40,10 +40,52 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
             load( QDir(pathLastPrezOpened));
     }
 
+    startSwagApp();
+
 }
-PrezManager::~PrezManager(){
+PrezManager::~PrezManager()
+{
     if (m_pendingChanges)
         saveToDisk();
+    delete m_pEngine;
+}
+
+void PrezManager::reload()
+{
+    if ( m_isDevelopmentPhase)
+        startSwagApp();    //Reload everything QML
+    else {
+        //Reload current QML document
+        m_pEngine->clearCache();
+        emit slideChanged();
+    }
+}
+
+void PrezManager::startSwagApp()
+{
+    QClearableCacheQmlEngine* pOldEngine = m_pEngine;
+    if (m_pEngine)
+        m_pEngine->close();
+
+
+    m_pEngine = new QClearableCacheQmlEngine();
+    m_pEngine->addImportPath( "qrc:/");
+
+    m_pEngine->rootContext()->setContextProperty("appVersion", QString(VERSION)); //QMake defined
+    //m_pEngine->rootContext()->setContextProperty("qmlEngine", m_pEngine);
+
+    qmlRegisterUncreatableType<PrezManager>("fr.ateam.swag", 1, 0, "PM","uncreatable type, only for enum");
+
+    m_pEngine->rootContext()->setContextProperty("pm", this);
+    qmlRegisterSingletonType( documentUrl("NavigationSingleton.qml"),"fr.ateam.swag", 1, 0,"NavMan");
+
+    m_pEngine->load(documentUrl("main.qml"));
+
+    if (pOldEngine)
+        pOldEngine->deleteLater();
+
+
+
 }
 
 void PrezManager::savePrezSettings(QString key, QVariant value)
@@ -83,9 +125,7 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
     QJsonArray slides = lstSlides();
     QJsonValue slide = slides.takeAt(selectedSlide);
     newPos = std::min(newPos, slides.count());
-    //if (selectedSlide < newPos) newPos++;
     slides.insert(newPos, slide);
-    //m_prezProperties.remove("slides");
     m_prezProperties.insert("slides", slides);
     emit slidesReordered();
     qDebug()<<"ok";
@@ -94,11 +134,14 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 
 QString PrezManager::installPath() const
 {
-    //QString ret = m_settings.value("installPath").toString();
+    if (!m_installPath.isEmpty())
+        return m_installPath;
 
-    if (m_installPath.isEmpty()) //fallback
-    {
-
+    QString sourceDir (SRCDIR);
+    if (!sourceDir.isEmpty())
+        m_installPath = sourceDir;
+    else {
+        //fallback
         QDir wd( QCoreApplication::applicationDirPath());
         #ifdef Q_OS_MACOS
         //application is inside swag/bin/swag.app/contents/MacOS
@@ -116,6 +159,7 @@ QString PrezManager::installPath() const
         //m_settings.setValue("installPath", m_installPath);
 
     }
+    qDebug() << "install path is :" << m_installPath;
     return m_installPath;
 }
 
@@ -126,7 +170,8 @@ void PrezManager::setInstallPath(QString newPath)
         tmpDir = QDir( QUrl(newPath).toLocalFile());
     if ( !tmpDir.exists() ) return;
 
-    m_settings.setValue("installPath", tmpDir.path());
+    //m_settings.setValue("installPath", tmpDir.path());
+    m_installPath = newPath;
     emit installPathChanged();
 }
 
@@ -158,12 +203,11 @@ void PrezManager::setSlideDecksFolderPath(const QString& newPath)
 
 
 
-QString PrezManager::ressourcePrefix() const
+QUrl PrezManager::documentUrl(const QString& docName, const QString& dir) const
 {
-    QString prefix = "qrc:/";
-    if (!installPath().isEmpty() )
-        prefix = "file:"+installPath()+"/";
-    return prefix;
+
+    return "file:"+installPath()+"/"+dir+docName;
+
 }
 
 QString PrezManager::readSlideQMLCode(int idxSlide) const
@@ -369,27 +413,22 @@ bool PrezManager::isSlideDisplayed() const{
             (m_displayType == Slide_Loader) );
 }
 
-bool PrezManager::isSlideFromQrc() const
-{
-    return urlSlide().scheme()!="qrc";
-}
-
 QUrl PrezManager::currentDisplay() const
 {
-    QString prefix = ressourcePrefix();
+    QString prefix = "file:"+installPath()+"/";
     switch(m_displayType)
     {
-        case Welcome: return QUrl(prefix+"src/qml/Welcome.qml");
-        case About: return QUrl(prefix+"src/qml/About.qml");
-        case GlobalSettings: return QUrl(prefix+"src/qml/SettingsPage.qml");
-        case PrezSettings: return QUrl(prefix+"src/qml/PrezInfo.qml");
-        case SlideSettings: return QUrl(prefix+"src/qml/SlideInfo.qml");
-        case SlideExport: return QUrl(prefix+"src/qml/SlidesExporter.qml");
+        case Welcome: return documentUrl("Welcome.qml");
+        case About: return documentUrl("About.qml");
+        case GlobalSettings: return documentUrl("SettingsPage.qml");
+        case PrezSettings: return documentUrl("PrezInfo.qml");
+        case SlideSettings: return documentUrl("SlideInfo.qml");
+        case SlideExport: return documentUrl("SlidesExporter.qml");
 
         //Cases where a slide is displayed
-        case Slide_ListView:return QUrl(prefix+"src/qml/ListViewDisplay.qml");
+        case Slide_ListView:return documentUrl("ListViewDisplay.qml");
     case Slide:
-        case Slide_FlatView:return QUrl(prefix+"src/qml/FlatViewDisplay.qml");
+        case Slide_FlatView:return documentUrl("FlatViewDisplay.qml");
         case Slide_Loader: return urlSlide();
 
     }

@@ -47,13 +47,9 @@ ToolBar{
                 width : parent.width - height - closeButton.width
                 height:parent.height
                 visible:!NavMan.editMode
-                //Layout.alignment: Qt.AlignVCenter
                 minimumPointSize:5
                 fontSizeMode:Text.Fit
                 font.pointSize : 50
-                //horizontalAlignment: Text.AlignHCenter
-                //verticalAlignment: Text.AlignTop
-
                 text: pm.title
             }
             TextField{
@@ -61,7 +57,7 @@ ToolBar{
                 height:parent.height
                 visible:NavMan.editMode
                 text: pm.title
-                onTextEdited: pm.saveSlideSettings("title", text)
+                onEditingFinished: pm.saveSlideSettings("title", text)
             }
             FAButton{
                 id:closeButton

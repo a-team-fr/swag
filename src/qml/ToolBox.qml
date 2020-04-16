@@ -30,6 +30,10 @@ Frame{
     width:visible ?  70: 0
     height:parent.height
 
+    Component.onCompleted: {
+        if (NavMan.settings.loadElement3d)
+            lstTools.append({icon:"\uf1b3", elementType:"Entity3DElement.qml",tooltip:qsTr("Add a 3D element")})
+    }
     ListModel{
         id:lstTools
         ListElement{
@@ -107,11 +111,11 @@ Frame{
             elementType:"TocElement.qml"
             tooltip:qsTr("Add a Table of Content element")
         }
-        ListElement{
-            icon: "\uf1b3"//FontAwesome.cubes
-            elementType:"Entity3DElement.qml"
-            tooltip:qsTr("Add a 3D element")
-        }
+//        ListElement{
+//            icon: "\uf1b3"//FontAwesome.cubes
+//            elementType:"Entity3DElement.qml"
+//            tooltip:qsTr("Add a 3D element")
+//        }
     }
 
     Flickable {

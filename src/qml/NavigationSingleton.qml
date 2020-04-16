@@ -38,6 +38,7 @@ Item {
 
     property var settings : Settings{
         property bool openLastPrezAtStartup : false
+        property bool loadElement3d: false //Qt.platform.os !== "windows" || Qt.platform.os === "osx" )
         property string defaultSyntaxHighlightingStyle : "default"
         property alias windowWidth : root.windowWidth
         property alias windowHeight : root.windowHeight

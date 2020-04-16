@@ -73,8 +73,8 @@ Element {
         return dump.slideDump;
     }
 
-    contentItem: Qt.platform.os === "windows" ? fallback : cmp3d
-    property var fallback : Label{ color:"red"; anchors.fill:parent; text: qsTr("Entity3dElement is not supported on this OS")}
+    contentItem: NavMan.settings.loadElement3d ? cmp3d : fallback
+    property var fallback : Label{ color:"red"; anchors.fill:parent; text: qsTr("Entity3dElement disabled (known issues reported), you can override from the settings")}
     property var cmp3d : Scene3D {
         id: scene3d
         focus: true

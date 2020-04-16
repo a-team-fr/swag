@@ -67,14 +67,14 @@ Frame{
                         placeholderText: qsTr("install path is not defined")
                         placeholderTextColor: "red"
                     }
-                    Button{
-                        text:"..."
-                        onClicked:  {
-                            fileDialog.modifyInstallPath = true
-                            fileDialog.folder = pm.installPath
-                            fileDialog.open()
-                        }
-                    }
+//                    Button{
+//                        text:"..."
+//                        onClicked:  {
+//                            fileDialog.modifyInstallPath = true
+//                            fileDialog.folder = pm.installPath
+//                            fileDialog.open()
+//                        }
+//                    }
                 }
             }
             GroupBox{
@@ -105,6 +105,11 @@ Frame{
                 text:qsTr("Open last document at startup")
                 checked : NavMan.settings.openLastPrezAtStartup
                 onToggled: NavMan.settings.openLastPrezAtStartup = checked
+            }
+            Switch{
+                text:qsTr("enable Element3d")
+                checked : NavMan.settings.loadElement3d
+                onToggled: NavMan.settings.loadElement3d = checked
             }
 
             GroupBox{

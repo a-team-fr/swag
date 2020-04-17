@@ -52,6 +52,7 @@ PrezManager::~PrezManager()
 
 void PrezManager::reload()
 {
+    m_pEngine->clearCache();
     if ( m_isDevelopmentPhase)
         startSwagApp();    //Reload everything QML
     else {
@@ -64,8 +65,11 @@ void PrezManager::reload()
 void PrezManager::startSwagApp()
 {
     QClearableCacheQmlEngine* pOldEngine = m_pEngine;
-    if (m_pEngine)
-        m_pEngine->close();
+    if (pOldEngine)
+    {
+        pOldEngine->close();
+        pOldEngine->deleteLater();
+    }
 
 
     m_pEngine = new QClearableCacheQmlEngine();
@@ -80,10 +84,6 @@ void PrezManager::startSwagApp()
     qmlRegisterSingletonType( documentUrl("NavigationSingleton.qml"),"fr.ateam.swag", 1, 0,"NavMan");
 
     m_pEngine->load(documentUrl("main.qml"));
-
-    if (pOldEngine)
-        pOldEngine->deleteLater();
-
 
 
 }

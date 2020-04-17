@@ -69,10 +69,10 @@ void PrezManager::startSwagApp()
 
 
     m_pEngine = new QClearableCacheQmlEngine();
-    m_pEngine->addImportPath( "qrc:/");
+    m_pEngine->addImportPath( documentUrl("","").toLocalFile());
+    m_pEngine->addImportPath( "qrc:");
 
     m_pEngine->rootContext()->setContextProperty("appVersion", QString(VERSION)); //QMake defined
-    //m_pEngine->rootContext()->setContextProperty("qmlEngine", m_pEngine);
 
     qmlRegisterUncreatableType<PrezManager>("fr.ateam.swag", 1, 0, "PM","uncreatable type, only for enum");
 

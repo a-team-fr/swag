@@ -28,7 +28,6 @@ HEADERS += \
     src/qttshelper.hpp
 
 RESOURCES += qml.qrc \
-            Swag.qrc
 
 TARGET.CAPABILITY += SwEvent
 

@@ -7,23 +7,5 @@
         <file>gpl-3.0.md</file>
         <file>res/qt.png</file>
         <file>res/SwagLogo.iconset/icon1024.png</file>
-        <file>src/qml/main.qml</file>
-        <file>src/qml/ToolBox.qml</file>
-        <file>src/qml/About.qml</file>
-        <file>src/qml/Welcome.qml</file>
-        <file>src/qml/NavigationSingleton.qml</file>
-        <file>src/qml/PrezInfo.qml</file>
-        <file>src/qml/SettingsPage.qml</file>
-        <file>src/qml/LeftMenu.qml</file>
-        <file>src/qml/MainMenu.qml</file>
-        <file>src/qml/SlideInfo.qml</file>
-        <file>src/qml/slideViewer.qml</file>
-        <file>src/qml/UploadPanel.qml</file>
-        <file>src/qml/SlidesExporter.qml</file>
-        <file>src/qml/ListViewDisplay.qml</file>
-        <file>src/qml/Header.qml</file>
-        <file>src/qml/Footer.qml</file>
-        <file>src/qml/FocusNavigator.qml</file>
-        <file>src/qml/FlatViewDisplay.qml</file>
     </qresource>
 </RCC>

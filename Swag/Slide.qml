@@ -193,26 +193,6 @@ Control{
         }
     }
 
-    ElementEditor{
-        id:elementEditor
-        visible:NavMan.editMode && target && slide.isSelected
-        target : NavMan.elementItemToModify
-        closePolicy: Popup.NoAutoClose
-        anchors.centerIn:parent
-        width: slide.width //* 0.9
-        height: slide.height //* 0.9
-        onDone:{
-            NavMan.elementItemToModify=null
-            NavMan.actionReloadSlide(true);
-        }
-
-    }
-
-
-
-
-
-
 
 }
 

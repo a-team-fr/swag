@@ -163,16 +163,19 @@ Element {
     editorComponent: Component {
         Column {
             width: parent.width
-
-            Switch{
+            spacing : 3
+            SwitchDelegate{
                 text:qsTr("clickable")
                 checked:target.clickable
                 onToggled: target.clickable = checked
+                width: parent.width
             }
 
             GroupBox{
                 title:qsTr("frontLayout")
+                width: parent.width
                 ComboBox{
+                    width: parent.width
                     model: ["Overlapped", "ImageLeft", "TextLeft"]
                     currentIndex: target.frontLayout
                     onActivated: target.frontLayout = currentIndex
@@ -197,17 +200,18 @@ Element {
                 }
             }
 
-            GroupBox{
-                title:qsTr("frontTextFill")
-                CheckBox{
-                    checked: target.frontTextFill
-                    onToggled: target.frontTextFill = checked
-                }
+            CheckDelegate{
+                text:qsTr("frontTextFill")
+                width: parent.width
+                checked: target.frontTextFill
+                onToggled: target.frontTextFill = checked
             }
 
             GroupBox{
                 title:qsTr("backLayout")
+                width: parent.width
                 ComboBox{
+                    width: parent.width
                     model: ["Overlapped", "ImageLeft", "TextLeft"]
                     currentIndex: target.backLayout
                     onActivated: target.backLayout = currentIndex
@@ -232,12 +236,11 @@ Element {
                 }
             }
 
-            GroupBox{
-                title:qsTr("backTextFill")
-                CheckBox{
-                    checked: target.backTextFill
-                    onToggled: target.backTextFill = checked
-                }
+            CheckDelegate{
+                text:qsTr("backTextFill")
+                width: parent.width
+                checked: target.backTextFill
+                onToggled: target.backTextFill = checked
             }
 
 

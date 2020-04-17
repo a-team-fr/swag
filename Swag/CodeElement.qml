@@ -81,27 +81,24 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
-
-            GroupBox{
-                title:qsTr("Show")
+            spacing:2
+            SwitchDelegate{
+                text:qsTr("showEditor")
+                checked: target ? target.showEditor : false
+                onToggled: target.showEditor = checked
                 width:parent.width
-                Row{
-                    Switch{
-                        text:qsTr("showEditor")
-                        checked: target ? target.showEditor : false
-                        onToggled: target.showEditor = checked
-                    }
-                    Switch{
-                        text:qsTr("showRenderer")
-                        checked: target ? target.showRenderer : false
-                        onToggled: target.showRenderer = checked
-                    }
-                    Switch{
-                        text:qsTr("showEditorPanel")
-                        checked: target ? target.showEditorPanel : false
-                        onToggled: target.showEditorPanel = checked
-                    }
-                }
+            }
+            SwitchDelegate{
+                text:qsTr("showRenderer")
+                checked: target ? target.showRenderer : false
+                onToggled: target.showRenderer = checked
+                width:parent.width
+            }
+            SwitchDelegate{
+                text:qsTr("showEditorPanel")
+                checked: target ? target.showEditorPanel : false
+                onToggled: target.showEditorPanel = checked
+                width:parent.width
             }
             GroupBox{
                 title:qsTr("Code")

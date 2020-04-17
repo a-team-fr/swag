@@ -69,6 +69,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
+            spacing : 3
             GroupBox{
                 title:qsTr("onEditingFinished:")
                 width:parent.width
@@ -100,7 +101,9 @@ Element{
             }
             GroupBox{
                 title:qsTr("wrapMode")
+                width:parent.width
                 ComboBox{
+                    width:parent.width
                     model: ["No wrap", "WordWrap", "--reserved--", "WrapAnywhere", "Wrap"]
                     currentIndex: currentIndex = target.wrapMode
                     onActivated: target.wrapMode = currentIndex

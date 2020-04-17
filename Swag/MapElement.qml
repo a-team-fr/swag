@@ -74,7 +74,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
-
+            spacing :3
             GroupBox{
                 title:qsTr("centerLatitude")
                 width:parent.width
@@ -93,14 +93,11 @@ Element{
                     onEditingFinished: target.centerLongitude = Number(text)
                 }
             }
-            GroupBox{
-                title:qsTr("usePositionSource")
+            SwitchDelegate{
+                text:qsTr("usePositionSource")
                 width:parent.width
-                Switch{
-                    width:parent.width
-                    checked:target ? target.usePositionSource : false
-                    onCheckableChanged: target.usePositionSource = checked
-                }
+                checked:target ? target.usePositionSource : false
+                onCheckableChanged: target.usePositionSource = checked
             }
             GroupBox{
                 title:qsTr("zoomLevel")
@@ -124,7 +121,9 @@ Element{
             }
             GroupBox{
                 title:qsTr("pluginName")
+                width:parent.width
                 ComboBox{
+                    width:parent.width
                     model: ["osm", "esri", "mapboxgl"]
                     currentIndex: target ? currentIndex = indexOfValue(target.pluginName) : 0
                     onActivated: {
@@ -134,8 +133,10 @@ Element{
                 }
             }
             GroupBox{
+                width:parent.width
                 title:qsTr("activeMapType")
                 ComboBox{
+                    width:parent.width
                     model: content.supportedMapTypes
                     textRole:"name"
                     currentIndex: target ? target.activeMapTypeIndex : 0

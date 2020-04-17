@@ -92,6 +92,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
+            spacing :2
             GroupBox{
                 title:qsTr("Text")
                 width:parent.width
@@ -103,36 +104,32 @@ Element{
                     onEditingFinish: target.text = code
                 }
             }
-            GroupBox{
-                title:qsTr("minimumPointSize")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.minimumPointSize : ""
-                    onTextEdited: target.minimumPointSize = Number(text)
-                }
+            TextFieldDelegate{
+                title: qsTr("minimumPointSize")
+                width: parent.width
+                text: target.minimumPointSize
+                onEditingFinished: target.minimumPointSize = Number(text)
+                content.validator: IntValidator{}
             }
-            GroupBox{
-                title:qsTr("fontPointSize")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.fontPointSize : ""
-                    onTextEdited: target.fontPointSize = Number(text)
-                }
+            TextFieldDelegate{
+                title: qsTr("fontPointSize")
+                width: parent.width
+                text: target.fontPointSize
+                onEditingFinished: target.fontPointSize = Number(text)
+                content.validator: IntValidator{}
             }
-            GroupBox{
-                title:qsTr("Color")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.color : ""
-                    onTextEdited: target.color = text
-                }
+            TextFieldDelegate{
+                title: qsTr("color")
+                width: parent.width
+                text: target.color
+                onEditingFinished: target.color = text
             }
+
             GroupBox{
                 title:qsTr("elide")
+                width:parent.width
                 ComboBox{
+                    width:parent.width
                     model: ["Left", "Middle", "Right","None"]
                     currentIndex: currentIndex = target.elide
                     onActivated: target.elide = currentIndex
@@ -140,15 +137,19 @@ Element{
             }
             GroupBox{
                 title:qsTr("wrapMode")
+                width:parent.width
                 ComboBox{
+                    width:parent.width
                     model: ["No wrap", "WordWrap", "--reserved--", "WrapAnywhere", "Wrap"]
                     currentIndex: currentIndex = target.wrapMode
                     onActivated: target.wrapMode = currentIndex
                 }
             }
             GroupBox{
+                width:parent.width
                 title:qsTr("horizontalAlignment")
                 ComboBox{
+                    width:parent.width
                     textRole:"t";valueRole:"v"
                     model: [{v:1, t:"Left"}, {v:2, t:"Right"}, {v:4, t:"Center"},{v:8, t:"Justify"}]
                     currentIndex: currentIndex = indexOfValue(target.horizontalAlignment)
@@ -156,8 +157,10 @@ Element{
                 }
             }
             GroupBox{
+                width:parent.width
                 title:qsTr("verticalAlignment")
                 ComboBox{
+                    width:parent.width
                     textRole:"t";valueRole:"v"
                     model: [{v:32, t:"Top"}, {v:64, t:"Bottom"}, {v:128, t:"Center"}]
                     currentIndex: currentIndex = indexOfValue(target.verticalAlignment)
@@ -165,16 +168,20 @@ Element{
                 }
             }
             GroupBox{
+                width:parent.width
                 title:qsTr("fontSizeMode")
                 ComboBox{
+                    width:parent.width
                     model: ["FixedSize", "HorizontalFit", "VerticalFit","Fit"]
                     currentIndex: currentIndex = target.fontSizeMode
                     onActivated: target.fontSizeMode = currentIndex
                 }
             }
             GroupBox{
+                width:parent.width
                 title:qsTr("textFormat")
                 ComboBox{
+                    width:parent.width
                     model: ["PlainText", "RichText", "AutoText","MarkdownText", "StyledText"]
                     currentIndex: currentIndex = target.textFormat
                     onActivated: target.textFormat = currentIndex

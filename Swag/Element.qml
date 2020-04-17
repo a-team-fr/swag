@@ -64,13 +64,14 @@ Control{
 
     hoverEnabled: NavMan.editMode && !NavMan.elementItemToPosition
 
-    readonly property bool showEditUI : root.hovered && NavMan.editMode && !NavMan.elementItemToPosition
+    readonly property bool showEditUI : (isMe || root.hovered) && NavMan.editMode && !NavMan.elementItemToPosition
+    property bool isMe : root === NavMan.elementItemToModify
     property var editItem : null
-    property var editorComponent : null
+    property var editorComponent : null //Component{ Rectangle{ anchors.fill:parent; color:"red"; Label{text:target.elementType; anchors.centerIn: parent}}}
     Binding{
         target: contentItem
         property: "visible"
-        value:!showEditUI && !NavMan.elementItemToPosition
+        value:!NavMan.elementItemToPosition && ( !showEditUI || !editItem)
     }
     onEditItemChanged : editItem.parent = editContentItem
 
@@ -78,7 +79,7 @@ Control{
         visible:showEditUI || NavMan.elementItemToPosition
         enabled:visible
         border.color:"orange"
-        border.width: 1
+        border.width: isMe ? 3 : 1
         radius:3
         color:"transparent"
         z:50
@@ -87,57 +88,11 @@ Control{
             anchors.fill:parent
             visible: !NavMan.elementItemToPosition
         }
-        Grid{
-            property bool isLarger : (parent.width > parent.height)
-            columns:  isLarger ? 3 : 1
-            rows : isLarger ? 1 : 3
-            anchors.centerIn: !root.editItem ? parent : null
-            x : isLarger ? 0 : parent.width
-            y : isLarger ? parent.height : 0
-            visible: !NavMan.elementItemToPosition
-            FAButton{
-                decorate:false
-                icon:FontAwesome.crop
-                width:50
-                height:width
-                ToolTip.visible: down
-                ToolTip.text: qsTr("Set position and size")
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: NavMan.elementItemToPosition = root
-                }
-            }
-            FAButton{
-                decorate:false
-                icon:FontAwesome.edit
-                //anchors.right : parent.right
-                width:50
-                height:width
-                ToolTip.visible: down
-                ToolTip.text: qsTr("Change element settings")
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: NavMan.displayEditElement( root)
-                }
-            }
-            FAButton{
-                decorate:false
-                icon:FontAwesome.trash
-                color:"red"
-                //anchors.right : parent.right
-                //anchors.bottom : parent.bottom
-                width:50
-                height:width
-                ToolTip.visible: down
-                ToolTip.text: qsTr("Remove element")
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        root.destroy()
-                        NavMan.actionReloadSlide(false);
-                    }
-                }
-            }
+        MouseArea{
+            anchors.fill: parent
+            preventStealing: true
+            propagateComposedEvents: true
+            onClicked: NavMan.displayEditElement( root)
         }
     }
 

@@ -90,6 +90,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
+            spacing :2
             GroupBox{
                 title:qsTr("onClicked:")
                 width:parent.width
@@ -106,53 +107,40 @@ Element{
                 width:parent.width
                 TextField{
                     width:parent.width
-                    text:target ? target.text : ""
+                    text:target.text
                     onEditingFinished: target.text = text
                 }
             }
-            GroupBox{
-                title:qsTr("Icon")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.icon : ""
-                    onEditingFinished: target.icon = text
-                }
+            TextFieldDelegate{
+                title: qsTr("Icon")
+                width: parent.width
+                text: target.icon
+                onEditingFinished: target.icon = text
             }
-            GroupBox{
-                title:qsTr("IconColor")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.iconColor : ""
-                    onEditingFinished: target.iconColor = text
-                }
+            TextFieldDelegate{
+                title: qsTr("IconColor")
+                width: parent.width
+                text: target.iconColor
+                onEditingFinished: target.iconColor = text
             }
-            GroupBox{
-                title:qsTr("Color")
+            TextFieldDelegate{
+                title: qsTr("Color")
+                width: parent.width
+                text: target.color
+                onEditingFinished: target.color = text
+            }
+            SwitchDelegate{
+                text:qsTr("decorate")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.color : ""
-                    onEditingFinished: target.color = text
-                }
+                checked: target.decorate
+                onToggled: target.decorate = checked
             }
 
-            GroupBox{
-                title:qsTr("decorate")
+            SwitchDelegate{
+                text:qsTr("autoFitText")
                 width:parent.width
-                Switch{
-                    checked: target ? target.decorate : false
-                    onToggled: target.decorate = checked
-                }
-            }
-            GroupBox{
-                title:qsTr("autoFitText")
-                width:parent.width
-                Switch{
-                    checked: target ? target.navigationFocus : false
-                    onToggled: target.autoFitText = checked
-                }
+                checked: target.autoFitText
+                onToggled: target.autoFitText = checked
             }
 
         }

@@ -60,33 +60,59 @@ ApplicationWindow {
         y:menuBar.height + toolBar.height
     }
 
+
+
+
+    SplitView{
+        x:leftMenu.position * leftMenu.width
+        width:parent.width - x - elementToolBox.width
+        height:parent.height
+
+        Loader{
+            SplitView.preferredWidth: parent.width / 4
+            SplitView.minimumWidth: 100
+            visible:active
+            active:NavMan.editMode && NavMan.elementItemToModify
+            sourceComponent:  ElementEditor{
+
+                target : NavMan.elementItemToModify
+            }
+        }
+
+
+        CodeRenderer{
+            id:renderer
+
+            SplitView.fillWidth: true
+            height:parent.height
+
+
+
+            showEditor:NavMan.showDocumentCode
+            style : NavMan.settings.defaultSyntaxHighlightingStyle
+            code : pm.readSlideQMLCode( pm.slideSelected)
+            rendererSource : pm.displayUrl
+            renderCode : false
+
+            onWidthChanged:NavMan.slideWidth = width
+            onHeightChanged:NavMan.slideHeight = height
+
+            onRenderedItemChanged:{
+                if (pm.prezProperties.displayMode!=="Loader") return;
+                    NavMan.currentDocument = renderedItem
+            }
+
+        }
+
+    }
+
     ToolBox{
         id:elementToolBox
         visible:NavMan.editMode && NavMan.currentSlide
         anchors.right: parent.right
     }
 
-    CodeRenderer{
-        id:renderer
-        x:leftMenu.position * leftMenu.width
-        width:parent.width - x - elementToolBox.width
-        height:parent.height
 
-        showEditor:NavMan.showDocumentCode
-        style : NavMan.settings.defaultSyntaxHighlightingStyle
-        code : pm.readSlideQMLCode( pm.slideSelected)
-        rendererSource : pm.displayUrl
-        renderCode : false
-
-        onWidthChanged:NavMan.slideWidth = width
-        onHeightChanged:NavMan.slideHeight = height
-
-        onRenderedItemChanged:{
-            if (pm.prezProperties.displayMode!=="Loader") return;
-                NavMan.currentDocument = renderedItem
-        }
-
-    }
 
     Button{
         font.family : FontAwesome.fontFamily

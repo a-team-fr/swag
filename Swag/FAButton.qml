@@ -36,10 +36,12 @@ Control{
     property bool decorate : true
     property alias horizontalAlignment : label.horizontalAlignment
 
-    readonly property alias down : mouseArea.pressed
+    readonly property bool down : mouseArea.pressed || checked
 
     property bool autoFitText : false
 
+    property bool toggleButton : false
+    property bool checked : false
 
     background: Rectangle {
         visible:root.decorate
@@ -101,6 +103,9 @@ Control{
     MouseArea{
         id:mouseArea
         anchors.fill: parent
-        onClicked: root.clicked()
+        onClicked: {
+            root.clicked()
+            root.checked = toggleButton && !root.checked
+        }
     }
 }

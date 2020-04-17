@@ -70,8 +70,11 @@ Item {
     property var elementItemToPosition : null
     property var elementItemToModify : null
 
+    property bool currentSlidePossiblyModified : false
+
     function actionSave()
     {
+        currentSlidePossiblyModified = false;
         actionReloadSlide(false)
         pm.saveToDisk()
     }
@@ -87,17 +90,28 @@ Item {
         }
     }
 
-    function actionNext(ForcetoSlide){
+    function actionNext(ForcetoSlide)
+    {
+        if (currentSlidePossiblyModified)
+            actionSave();
+
         if (root.navigationManagedBySlide)
             sigNext(ForcetoSlide)
         else pm.nextSlide();
     }
-    function actionPrevious(ForcetoSlide){
+
+    function actionPrevious(ForcetoSlide)
+    {
+        if (currentSlidePossiblyModified)
+            actionSave();
+
         if (root.navigationManagedBySlide)
             sigPrevious(ForcetoSlide)
         else pm.previousSlide();
     }
-    function actionCancel(){
+
+    function actionCancel()
+    {
         elementItemToPosition = null;
         elementItemToPosition = null;
         pm.displayType = PM.Slide;
@@ -108,6 +122,8 @@ Item {
     }
     function actionEditMode(){
         editMode = !editMode && !viewWorldMode
+        if (editMode)
+            currentSlidePossiblyModified = true;
     }
     function actionviewWorldMode(){
         NavMan.viewWorldMode = !NavMan.viewWorldMode

@@ -56,6 +56,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
+            spacing : 3
             GroupBox{
                 title:qsTr("source")
                 width:parent.width
@@ -67,7 +68,9 @@ Element{
             }
             GroupBox{
                 title:qsTr("fillMode")
+                width:parent.width
                 ComboBox{
+                    width:parent.width
                     model: ["Stretch", "PreserveAspectFit", "PreserveAspectCrop","Tile","TileVertically","TileHorizontally","Pad"]
                     currentIndex: currentIndex = target.fillMode
                     onActivated: target.fillMode = currentIndex

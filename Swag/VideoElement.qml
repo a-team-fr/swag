@@ -149,15 +149,12 @@ Element {
     editorComponent: Component {
         Column {
             width:parent.width
-
-            GroupBox{
-                title:qsTr("useCamera")
+            spacing :2
+            CheckDelegate{
+                text:qsTr("useCamera")
                 width:parent.width
-                CheckBox{
-                    checked: target.useCamera
-                    onToggled: target.useCamera = checked
-                    width:parent.width
-                }
+                checked: target.useCamera
+                onToggled: target.useCamera = checked
             }
 
             GroupBox{

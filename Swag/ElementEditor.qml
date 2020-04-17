@@ -1,3 +1,4 @@
+
 /****************************************************************************
 **
 ** Copyright (C) 2020 A-Team.
@@ -19,110 +20,135 @@
 **  along with SwagSoftware.  If not, see <https://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-import QtQuick 2.0
-import QtQuick.Controls 2.5
+import QtQuick 2.12
+import QtQuick.Controls 2.12
 import fr.ateam.swag 1.0
 import Swag 1.0
 import FontAwesome 1.0
+import QtQuick.Layouts 1.14
 
-Popup{
-    id:root
-    property var target: null
-    signal done();
+Frame {
+    id: root
+    property var target: NavMan.elementItemToModify
+    onTargetChanged: pages.reload();
+    signal done
 
-    Column{
-        height:parent.height
-        width:parent.width
-        TabBar{
-            id:tabBar
-            width:parent.width
-            currentIndex:view.currentIndex
-            onCurrentIndexChanged: view.currentIndex = currentIndex
-            TabButton{
-                text:qsTr("Base")
-            }
-            TabButton{
-                text:target ? target.elementType : ""
-            }
-        }
-
-        SwipeView {
-            id: view
-            visible: target
-            height:parent.height-tabBar.contentHeight - footer.implicitHeight
-            width:parent.width
-            clip:true
-            Item{
-                ScrollView{
-                clip:true
-                anchors.fill: parent
-                anchors.margins: 10
-                Column{
-                    width:parent.width
-                    GroupBox{
-                        title:qsTr("Id")
-                        width:parent.width
-                        TextField{
-                            width:parent.width
-                            text:(target && target.idAsAString) ? target.idAsAString : ""
-                            onEditingFinished: {
-                                //TODO : check unicity of id among slide elements
-                                //TODO : enforce naming policy
-                                target.idAsAString = text
-                            }
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("z")
-                        width:parent.width
-                        TextField{
-                            width:parent.width
-                            text:target ? target.z : 0
-                            onEditingFinished: target.z = Number(text)
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("rotation")
-                        width:parent.width
-                        TextField{
-                            width:parent.width
-                            text:target ? target.z : 0
-                            onEditingFinished: target.z = Number(text)
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("navigationFocus")
-                        width:parent.width
-                        Switch{
-                            checked: target ? target.navigationFocus : false
-                            onToggled: target.navigationFocus = checked
-                        }
-                    }
+    Component {
+        id: baseElementProperties
+        Column {
+            width: parent.width
+            spacing : 2
+            TextFieldDelegate{
+                title: qsTr("Id")
+                width: parent.width
+                text: target.idAsAString
+                onEditingFinished: {
+                    //TODO : check unicity of id among slide elements
+                    //TODO : enforce naming policy
+                    target.idAsAString = text
+                    //save & reload right away to get a proper id
+                    NavMan.actionReloadSlide(true);
                 }
             }
-            }
-            Item{
-                ScrollView{
-                clip:true
-                anchors.fill: parent
-                anchors.margins: 10
-                Loader{
-                    anchors.fill: parent
-                    sourceComponent: target ? target.editorComponent : null
-                    property var target : root.target
-                }
-            }
+
+            FAButton{
+                //decorate:false
+                icon:FontAwesome.crop
+                width:parent.width
+                text: qsTr("Resize and reposition")
+                onClicked: NavMan.elementItemToPosition = target
             }
 
-        }
+            TextFieldDelegate{
+                title: qsTr("z")
+                width: parent.width
+                text: target.z ? target.z : 0
+                onEditingFinished: target.z = Number(text)
+                content.validator: IntValidator{}
+            }
 
+            TextFieldDelegate{
+                title: qsTr("rotation")
+                width: parent.width
+                text: target.rotation ? target.rotation : 0
+                onEditingFinished: target.rotation = Number(text)
+                content.validator: DoubleValidator{}
+            }
 
-        Button{
-            id:footer
-            text:qsTr("Ok")
-            onClicked: root.done();
+            SwitchDelegate {
+                width: parent.width
+                text:qsTr("navigationFocus")
+                checked: target ? target.navigationFocus : false
+                onToggled: target.navigationFocus = checked
+            }
+
         }
     }
 
+    ListModel {
+        id: pages
+        function reload() {
+            clear()
+            append({
+                       "groupTitle": qsTr("Basic properties"),
+                       "component": baseElementProperties
+                   })
+            if (root.target.editorComponent)
+                append({
+                           "groupTitle": root.target.elementType,
+                           "component": root.target.editorComponent
+                       })
+        }
+
+    }
+
+
+    ListView {
+        id: layout
+        anchors.fill:parent
+        anchors.bottomMargin: 50 //remove button
+        clip: true
+        model: pages
+        contentHeight: childrenRect.height
+        delegate: Column {
+            clip: true
+            width: layout.width
+            height: (index === layout.currentIndex) ? propertyTitle.height + propertyContent.height : propertyTitle.height
+            ItemDelegate {
+                id: propertyTitle
+                highlighted: true
+                text: model.groupTitle
+                width: parent.width
+                onClicked: layout.currentIndex = index
+                font.pixelSize: 16
+                font.bold: true
+                font.underline: true
+
+
+
+            }
+
+            Loader {
+                id: propertyContent
+                width: parent.width
+                visible: (index === layout.currentIndex)
+                sourceComponent: model.component
+                property var target: root.target
+            }
+        }
+    }
+
+    FAButton{
+        icon:FontAwesome.trash
+        color:"red"
+        width: parent.width
+        anchors.bottom: parent.bottom
+        text: qsTr("Remove element")
+        onClicked: {
+            target.destroy()
+            NavMan.actionReloadSlide(false);
+        }
+
+    }
 
 }

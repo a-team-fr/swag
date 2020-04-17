@@ -150,7 +150,7 @@ Element {
                 width:parent.width
                 TextField{
                     width:parent.width
-                    text:target ? target.meshPath : ""
+                    text:target.meshPath
                     onTextEdited: target.meshPath = text
                     onEditingFinished: target.meshPath = text
                 }

@@ -30,9 +30,20 @@ RowLayout{
     width:parent.width
     height : 40
     id:footer
+
+
+    Switch{
+        text:qsTr("Edit")
+        checked: NavMan.editMode
+        onToggled: NavMan.actionEditMode()
+        height:footer.height
+
+    }
+
     FAButton{
         icon:FontAwesome.arrowLeft
         onClicked:NavMan.actionPrevious(true)
+        opacity : pm.slideSelected > 0 ? 1 : 0
         decorate:false
     }
     FAButton{

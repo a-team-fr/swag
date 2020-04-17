@@ -50,6 +50,7 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
+            spacing :2
             GroupBox{
                 title:qsTr("pdfPath")
                 width:parent.width
@@ -60,16 +61,14 @@ Element{
                     onTextEdited: target.pdfPath = text
                 }
             }
-            GroupBox{
-                title:qsTr("permissive")
+
+            CheckDelegate{
+                text:qsTr("permissive")
                 width:parent.width
-                CheckBox{
-                    width:parent.width
-                    //text:target ? target.pdfPath : ""
-                    checked:target.permissive
-                    text:"Disable protection on cross domain request (use it only if you are 100% sure of the origin of your document)"
-                    onToggled: target.permissive = checked
-                }
+                checked:target.permissive
+                ToolTip.text:qsTr("Disable protection on cross domain request (use it only if you are 100% sure of the origin of your document)")
+                ToolTip.visible: hovered
+                onToggled: target.permissive = checked
             }
 
         }

@@ -26,6 +26,7 @@ import fr.ateam.swag 1.0
 
 Element{
     id:root
+
     property alias text:content.text
     property alias color:content.color
     property alias elide:content.elide
@@ -36,6 +37,20 @@ Element{
     property alias verticalAlignment:content.verticalAlignment
     property alias minimumPointSize:content.minimumPointSize
     property alias fontPointSize:content.font.pointSize
+    property color bckgColor : "transparent"
+    property color bckgBorderColor : "black"
+    property int bckgBorderWidth : 0
+
+    property alias fontFamily : content.font.family
+    property alias bold : content.font.bold
+    property alias italic : content.font.italic
+    property alias underline : content.font.underline
+    property alias strikeout : content.font.strikeout
+    property alias style : content.style
+    property alias styleColor : content.styleColor
+    property alias fontWeight : content.font.weight
+    property alias capitalization : content.font.capitalization
+
 
     elementType : "TextElement"
 
@@ -50,17 +65,45 @@ Element{
         dumpedProperties.push( {"name":"verticalAlignment","default":Text.AlignTop})
         dumpedProperties.push( {"name":"minimumPointSize","default":12})
         dumpedProperties.push( {"name":"fontPointSize","default":14})
+        dumpedProperties.push( {"name":"bckgColor","default":"#00000000"})
+        dumpedProperties.push( {"name":"bckgBorderColor","default":"#000000"})
+        dumpedProperties.push( {"name":"bckgBorderWidth","default":0})
+
+        dumpedProperties.push( {"name":"fontFamily","default":"Verdana"})
+        dumpedProperties.push( {"name":"bold","default":false})
+        dumpedProperties.push( {"name":"italic","default":false})
+        dumpedProperties.push( {"name":"underline","default":false})
+        dumpedProperties.push( {"name":"strikeout","default":false})
+        dumpedProperties.push( {"name":"style","default":Text.Normal})
+        dumpedProperties.push( {"name":"styleColor","default":"#000000"})
+        dumpedProperties.push( {"name":"fontWeight","default":50})
+        dumpedProperties.push( {"name":"capitalization","default":Font.MixedCase})
     }
+
+    Component{
+        id:defaultBackground
+        Rectangle{
+            color : root.bckgColor
+            border.width: root.bckgBorderWidth
+            border.color : root.bckgBorderColor
+        }
+    }
+
 
     contentItem:ScrollView{
         enabled:!NavMan.editMode
         clip:true
+        property var backcustomComponent : Qt.createComponent(root.backCustomComponent)
         Label{
             id:content
+            background: Loader{ sourceComponent:defaultBackground}
+            font.family: "Verdana"
             width:root.width
             height:root.height
         }
     }
+
+
 
     editItem : ScrollView{
             enabled:NavMan.editMode && !NavMan.elementItemToPosition
@@ -152,7 +195,8 @@ Element{
                     width:parent.width
                     textRole:"t";valueRole:"v"
                     model: [{v:1, t:"Left"}, {v:2, t:"Right"}, {v:4, t:"Center"},{v:8, t:"Justify"}]
-                    currentIndex: currentIndex = indexOfValue(target.horizontalAlignment)
+                    //currentIndex: currentIndex = indexOfValue(target.horizontalAlignment)
+                    Component.onCompleted: currentIndex = indexOfValue(target.horizontalAlignment)
                     onActivated: target.horizontalAlignment = currentValue
                 }
             }
@@ -163,7 +207,8 @@ Element{
                     width:parent.width
                     textRole:"t";valueRole:"v"
                     model: [{v:32, t:"Top"}, {v:64, t:"Bottom"}, {v:128, t:"Center"}]
-                    currentIndex: currentIndex = indexOfValue(target.verticalAlignment)
+                    //currentIndex: currentIndex = indexOfValue(target.verticalAlignment)
+                    Component.onCompleted: currentIndex = indexOfValue(target.verticalAlignment)
                     onActivated: target.verticalAlignment = currentValue
                 }
             }
@@ -173,7 +218,7 @@ Element{
                 ComboBox{
                     width:parent.width
                     model: ["FixedSize", "HorizontalFit", "VerticalFit","Fit"]
-                    currentIndex: currentIndex = target.fontSizeMode
+                    currentIndex: target.fontSizeMode
                     onActivated: target.fontSizeMode = currentIndex
                 }
             }
@@ -183,8 +228,118 @@ Element{
                 ComboBox{
                     width:parent.width
                     model: ["PlainText", "RichText", "AutoText","MarkdownText", "StyledText"]
-                    currentIndex: currentIndex = target.textFormat
+                    currentIndex: target.textFormat
                     onActivated: target.textFormat = currentIndex
+                }
+            }
+
+            GroupBox{
+                width:parent.width
+                title:qsTr("font")
+                Column{
+                    anchors.fill:parent
+                    ComboBox{
+                        width:parent.width
+                        model: Qt.fontFamilies()
+                        //currentIndex: indexOfValue(target.fontFamily)
+                        Component.onCompleted: currentIndex = indexOfValue(target.fontFamily)
+                        onActivated: target.fontFamily = currentValue
+                    }
+                    SwitchDelegate{
+                        text:qsTr("bold")
+                        width:parent.width
+                        checked: target.bold
+                        onToggled: target.bold = checked
+                    }
+                    SwitchDelegate{
+                        text:qsTr("italic")
+                        width:parent.width
+                        checked: target.italic
+                        onToggled: target.italic = checked
+                    }
+                    SwitchDelegate{
+                        text:qsTr("underline")
+                        width:parent.width
+                        checked: target.underline
+                        onToggled: target.underline = checked
+                    }
+                    SwitchDelegate{
+                        text:qsTr("strikeout")
+                        width:parent.width
+                        checked: target.strikeout
+                        onToggled: target.strikeout = checked
+                    }
+                    TextFieldDelegate{
+                        title: qsTr("weight")
+                        width: parent.width
+                        text: target.fontWeight
+                        onEditingFinished: target.fontWeight = Number(text)
+                        content.validator: IntValidator{}
+                    }
+
+                    GroupBox{
+                        width:parent.width
+                        title:qsTr("style")
+                        Column{
+                            anchors.fill : parent
+                            ComboBox{
+                                width:parent.width
+                                textRole:"t";valueRole:"v"
+                                model: [{v:Text.Normal, t:"Normal"}, {v:Text.Outline, t:"Outline"}, {v:Text.Raised, t:"Raised"}, {v:Text.Sunken, t:"Sunken"}]
+                                //currentIndex: indexOfValue(target.style)
+                                Component.onCompleted: currentIndex = indexOfValue(target.style)
+                                onActivated: target.style = currentValue
+                            }
+                            TextFieldDelegate{
+                                title: qsTr("style color")
+                                width: parent.width
+                                text: target.styleColor
+                                onEditingFinished: target.styleColor = text
+                            }
+                        }
+                    }
+                    GroupBox{
+                        width:parent.width
+                        title:qsTr("capitalization")
+                        ComboBox{
+                            width:parent.width
+                            textRole:"t";valueRole:"v"
+                            model: [{v:Font.MixedCase, t:"MixedCase"}, {v:Font.AllUppercase, t:"AllUppercase"}, {v:Font.AllLowercase, t:"AllLowercase"}, {v:Font.SmallCaps, t:"SmallCaps"}, {v:Font.Capitalize, t:"Capitalize"}]
+                            //currentIndex: indexOfValue(target.capitalization)
+                            Component.onCompleted: currentIndex = indexOfValue(target.capitalization)
+                            onActivated: target.capitalization = currentValue
+                        }
+                    }
+                }
+
+
+            }
+
+            GroupBox{
+                width:parent.width
+                title:qsTr("Background")
+
+                Column{
+                    anchors.fill:parent
+                TextFieldDelegate{
+                    title: qsTr("color")
+                    width: parent.width
+                    text: target.bckgColor
+                    onEditingFinished: target.bckgColor = text
+                }
+                TextFieldDelegate{
+                    title: qsTr("border color")
+                    width: parent.width
+                    text: target.bckgBorderColor
+                    onEditingFinished: target.bckgBorderColor = text
+                }
+                TextFieldDelegate{
+                    title: qsTr("border width")
+                    width: parent.width
+                    text: target.bckgBorderWidth
+                    onEditingFinished: target.bckgBorderWidth = Number(text)
+                    content.validator: IntValidator{}
+                }
                 }
             }
 

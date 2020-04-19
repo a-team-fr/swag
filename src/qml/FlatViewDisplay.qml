@@ -31,7 +31,7 @@ Item{
 
 
     function applyViewWorldMode( ){
-        if (NavMan.viewWorldMode){
+        if (pm.viewWorldMode){
             if (world.currentSlide){
             flick.contentX -= world.currentSlide.width *0.3
             flick.contentY -= world.currentSlide.height *0.3
@@ -55,10 +55,10 @@ Item{
         contentY:offsetY
         contentWidth: 2*world.width
         contentHeight:2*world.height
-        ScrollBar.horizontal: ScrollBar{ policy: NavMan.viewWorldMode ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff }
-        ScrollBar.vertical: ScrollBar{ policy: NavMan.viewWorldMode ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff }
+        ScrollBar.horizontal: ScrollBar{ policy: pm.viewWorldMode ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff }
+        ScrollBar.vertical: ScrollBar{ policy: pm.viewWorldMode ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff }
 
-        interactive: NavMan.viewWorldMode
+        interactive: pm.viewWorldMode
         property int offsetX : world.width
         property int offsetY : world.height
 
@@ -75,7 +75,7 @@ Item{
         x:flick.offsetX
         y:flick.offsetY
         border.color:"orange"
-        border.width:NavMan.viewWorldMode ? 10 : 0
+        border.width:pm.viewWorldMode ? 10 : 0
         color:"transparent"
         width:childrenRect.width
         height:childrenRect.height
@@ -135,7 +135,7 @@ Item{
         anchors.margins: -Math.max(world.width,world.height)
         z:-100
 
-        enabled:NavMan.viewWorldMode
+        enabled:pm.viewWorldMode
 
 
 
@@ -157,7 +157,7 @@ Item{
 
     Item{
         id:pinchControl
-        visible : NavMan.viewWorldMode
+        visible : pm.viewWorldMode
 
         width:root.width
         height:root.height
@@ -216,7 +216,7 @@ Item{
                     icon:FontAwesome.undo
                     text:qsTr("Return to normal view")
                     onClicked: {
-                        NavMan.viewWorldMode = false
+                        pm.viewWorldMode = false
                         NavMan.actionReloadSlide(true)
                     }
                 }

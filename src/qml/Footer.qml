@@ -34,8 +34,8 @@ RowLayout{
 
     Switch{
         text:qsTr("Edit")
-        checked: NavMan.editMode
-        onToggled: NavMan.actionEditMode()
+        checked: pm.editMode
+        onToggled: pm.editMode = ! pm.editMode
         height:footer.height
 
     }
@@ -49,7 +49,7 @@ RowLayout{
     FAButton{
         icon:FontAwesome.arrowCircleLeft
         onClicked: NavMan.actionPrevious(false)
-        visible : NavMan.navigationManagedBySlide && !NavMan.viewWorldMode
+        visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode
         decorate:false
     }
     Label{
@@ -79,7 +79,7 @@ RowLayout{
     FAButton{
         icon:FontAwesome.arrowCircleRight
         onClicked:NavMan.actionNext(false)
-        visible : NavMan.navigationManagedBySlide  && !NavMan.viewWorldMode
+        visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode
         decorate:false
     }
     FAButton{
@@ -90,13 +90,13 @@ RowLayout{
     Label{
         Layout.fillWidth: true
         text: pm.loaded ? pm.prezProperties.title + qsTr(" ( GPLv3 licensed )") : ""
-        visible:!NavMan.editMode
+        visible:!pm.editMode
     }
     TextField{
         Layout.fillWidth: true
         text:pm.loaded ? pm.prezProperties.title : ""
         onTextEdited: pm.savePrezSettings("title", pm.prezProperties.title)
-        visible:NavMan.editMode
+        visible:pm.editMode
     }
 
 }

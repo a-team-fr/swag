@@ -101,23 +101,23 @@ MenuBar {
         }
         MenuItem {
             text: qsTr("Edit mode (Ctrl+E)")
-            onTriggered: NavMan.actionEditMode()
+            onTriggered:pm.editMode = !pm.editMode
             checkable: true
-            checked: NavMan.editMode
+            checked: pm.editMode
             enabled:pm.loaded
         }
         MenuItem {
             text: qsTr("Edit deck world (Ctrl+D)")
-            onTriggered: NavMan.actionviewWorldMode()
+            onTriggered: pm.viewWorldMode = !pm.viewWorldMode
             enabled:pm.loaded && (pm.displayType == PM.Slide_FlatView)
             checkable: true
-            checked: NavMan.viewWorldMode
+            checked: pm.viewWorldMode
         }
         MenuItem {
             text: qsTr("Show code (Ctrl+T)")
-            onTriggered: NavMan.showDocumentCode = !NavMan.showDocumentCode
+            onTriggered: pm.showDocumentCode = !pm.showDocumentCode
             checkable: true
-            checked: NavMan.showDocumentCode
+            checked: pm.showDocumentCode
             enabled:pm.loaded
         }
     }

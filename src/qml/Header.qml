@@ -46,7 +46,7 @@ ToolBar{
             Label{
                 width : parent.width - height - closeButton.width
                 height:parent.height
-                visible:!NavMan.editMode
+                visible:!pm.editMode
                 minimumPointSize:5
                 fontSizeMode:Text.Fit
                 font.pointSize : 50
@@ -55,7 +55,7 @@ ToolBar{
             TextField{
                 width : parent.width - height - closeButton.width
                 height:parent.height
-                visible:NavMan.editMode
+                visible:pm.editMode
                 text: pm.title
                 onEditingFinished: pm.saveSlideSettings("title", text)
             }

@@ -55,7 +55,7 @@ Element{
     elementType : "TextElement"
 
     Component.onCompleted: {
-        dumpedProperties.push( {"name":"text","default":""})
+        dumpedProperties.push( {"name":"text","default":qsTr("A text element...")})
         dumpedProperties.push( {"name":"color","default":""})
         dumpedProperties.push( {"name":"elide","default":Text.ElideNone})
         dumpedProperties.push( {"name":"fontSizeMode","default":Text.FixedSize})
@@ -91,12 +91,14 @@ Element{
 
 
     contentItem:ScrollView{
-        enabled:!NavMan.editMode
+        enabled:!pm.editMode
         clip:true
-        property var backcustomComponent : Qt.createComponent(root.backCustomComponent)
+        //property var backcustomComponent : Qt.createComponent(root.backCustomComponent)
         Label{
             id:content
-            background: Loader{ sourceComponent:defaultBackground}
+            //background: Loader{ sourceComponent:defaultBackground}
+            color : pm.defaultTextColor
+            text : qsTr("A text element...")
             font.family: "Verdana"
             width:root.width
             height:root.height
@@ -104,36 +106,9 @@ Element{
     }
 
 
-
-    editItem : ScrollView{
-            enabled:NavMan.editMode && !NavMan.elementItemToPosition
-            width:root.width
-            height: root.height
-
-            TextArea{
-                id: textArea
-                width : textArea.contentWidth
-                text:root.text
-                wrapMode:content.wrapMode
-                font.family: content.font.family
-                font.pixelSize: content.font.pixelSize
-                color:content.color
-
-            }
-            Button{
-                text:"Done"
-                visible: root.text !== textArea.text
-                anchors.right:parent.right
-                onClicked: {
-                    root.text = textArea.text
-                    NavMan.actionReloadSlide(true);
-                }
-            }
-        }
-
-
     editorComponent:Component{
         Column{
+
             width:parent.width
             spacing :2
             GroupBox{
@@ -141,10 +116,12 @@ Element{
                 width:parent.width
                 CodeEditor{
                     langage: "json"
+                    showLineNumber: false
                     width:parent.width
                     height:200
                     code:target.text
                     onEditingFinish: target.text = code
+                    focus:true
                 }
             }
             TextFieldDelegate{

@@ -67,25 +67,6 @@ Element{
         }
     }
 
-    editItem : ScrollView{
-            width:root.width
-            height: root.height
-            TextField{
-                id: textArea
-                width : root.width
-                text:root.text
-            }
-            Button{
-                text:"Done"
-                visible: root.text !== textArea.text
-                anchors.right:parent.right
-                onClicked: {
-                    root.text = textArea.text
-                    NavMan.saveCurrentSlideAndReload(false);
-                }
-            }
-        }
-
 
     editorComponent:Component{
         Column{

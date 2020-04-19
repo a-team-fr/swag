@@ -40,7 +40,7 @@ Control{
 
     Item{
         id:slideBorder
-        visible: NavMan.viewWorldMode && (slide.hovered || pt1.pressed || pt2.pressed)
+        visible: pm.viewWorldMode && (slide.hovered || pt1.pressed || pt2.pressed)
 
         anchors.fill: parent
 
@@ -86,7 +86,7 @@ Control{
 
 
     property bool isSelected : slide === NavMan.currentSlide
-    enabled: isSelected //|| NavMan.viewWorldMode
+    enabled: isSelected //|| pm.viewWorldMode
     //parent.z : isSelected ? 50 : 0
     //opacity : isSelected ? 1 : 0.7
     Behavior on opacity {  NumberAnimation { duration: 200;easing.type: Easing.InOutQuad }}
@@ -177,18 +177,21 @@ Control{
             }
         }
 
-        enabled : NavMan.editMode && NavMan.elementItemToPosition && slide.isSelected
+        enabled : pm.editMode && NavMan.elementItemToPosition && slide.isSelected
         property point ptTopLeft : Qt.point(-1,-1)
         onClicked: {
             if (elementPositionner.ptTopLeft.x < 0)
                 elementPositionner.ptTopLeft = Qt.point(mouse.x, mouse.y)
             else{
                 //Update elementItem
+                var elementId = NavMan.elementItemToPosition;
                 NavMan.elementItemToPosition.updateRel(ptTopLeft, mouse)
                 //reset positionner
                 NavMan.elementItemToPosition = null
                 ptTopLeft = Qt.point(-1,-1);
-                NavMan.actionReloadSlide(true); //force save as we could be there right after an element creation
+                NavMan.actionReloadSlide(false); //force save as we could be there right after an element creation
+                //select the edit panel
+                NavMan.displayEditElement( elementId)
             }
         }
     }

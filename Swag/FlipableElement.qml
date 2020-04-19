@@ -95,6 +95,7 @@ Element {
                 font.pointSize: root.frontTextFill ? 50 : 14
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
+                text: qsTr("front text")
             }
         }
         back:  Frame{
@@ -123,7 +124,7 @@ Element {
                 font.pointSize: root.backTextFill ? 50 : 14
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
-
+                text: qsTr("back text")
             }
         }
 

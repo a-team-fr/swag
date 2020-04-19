@@ -26,7 +26,7 @@ import fr.ateam.swag 1.0
 
 Element{
     id:root
-    property string code :""
+    //property string code :""
     elementType : "CodeElement"
 
     property alias showEditor : renderer.showEditor
@@ -53,29 +53,8 @@ Element{
     contentItem:CodeRenderer{
         id:renderer
         anchors.fill:parent
+        code : "Text{ text:'Hello world'}"
 
-    }
-
-
-    editItem : CodeEditor{
-        id:editor
-        width:root.width
-        height:root.width
-        code:root.code
-        style : "darcula"
-        onEditingFinish: {
-            root.code = code;
-            NavMan.currentSlide.modified = true;
-        }
-        Button{
-            text:"apply"
-            visible: root.code !== editor.code
-            anchors.right:parent.right
-            onClicked: {
-                root.code = editor.code
-                NavMan.currentSlide.modified = true;
-            }
-        }
     }
 
     editorComponent:Component{

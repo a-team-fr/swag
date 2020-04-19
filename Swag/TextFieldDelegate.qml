@@ -32,6 +32,10 @@ ItemDelegate {
     property string title:title.text
     signal editingFinished(string text)
     property alias content:textField
+
+    implicitWidth : 200
+    implicitHeight : 59
+
     contentItem: RowLayout{
         width:root.width
         Label{

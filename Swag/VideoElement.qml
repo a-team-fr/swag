@@ -31,7 +31,7 @@ Element {
 
     property bool useCamera : false
     property bool showPanel : true
-    property string videoSource : ""
+    property string videoSource : pm.documentUrl("small.mp4","examples/Gallery/{c6c8877d-0e93-4f8a-806d-99755b6586a8}/")
     property alias fillMode : videoOutput.fillMode
     property alias flushMode : videoOutput.flushMode
 

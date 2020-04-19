@@ -28,7 +28,7 @@ import Swag 1.0
 Element{
     id:root
     property bool permissive : false
-    property string pdfPath: "https://github.com/mozilla/pdf.js/blob/master/test/pdfs/alphatrans.pdf"
+    property string pdfPath: pm.documentUrl("pdfSample.pdf","examples/Gallery/{08074c7f-ec51-448a-b67b-a22a5892cd95}/")
     //readonly property string pdfSource : pm.lookForLocalFile(pdfPath)
     //onPdfSourceChanged: console.log(pdfSource)
 

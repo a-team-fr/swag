@@ -72,7 +72,7 @@ ApplicationWindow {
             SplitView.preferredWidth: parent.width / 4
             SplitView.minimumWidth: 100
             visible:active
-            active:NavMan.editMode && NavMan.elementItemToModify
+            active:pm.editMode && NavMan.elementItemToModify
             sourceComponent:  ElementEditor{
 
                 target : NavMan.elementItemToModify
@@ -88,7 +88,7 @@ ApplicationWindow {
 
 
 
-            showEditor:NavMan.showDocumentCode
+            showEditor:pm.showDocumentCode
             style : NavMan.settings.defaultSyntaxHighlightingStyle
             code : pm.readSlideQMLCode( pm.slideSelected)
             rendererSource : pm.displayUrl
@@ -108,7 +108,7 @@ ApplicationWindow {
 
     ToolBox{
         id:elementToolBox
-        visible:NavMan.editMode && NavMan.currentSlide
+        visible:pm.editMode && NavMan.currentSlide
         anchors.right: parent.right
     }
 

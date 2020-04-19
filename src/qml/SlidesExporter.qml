@@ -32,7 +32,7 @@ Frame {
     property int currentSlideIdx : 0
     property var lstUrls :pm.urlSlides()
     property bool exportRunning : false;
-    property int msWaitDelayBeforeExport :1000
+    property int msWaitDelayBeforeExport :2000
     property bool autoStart : true
 
 
@@ -47,8 +47,12 @@ Frame {
     Connections{
         target:pm
         onSlideExported:{
+            console.log("next slide to export")
             if (root.currentSlideIdx < (root.nbSlides-1))
+            {
                 root.currentSlideIdx++;
+                delaySlideExport.restart();
+            }
             else root.stopExport()
         }
     }
@@ -76,8 +80,8 @@ Frame {
         anchors.fill:parent
         source: root.slideUrl
         onStatusChanged: {
-            if ((root.exportRunning) && (status === Loader.Ready))
-                delaySlideExport.restart()
+            //if ((root.exportRunning) && (status === Loader.Ready))
+            //    delaySlideExport.restart()
         }
     }
     Popup{
@@ -105,7 +109,7 @@ Frame {
 
             }
             Button{
-                visible: root.exportRunning
+                visible: !root.exportRunning
                 text:"Start"
                 onClicked: root.startExport()
             }

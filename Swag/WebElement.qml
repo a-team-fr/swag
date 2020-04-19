@@ -26,13 +26,13 @@ import QtWebView 1.14
 
 Element{
     id:root
-    property string url: ""
+    property string url: "https://swagsoftware.net"
 
 
     elementType : "WebElement"
 
     Component.onCompleted: {
-        dumpedProperties.push( {"name":"url","default":""})
+        dumpedProperties.push( {"name":"url","default":"https://swagsoftware.net"})
 
     }
 

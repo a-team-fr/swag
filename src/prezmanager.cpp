@@ -50,10 +50,10 @@ PrezManager::~PrezManager()
     delete m_pEngine;
 }
 
-void PrezManager::reload()
+void PrezManager::reload(bool restartApp )
 {
     m_pEngine->clearCache();
-    if ( m_isDevelopmentPhase)
+    if ( restartApp && m_isDevelopmentPhase)
         startSwagApp();    //Reload everything QML
     else {
         //Reload current QML document
@@ -377,6 +377,15 @@ QString PrezManager::defaultBackround() const
 
 }
 
+QString PrezManager::defaultTextColor() const
+{
+    QString textColor = m_prezProperties.value("defaultTextColor").toString();
+    if (textColor.isEmpty())
+        textColor = "black";
+    return textColor;
+
+}
+
 void PrezManager::selectSlide(int slideIdx)
 {
     if ( (slideIdx < 0) || (slideIdx == m_selectedSlide) || (slideIdx >= lstSlides().count() )) return;
@@ -486,6 +495,8 @@ void PrezManager::create(QString url)
     obj.insert("displayMode", QJsonValue::fromVariant("Loader"));
     obj.insert("author", QJsonValue::fromVariant( m_settings.value("profileAuthor").toString() ));
     obj.insert("defaultBackground", QJsonValue::fromVariant( ""));
+    obj.insert("defaultTextColor", QJsonValue::fromVariant( "black"));
+
 
     obj.insert("materialAccent", QJsonValue::fromVariant( m_settings.value("materialAccent").value<QColor>()));
     obj.insert("materialBackground", QJsonValue::fromVariant( m_settings.value("materialBackground").value<QColor>()));
@@ -525,13 +536,16 @@ void PrezManager::createSlide()
     slide.insert("width", QJsonValue::fromVariant(640));
     slide.insert("height", QJsonValue::fromVariant(480));
 
-    slides.insert(m_selectedSlide < 0 ? 0 : m_selectedSlide, slide);
+    slides.append(slide);
     m_prezProperties.insert("slides", slides);
 
     //Save to disk
     saveToDisk();
 
     emit slidesReordered();
+
+    //go to the newly created slide
+    selectSlide(slides.count()-1);
 
 }
 
@@ -570,7 +584,7 @@ void PrezManager::removeSlide(int idxSlide)
     //Save to disk
     saveToDisk();
 
-    m_selectedSlide = std::min(m_selectedSlide,slides.count());
+    m_selectedSlide = std::min(m_selectedSlide,slides.count()-1);
     emit slidesReordered();
 }
 void PrezManager::editSlide(int idxSlide)

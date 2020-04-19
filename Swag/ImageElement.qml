@@ -33,25 +33,15 @@ Element{
     elementType : "ImageElement"
 
     Component.onCompleted: {
-        dumpedProperties.push( {"name":"source","default":""})
+        dumpedProperties.push( {"name":"source","default":pm.documentUrl("icon1024.png","res/SwagLogo.iconset/")})
         dumpedProperties.push( {"name":"fillMode","default":Image.Stretch})
 
     }
 
     contentItem:Image{
         id:image
-
+        source:pm.documentUrl("icon1024.png","res/SwagLogo.iconset/") //default image
     }
-
-    editItem: Image{
-        width:root.width
-        height: root.height
-        source:image.source
-        opacity:0.7
-        fillMode:image.fillMode
-    }
-
-
 
     editorComponent:Component{
         Column{

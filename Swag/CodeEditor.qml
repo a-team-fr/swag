@@ -29,6 +29,7 @@ Rectangle {
     property alias enabled : editor.enabled
     property string style: "darcula"
     property alias showEditorPanel : editorPanel.visible
+    property bool showLineNumber : true
     property alias contentHeight: editor.contentHeight
 
     property string hljsRootDir: "file:" + pm.installPath + "/deps"
@@ -81,7 +82,9 @@ return tmp
         Row {
             anchors.fill: parent
             Item {
-                width: 45
+                id:lineNumber
+                visible : content.showLineNumber
+                width: visible ? 45 : 0
                 height: parent.height
                 Repeater {
                     model: editor.lineCount
@@ -101,7 +104,7 @@ return tmp
 
             TextArea {
                 id: editor
-                width: parent.width - 45
+                width: parent.width - lineNumber.width
                 height: parent.height
                 text: content.code2Html(content.langage, content.code,content.css)
                 wrapMode: Text.WordWrap

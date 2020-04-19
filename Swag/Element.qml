@@ -29,7 +29,6 @@ import Swag 1.0
 Control{
     id:root
 
-    z : showEditUI ? 100 : 0
     function updateRel(ptTopLeft, ptBottomRight){
         xRel = ptTopLeft.x / refWidth
         yRel = ptTopLeft.y / refHeight
@@ -62,37 +61,36 @@ Control{
     width:Math.max(refWidth * widthRel,10)
     height:Math.max(refHeight * heightRel,10)
 
-    hoverEnabled: NavMan.editMode && !NavMan.elementItemToPosition
+    hoverEnabled: pm.editMode && !NavMan.elementItemToPosition
 
-    readonly property bool showEditUI : (isMe || root.hovered) && NavMan.editMode && !NavMan.elementItemToPosition
-    property bool isMe : root === NavMan.elementItemToModify
-    property var editItem : null
-    property var editorComponent : null //Component{ Rectangle{ anchors.fill:parent; color:"red"; Label{text:target.elementType; anchors.centerIn: parent}}}
+    readonly property bool isMe : root === NavMan.elementItemToModify
+
+    property var editorComponent : null
     Binding{
         target: contentItem
         property: "visible"
-        value:!NavMan.elementItemToPosition && ( !showEditUI || !editItem)
+        value:!NavMan.elementItemToPosition
     }
-    onEditItemChanged : editItem.parent = editContentItem
+
 
     background:Rectangle{
-        visible:showEditUI || NavMan.elementItemToPosition
+        visible:(isMe || root.hovered) && pm.editMode || NavMan.elementItemToPosition
         enabled:visible
         border.color:"orange"
         border.width: isMe ? 3 : 1
         radius:3
         color:"transparent"
         z:50
-        Item{
-            id:editContentItem
-            anchors.fill:parent
-            visible: !NavMan.elementItemToPosition
-        }
+
         MouseArea{
+            enabled: !NavMan.elementItemToPosition
             anchors.fill: parent
             preventStealing: true
             propagateComposedEvents: true
-            onClicked: NavMan.displayEditElement( root)
+            onClicked: {
+                if (!root.isMe)
+                    NavMan.displayEditElement( root)
+            }
         }
     }
 

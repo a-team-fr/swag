@@ -51,14 +51,6 @@ Frame {
                 }
             }
 
-            FAButton{
-                //decorate:false
-                icon:FontAwesome.crop
-                width:parent.width
-                text: qsTr("Resize and reposition")
-                onClicked: NavMan.elementItemToPosition = target
-            }
-
             TextFieldDelegate{
                 title: qsTr("z")
                 width: parent.width
@@ -106,9 +98,10 @@ Frame {
     ListView {
         id: layout
         anchors.fill:parent
-        anchors.bottomMargin: 50 //remove button
+        anchors.bottomMargin: footer.height + 10
         clip: true
         model: pages
+        currentIndex: count -1
         contentHeight: childrenRect.height
         delegate: Column {
             clip: true
@@ -138,17 +131,42 @@ Frame {
         }
     }
 
-    FAButton{
-        icon:FontAwesome.trash
-        color:"red"
-        width: parent.width
+    Column{
+        id:footer
+        width:parent.width
+        height : childrenRect.height
         anchors.bottom: parent.bottom
-        text: qsTr("Remove element")
-        onClicked: {
-            target.destroy()
-            NavMan.actionReloadSlide(false);
+        spacing : 3
+
+        FAButton{
+            //decorate:false
+            icon:FontAwesome.crop
+            width:parent.width
+            text: qsTr("Resize and reposition")
+            onClicked: NavMan.elementItemToPosition = target
         }
 
+        FAButton{
+            //decorate:false
+            icon:FontAwesome.save
+            width:parent.width
+            text: qsTr("save slide")
+            onClicked: NavMan.actionSave()
+        }
+
+        FAButton{
+            icon:FontAwesome.trash
+            color:"red"
+            width: parent.width
+            text: qsTr("Remove element")
+            onClicked: {
+                target.destroy()
+                NavMan.actionReloadSlide(false);
+            }
+
+        }
     }
+
+
 
 }

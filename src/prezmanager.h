@@ -67,6 +67,7 @@ class PrezManager : public QObject
     Q_PROPERTY(QJsonArray lstSlides READ lstSlides NOTIFY slidesReordered)
     Q_PROPERTY(QJsonObject prezProperties MEMBER m_prezProperties NOTIFY prezLoaded)
     Q_PROPERTY(QString defaultBackground READ defaultBackround NOTIFY prezLoaded)
+    Q_PROPERTY(QString defaultTextColor READ defaultTextColor NOTIFY prezLoaded)
 
     Q_PROPERTY(int slideSelected MEMBER m_selectedSlide NOTIFY slideChanged)
     Q_PROPERTY(QString title READ title NOTIFY slideChanged)
@@ -74,6 +75,11 @@ class PrezManager : public QObject
     Q_PROPERTY(bool isSlideDisplayed READ isSlideDisplayed NOTIFY slideChanged)
 
     Q_PROPERTY(DisplayType displayType READ displayType WRITE setDisplayType NOTIFY displayTypeChanged)
+
+    Q_PROPERTY(bool showDocumentCode MEMBER m_showDocumentCode WRITE setShowDocumentCode NOTIFY showDocumentCodeChanged)
+    Q_PROPERTY(bool editMode MEMBER m_editMode WRITE setEditMode NOTIFY editModeChanged)
+    Q_PROPERTY(bool viewWorldMode MEMBER m_viewWorldMode WRITE setViewWorldMode NOTIFY viewWorldModeChanged)
+
 
 public:
     /**
@@ -104,9 +110,13 @@ signals:
     void slideExported();
     void slideDecksFolderPathChanged();
 
+    void showDocumentCodeChanged();
+    void editModeChanged();
+    void viewWorldModeChanged();
+
 
 public slots:
-    void reload();
+    void reload(bool restartApp = false);
 
     /**
      * @brief readDocument - low level document reading
@@ -164,16 +174,17 @@ public slots:
     QUrl lookForLocalFile(const QString& url) const;
 
 
+    /**
+     * @brief documentUrl
+     * @return return a local file path constructed from the installation path
+     */
+    QUrl documentUrl(const QString& docName, const QString& dir = "src/qml/") const;
 
 
 private:
     QString installPath() const;
     void setInstallPath(QString newPath) ;
-    /**
-     * @brief documentUrl
-     * @return return a local file path
-     */
-    QUrl documentUrl(const QString& docName, const QString& dir = "src/qml/") const;
+
 
     QString slideDecksFolderPath() const;
     void setSlideDecksFolderPath(const QString& newPath);
@@ -192,6 +203,7 @@ private:
 
     QString title() const;
     QString defaultBackround() const;
+    QString defaultTextColor() const;
 
     bool load(QDir prezFolder);
     bool m_loaded = false;
@@ -215,6 +227,34 @@ private:
     QClearableCacheQmlEngine* m_pEngine = nullptr;
 
     bool m_isDevelopmentPhase = !QString(SRCDIR).isEmpty();     //
+
+    void setShowDocumentCode(bool mode){
+        if (mode == m_showDocumentCode) return;
+        m_showDocumentCode = mode;
+        emit showDocumentCodeChanged();
+    }
+    void setEditMode(bool mode)
+    {
+        if ( (mode == m_editMode) || m_viewWorldMode)  return;
+
+        m_editMode = mode;
+        if (!m_pendingChanges)
+        {
+            m_pendingChanges = true;
+            emit pendingChangesChanged();
+        }
+        emit editModeChanged();
+    }
+    void setViewWorldMode(bool mode){
+        if (mode == m_viewWorldMode) return;
+        m_viewWorldMode = mode;
+        setEditMode(false);
+        emit viewWorldModeChanged();
+    }
+    bool m_showDocumentCode = false;
+    bool m_editMode = false;
+    bool m_viewWorldMode = false;
+
 };
 
 #endif

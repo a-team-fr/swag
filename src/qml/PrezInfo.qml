@@ -165,6 +165,7 @@ Frame{
                               model: lstMaterialColor
                               textRole: "l";valueRole: "v"
                               onActivated: pm.savePrezSettings("materialAccent", currentValue)
+                              currentIndex : indexOfValue(pm.prezProperties.materialAccent)
                               Component.onCompleted: currentIndex = indexOfValue(pm.prezProperties.materialAccent)
                           }
                       }
@@ -203,6 +204,7 @@ Frame{
                               model: lstMaterialColor
                               textRole: "l";valueRole: "v"
                               onActivated: pm.savePrezSettings("materialPrimary", currentValue)
+                              currentIndex : indexOfValue(pm.prezProperties.materialPrimary)
                               Component.onCompleted: currentIndex = indexOfValue(pm.prezProperties.materialPrimary)
                           }
                       }
@@ -264,6 +266,17 @@ Frame{
 
               }
 
+              GroupBox{
+                  title:qsTr("Default slide deck settings")
+                  Layout.fillWidth: true
+                  TextFieldDelegate{
+                      width:parent.width
+                      title:qsTr("default text color")
+                      text : pm.defaultTextColor
+                      onEditingFinished: pm.savePrezSettings("defaultTextColor", text);
+
+                  }
+              }
 
 
             }

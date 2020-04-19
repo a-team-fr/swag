@@ -70,12 +70,12 @@ Item {
     property var elementItemToPosition : null
     property var elementItemToModify : null
 
-    property bool currentSlidePossiblyModified : false
 
     function actionSave()
     {
-        currentSlidePossiblyModified = false;
-        actionReloadSlide(false)
+        if (currentSlide )
+            currentSlide.saveDocument( );
+
         pm.saveToDisk()
     }
 
@@ -92,7 +92,7 @@ Item {
 
     function actionNext(ForcetoSlide)
     {
-        if (currentSlidePossiblyModified)
+        if (pm.pendingChanges)
             actionSave();
 
         if (root.navigationManagedBySlide)
@@ -102,7 +102,7 @@ Item {
 
     function actionPrevious(ForcetoSlide)
     {
-        if (currentSlidePossiblyModified)
+        if (pm.pendingChanges)
             actionSave();
 
         if (root.navigationManagedBySlide)
@@ -115,24 +115,14 @@ Item {
         elementItemToPosition = null;
         elementItemToPosition = null;
         pm.displayType = PM.Slide;
-        showDocumentCode =false;
-        editMode = false;
-        viewWorldMode = false;
+        pm.showDocumentCode =false;
+        pm.editMode = false;
+        pm.viewWorldMode = false;
 
-    }
-    function actionEditMode(){
-        editMode = !editMode && !viewWorldMode
-        if (editMode)
-            currentSlidePossiblyModified = true;
-    }
-    function actionviewWorldMode(){
-        NavMan.viewWorldMode = !NavMan.viewWorldMode
-        editMode = false;
     }
 
     function displayEditElement(item){
         NavMan.elementItemToModify = item
-        //pm.displayType = PM.EditItem;
     }
 
     Shortcut {
@@ -154,28 +144,28 @@ Item {
     Shortcut {
         sequence: "Ctrl+D"
         context: Qt.ApplicationShortcut
-        onActivated: actionviewWorldMode()
+        onActivated: pm.viewWorldMode = !pm.viewWorldMode
     }
 
     Shortcut {
         sequence: "Ctrl+E"
         context: Qt.ApplicationShortcut
-        onActivated: actionEditMode()
+        onActivated: pm.editMode = !pm.editMode
     }
     Shortcut {
         sequence: "Ctrl+R"
         context: Qt.ApplicationShortcut
-        onActivated: pm.reload();
+        onActivated: pm.reload(true);
     }
     Shortcut {
         sequence: "Ctrl+S"
         context: Qt.ApplicationShortcut
-        onActivated: actionReloadSlide(true)
+        onActivated: actionSave()
     }
     Shortcut {
         sequence: "Ctrl+T"
         context: Qt.ApplicationShortcut
-        onActivated: showDocumentCode = !showDocumentCode
+        onActivated: pm.showDocumentCode = !pm.showDocumentCode
     }
 
     Shortcut {
@@ -190,13 +180,6 @@ Item {
         onActivated: pm.unload()
     }
 
-
-    /*------------------------------------------------------------------------------------------
-                kinda inputs (modified from anywhere outside)
-    ------------------------------------------------------------------------------------------*/
-    property bool showDocumentCode : false
-    property bool editMode : false
-    property bool viewWorldMode : false
 
     /*------------------------------------------------------------------------------------------
                 kinda output (usefull properties with readonly binding)

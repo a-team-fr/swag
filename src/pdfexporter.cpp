@@ -26,6 +26,7 @@
 #include <QPainter>
 #include <QQuickItemGrabResult>
 #include <QQmlProperty>
+#include <QPainterPath>
 
 PDFExporter::PDFExporter(const QString& fileName, QObject *parent ) : QObject(parent), m_pdfWriter(fileName)
 {

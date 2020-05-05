@@ -206,7 +206,7 @@ void PrezManager::setSlideDecksFolderPath(const QString& newPath)
 QUrl PrezManager::documentUrl(const QString& docName, const QString& dir) const
 {
 
-    return "file:"+installPath()+"/"+dir+docName;
+    return QUrl::fromLocalFile( installPath()+"/"+dir+docName);
 
 }
 

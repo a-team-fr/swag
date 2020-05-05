@@ -31,6 +31,7 @@ cp ./res/SwagLogo.iconset/Swag.iconset/icon_512x512.png ./deploy/linux/usr/share
 cp ./res/SwagLogo.iconset/Swag.iconset/icon_48x48.png ./deploy/linux/usr/share/icons/hicolor/48x48/swag_logo.png
 
 echo ******copy swag needed stuff
+mkdir -p ./deploy/linux/usr/qml
 cp -rf ./Swag ./deploy/linux/usr/qml/Swag
 cp -rf ./deps ./deploy/linux/usr/deps
 cp -rf ./src ./deploy/linux/usr/src

@@ -7,7 +7,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{96A65FE9-DCEB-4C0F-9DA5-D67DF34848E2}
 AppName=Swag
-AppVersion=%%%VERSION%%%
+AppVersion=0.0.1RC2
+
 ;AppVerName=Swag 0.0.1RC
 AppPublisher=A-Team (https://a-team.fr)
 AppPublisherURL=https://swagsoftware.net
@@ -30,6 +31,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: ".\windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "vcredist_x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 [Icons]
 Name: "{group}\Swag"; Filename: "{app}\bin\swag.exe"
@@ -40,3 +42,7 @@ Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\Swag"; Filename: "
 
 [Run]
 Filename: "{app}\bin\swag.exe"; Description: "{cm:LaunchProgram,Swag}"; Flags: nowait postinstall skipifsilent
+
+Filename: {tmp}\vcredist_x64.exe; \
+    Parameters: "/q /passive /Q:a /c:""msiexec /q /i vcredist.msi"""; \
+    StatusMsg: "Installing VC++ 2019 Redistributables..."

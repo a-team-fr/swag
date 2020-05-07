@@ -61,8 +61,19 @@ git submodule update --init
 * rise a [question or provide answer](https://faq.swagsoftware.net)
 * ...
 
+
+## Qt programming area of interest
+Swag has been a great opportunity for me to do fun stuff. The following is a short list of things that I found of interest :
+* Hot reload QML - the whole QML engine is reloaded when pressing Ctrl+R
+* PDF rendering using a webview and pdf.js
+* Syntax coloring using a TextArea and highlight.js
+* PDF generation (wip)
+* Using Wordpress as a backend via REST
+* dynamic creation of element with loader and/or js
+* CI with Github actions - automatic generation of dmg (MacOs), setup (Windows) and AppImage(Linux) on git tag creation
+
 ## Project big picture
-* **v0.0.1** : good enough to play with to create simple documents and program your own QML stuff. Swag will likely show a poor UI, a number of bugs and a limited feature set. Also the document format is likely to change. Yet, this version should help understanding the project potential. This milestone should be reached somewhere in April 2020.
+* **v0.0.1** : good enough to play with to create simple documents and program your own QML stuff. Swag will likely show a poor UI, a number of bugs and a limited feature set. Also the document format is likely to change. Yet, this version should help understanding the project potential. This milestone should be reached somewhere in May 2020.
 * **v0.1.0** : good enough to create presentation. First official version using a somewhat standardized document format. Swag contains all classic presentation features together with advanced features. Swag might be used to experiment others application (dynamic report, book, training support...). This milestone should be reached somewhere around April 2021.
 * **v1.0.0** : good enough to create any kind of application. Swag is a mature solution to handle a number of uses cases, backed with a generous toolbox it can be used to generate easily anykind of application. This milestone might be reached somewhere around April 2030.
 

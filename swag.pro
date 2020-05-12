@@ -19,13 +19,17 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 SOURCES += \
         src/main.cpp \
         src/pdfexporter.cpp \
-        src/prezmanager.cpp
+        src/prezmanager.cpp \
+        src/restinpeace.cpp \
+        src/wordprest.cpp
 
 HEADERS += \
     src/pdfexporter.h \
     src/prezmanager.h \
     src/qclearablecacheqmlengine.hpp \
-    src/qttshelper.hpp
+    src/qttshelper.hpp \
+    src/restinpeace.h \
+    src/wordprest.h
 
 RESOURCES += qml.qrc \
 
@@ -99,6 +103,7 @@ else:win32{
 }
 
 DISTFILES += \
-    Swag/TextFieldDelegate.qml
+    Swag/TextFieldDelegate.qml \
+    src/qml/WPConnect.qml
 
 

@@ -35,6 +35,7 @@
 #include <QQmlContext>
 #include <QTimer>
 #include "src/qclearablecacheqmlengine.hpp"
+#include "wordprest.h"
 
 /**
  * @brief The PrezManager class (the Swag C++ backend, available in QML engine as "pm")
@@ -44,6 +45,7 @@ class PrezManager : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(Wordprest* wp MEMBER m_wp NOTIFY installPathChanged)
     /**
      * @brief root of the installation : default applicationDirectory
      */
@@ -88,7 +90,7 @@ public:
      * anyother values are for special page (change application settings, export to pdf etc...)
      */
     enum DisplayType{ Slide, Slide_Loader,Slide_ListView,Slide_FlatView,
-                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About};
+                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About, WPConnect};
     Q_ENUM(DisplayType)
 
 
@@ -254,6 +256,8 @@ private:
     bool m_showDocumentCode = false;
     bool m_editMode = false;
     bool m_viewWorldMode = false;
+
+    Wordprest* m_wp = nullptr;
 
 };
 

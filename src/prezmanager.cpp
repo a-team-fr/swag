@@ -40,7 +40,11 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
             load( QDir(pathLastPrezOpened));
     }
 
+    m_wp = new Wordprest(this);
+
     startSwagApp();
+
+    m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
 
 }
 PrezManager::~PrezManager()
@@ -353,6 +357,7 @@ QString PrezManager::title() const
         case Welcome: return tr("welcome in s🤘ag");
         case About: return tr("About s🤘ag");
         case GlobalSettings: return tr("Settings");
+        case WPConnect :return tr("Connection to swagsoftware.net");
         case PrezSettings: return "Deck Settings";
         case SlideSettings: return "Slide Settings";
         case SlideExport: return "Slides Export";
@@ -430,6 +435,7 @@ QUrl PrezManager::currentDisplay() const
         case Welcome: return documentUrl("Welcome.qml");
         case About: return documentUrl("About.qml");
         case GlobalSettings: return documentUrl("SettingsPage.qml");
+        case WPConnect :return documentUrl("WPConnect.qml");
         case PrezSettings: return documentUrl("PrezInfo.qml");
         case SlideSettings: return documentUrl("SlideInfo.qml");
         case SlideExport: return documentUrl("SlidesExporter.qml");

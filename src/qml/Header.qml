@@ -44,7 +44,7 @@ ToolBar{
             }
 
             Label{
-                width : parent.width - height - closeButton.width
+                width : parent.width - height - closeButton.width - loginAlias.width - 2*parent.spacing
                 height:parent.height
                 visible:!pm.editMode
                 minimumPointSize:5
@@ -53,12 +53,29 @@ ToolBar{
                 text: pm.title
             }
             TextField{
-                width : parent.width - height - closeButton.width
+                width : parent.width - height - closeButton.width - loginAlias.width - 2*parent.spacing
                 height:parent.height
                 visible:pm.editMode
                 text: pm.title
                 onEditingFinished: pm.saveSlideSettings("title", text)
             }
+            FAButton{
+                id:loginAlias
+                height:parent.height
+                width:height
+                icon: pm.wp.loggedIn ? FontAwesome.signOut : FontAwesome.signIn
+                onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
+                ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in")
+                ToolTip.visible: hovered
+                Image{
+                    anchors.fill: parent
+                    visible : pm.wp.loggedIn && pm.wp.avatar
+                    fillMode: Image.PreserveAspectFit
+                    source : visible ? pm.wp.avatar : ""
+                    onSourceChanged: console.log(source)
+                }
+            }
+
             FAButton{
                 id:closeButton
                 decorate:false

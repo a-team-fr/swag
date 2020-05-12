@@ -90,7 +90,7 @@ public:
      * anyother values are for special page (change application settings, export to pdf etc...)
      */
     enum DisplayType{ Slide, Slide_Loader,Slide_ListView,Slide_FlatView,
-                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About, WPConnect};
+                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About, WPConnect, WPProfile};
     Q_ENUM(DisplayType)
 
 

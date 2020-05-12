@@ -65,14 +65,37 @@ ToolBar{
                 width:height
                 icon: pm.wp.loggedIn ? FontAwesome.signOut : FontAwesome.signIn
                 onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
-                ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in")
-                ToolTip.visible: hovered
+                //ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
+                //ToolTip.visible: hovered
+                onHoveredChanged: { if (hovered) wpmenu.open()}
                 Image{
                     anchors.fill: parent
                     visible : pm.wp.loggedIn && pm.wp.avatar
                     fillMode: Image.PreserveAspectFit
                     source : visible ? pm.wp.avatar : ""
                     onSourceChanged: console.log(source)
+                }
+                Menu{
+                    id:wpmenu
+                    x : toolbar.width - width
+                    y : parent.height
+
+
+                    Label{
+                        visible : pm.wp.loggedIn
+                        text:qsTr("currently log as %1").arg(pm.wp.username)
+                    }
+
+                    MenuItem{
+                        text:pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
+                        onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
+                    }
+                    MenuItem{
+                        enabled: pm.wp.loggedIn
+                        text:qsTr("show profile");
+                        onClicked: pm.displayType = PM.WPProfile
+                    }
+
                 }
             }
 

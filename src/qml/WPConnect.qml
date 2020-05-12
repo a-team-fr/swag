@@ -57,6 +57,11 @@ Pane {
             placeholderText: qsTr("fill in here your username")
         }
         TextField{
+            id:email
+            Layout.fillWidth: true
+            placeholderText: qsTr("fill in here your contact email")
+        }
+        TextField{
             id:password
             Layout.fillWidth: true
             text:settings.lastPassword
@@ -79,7 +84,10 @@ Pane {
             text:qsTr("Register")
             checked: root.register
         }
-        Button{
+        FAButton{
+            decorate : false
+            visible: !root.register
+            color :"blue"
             text:qsTr("Reset password")
             enabled:username.text.length > 0
             onClicked: pm.wp.passwordReset(username.text)
@@ -91,9 +99,10 @@ Pane {
             color : "red"
             text:pm.wp.error
         }
-        Button{
-            text: pm.wp.loggedIn ? qsTr("Log out") : qsTr("Log in")
-            onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.wp.logIn( username.text, password.text)
+        FAButton{
+            text: root.register ? qsTr("Register") : qsTr("Log in")
+            enabled : root.register ? username.text && email.text && password.text && password2.text === password.text: username.text && password.text
+            onClicked: root.register ? pm.wp.signup(username.text, email.text, password.text) : pm.wp.logIn( username.text, password.text)
         }
         Label{
             visible : pm.wp.loggedIn

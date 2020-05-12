@@ -104,6 +104,7 @@ else:win32{
 
 DISTFILES += \
     Swag/TextFieldDelegate.qml \
-    src/qml/WPConnect.qml
+    src/qml/WPConnect.qml \
+    src/qml/WPProfile.qml
 
 

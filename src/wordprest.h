@@ -14,7 +14,7 @@
 class Wordprest : public RestInPeace
 {
     Q_OBJECT
-    Q_PROPERTY( QVariantMap userData MEMBER m_userData NOTIFY loginChanged)
+    Q_PROPERTY( QVariantMap userData MEMBER m_userData NOTIFY userDataChanged)
     Q_PROPERTY( uint userId MEMBER m_userId NOTIFY loginChanged)
     Q_PROPERTY( QString username MEMBER m_userName NOTIFY loginChanged)
     Q_PROPERTY( QString email MEMBER m_email NOTIFY loginChanged)
@@ -29,6 +29,7 @@ public:
 signals :
     void loginChanged();
     void avatarChanged();
+    void userDataChanged();
 
 public slots:
     bool logIn(const QString& username, const QString& password);
@@ -37,6 +38,13 @@ public slots:
     bool getAvatar(bool full = false);
     bool deleteAccount();
     bool passwordReset(const QString& username);
+    //bool updateUser(const QVariantMap& valueMap);
+
+    //bool emailexists(const QString& email);
+    //bool usernameexists(const QString& email);
+
+    //bool updatePassword(const QString& newPassword);
+    //bool updateUserData(const QString& key, const QString& value);
 
 private:
     QVariantMap m_userData = QVariantMap{};

@@ -357,7 +357,8 @@ QString PrezManager::title() const
         case Welcome: return tr("welcome in s🤘ag");
         case About: return tr("About s🤘ag");
         case GlobalSettings: return tr("Settings");
-        case WPConnect :return tr("Connection to swagsoftware.net");
+        case WPConnect : return tr("Connection to swagsoftware.net");
+        case WPProfile : return tr("Profile");
         case PrezSettings: return "Deck Settings";
         case SlideSettings: return "Slide Settings";
         case SlideExport: return "Slides Export";
@@ -435,7 +436,8 @@ QUrl PrezManager::currentDisplay() const
         case Welcome: return documentUrl("Welcome.qml");
         case About: return documentUrl("About.qml");
         case GlobalSettings: return documentUrl("SettingsPage.qml");
-        case WPConnect :return documentUrl("WPConnect.qml");
+        case WPConnect : return documentUrl("WPConnect.qml");
+        case WPProfile : return documentUrl("WPProfile.qml");
         case PrezSettings: return documentUrl("PrezInfo.qml");
         case SlideSettings: return documentUrl("SlideInfo.qml");
         case SlideExport: return documentUrl("SlidesExporter.qml");

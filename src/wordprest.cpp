@@ -56,6 +56,7 @@ bool Wordprest::logIn(const QString &username, const QString &password)
                     {
                         assert( ( status == "ok") );
                         m_userData = user.toVariantMap();
+                        emit userDataChanged();
                         m_userName = user["username"].toString();
                         m_email = user["email"].toString();
                         m_userId = user["id"].toInt();
@@ -90,6 +91,7 @@ bool Wordprest::logOut()
     if (!isLoggedIn()) return false;
 
     m_userData = QVariantMap{};
+    emit userDataChanged();
     m_userId = 0;
     m_userName = "";
     m_email = "";
@@ -198,9 +200,9 @@ bool Wordprest::deleteAccount()
         if ( httpCode() == 200 ){
             QJsonObject obj = json.object();
             QString status = obj.value("status").toString();
-            QString method = obj.value("method").toString();
-            QString controller = obj.value("controller").toString();
-            assert( ( status == "ok") && ( method == "delete_account") && ( controller == "user"));
+            if (status != "ok")
+                return;
+
             QString nonce = obj.value("nonce").toString();
 
             setEndPoint( QString("api/user/delete_account/?nonce=%1&cookie=%2").arg(nonce, m_authCookie));
@@ -225,8 +227,6 @@ bool Wordprest::deleteAccount()
     } );
 
     request( RestInPeace::GET);
-    return true;
-
     return true;
 }
 
@@ -259,3 +259,118 @@ bool Wordprest::passwordReset(const QString& username)
 
     return true;
 }
+
+/*
+bool Wordprest::updateUser(const QVariantMap& valueMap)
+{
+    if (!isLoggedIn() || valueMap.isEmpty()) return false;
+    if (valueMap.contains("user_email"))
+    {
+        //TODO check email is not already used
+
+    }
+    QStringList lstUserData;
+    QStringList lstUserDataKeys = {"user_nicename","user_url", "user_email","user_pass", "display_name","nickname", "last_name"};
+    QStringList lstUserMetaData;
+    QVariantMap::const_iterator i = valueMap.constBegin();
+    while (i != valueMap.constEnd()) {
+        if ( !lstUserDataKeys.contains( i.key() ) )
+             lstUserMetaData.append( i.key() + "=" + i.value().toString() );
+        else lstUserData.append( i.key() + "=" + i.value().toString() );
+        ++i;
+    }
+    if (!lstUserMetaData.isEmpty())
+        lstUserData.append( QString("user_meta=[%1]").arg( lstUserMetaData.join(";") ) );
+
+    setEndPoint( "api/user/update_user/?"+ lstUserData.join("&") );
+
+    connect(this, &RestInPeace::replyFinished, [=]( QJsonDocument json){
+        disconnect( qobject_cast<QNetworkReply*>(sender()) );
+        QJsonObject obj = json.object();
+        if ( httpCode() == 200 ){
+            QString status = obj.value("status").toString();
+
+            if ( status == "ok")
+            {
+                //update cached user data
+                for (QVariantMap::const_iterator i = valueMap.constBegin(); i != valueMap.constEnd(); i++)
+                    m_userData.insert(i.key(), i.value());
+                emit userDataChanged();
+            }
+        }
+        if ( obj.contains("error"))
+            setError( obj.value("error").toString());
+    } );
+
+    request( RestInPeace::GET);
+
+    return true;
+
+}
+
+bool Wordprest::emailexists(const QString &email)
+{
+    setEndPoint("api/user/email_exists/?email="+email);
+
+    bool emailExists = true;
+    connect(this, &RestInPeace::replyFinished, [=, &emailExists]( QJsonDocument json){
+        disconnect( qobject_cast<QNetworkReply*>(sender()) );
+        QJsonObject obj = json.object();
+        if ( obj.contains("error"))
+            setError( obj.value("error").toString());
+
+    } );
+
+    request( RestInPeace::GET);
+
+    return true;
+
+    QEventLoop loop;
+    connect(grabRes.data(), &QQuickItemGrabResult::ready, &loop, &QEventLoop::quit);
+    loop.exec();
+}
+
+bool Wordprest::usernameexists(const QString &email)
+{
+
+}
+
+
+bool Wordprest::updatePassword(const QString &newPassword)
+{
+    if (!isLoggedIn()) return false;
+    setEndPoint("api/user/update_password/?password="+newPassword);
+
+    connect(this, &RestInPeace::replyFinished, [=]( QJsonDocument json){
+        disconnect( qobject_cast<QNetworkReply*>(sender()) );
+        QJsonObject obj = json.object();
+        if ( obj.contains("error"))
+            setError( obj.value("error").toString());
+
+    } );
+
+    request( RestInPeace::GET);
+
+    return true;
+
+}
+
+bool Wordprest::updateUserData(const QString &key, const QString &value)
+{
+    if (!isLoggedIn()) return false;
+    setEndPoint( QString("api/user/update_user_meta/?meta_key=%1&meta_value=%2").arg(key, value) );
+
+    connect(this, &RestInPeace::replyFinished, [=]( QJsonDocument json){
+        disconnect( qobject_cast<QNetworkReply*>(sender()) );
+        QJsonObject obj = json.object();
+        if ( obj.contains("error"))
+            setError( obj.value("error").toString());
+
+    } );
+
+    request( RestInPeace::GET);
+
+    return true;
+
+}
+*/

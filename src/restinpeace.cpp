@@ -32,7 +32,6 @@ RestInPeace::RestInPeace(QObject *parent) :
     QObject(parent)
 {
     m_pNAM = new QNetworkAccessManager(this);
-
 }
     
 RestInPeace::~RestInPeace()
@@ -44,6 +43,7 @@ RestInPeace::~RestInPeace()
 
 /* -------------------- Property accessors ----------------------------------*/
 void RestInPeace::setHostURI(const QString& res){
+    if (res.isEmpty() || res == m_hostURI) return;
     m_hostURI = res;
     emit hostChanged();
     emit readyChanged();
@@ -145,8 +145,20 @@ void RestInPeace::replyProgress(qint64 bytesSent, qint64 bytesTotal)
     setPercComplete( (bytesTotal!=0) ? bytesSent/bytesTotal*100 : 100);
 }
 
+void RestInPeace::handleSSlErrors(QList<QSslError> errors)
+{
+    QNetworkReply* request = qobject_cast<QNetworkReply*>(sender());
+    if (request)
+        request->ignoreSslErrors();
 
-QNetworkReply* RestInPeace::request( RestInPeace::Operation operation, QUrl url , QJsonDocument data)
+    qDebug() << "OpenSsl library missing or outdated...";
+    qDebug() << errors;
+
+
+}
+
+
+QNetworkReply* RestInPeace::request( QNetworkAccessManager::Operation operation, QUrl url , QJsonDocument data)
 {
     QNetworkRequest request;
     request.setUrl( url);
@@ -159,27 +171,29 @@ QNetworkReply* RestInPeace::request( RestInPeace::Operation operation, QUrl url 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
 
     //Proceed with request
-    QNetworkReply *reply;
+    QNetworkReply *reply = nullptr;
     switch (operation)
     {
-    case GET:
+    case QNetworkAccessManager::GetOperation:
         reply = m_pNAM->get(request);
         break;
-    case POST:
+    case QNetworkAccessManager::PostOperation:
         reply = m_pNAM->post(request, data.toJson());
         break;
-    case PUT:
+    case QNetworkAccessManager::PutOperation:
         reply = m_pNAM->put(request, data.toJson());
         break;
-    case DELETE:
+    case QNetworkAccessManager::DeleteOperation:
         reply = m_pNAM->deleteResource(request);
         break;
+    default:
+        qDebug() << "unsupported operation " << operation;
     }
     return reply;
 
 }
 
-QNetworkReply* RestInPeace::request( RestInPeace::Operation operation, QJsonDocument data )
+QNetworkReply* RestInPeace::request( QNetworkAccessManager::Operation operation, QJsonDocument data )
 {
     setPercComplete(0);
 
@@ -193,7 +207,7 @@ QNetworkReply* RestInPeace::request( RestInPeace::Operation operation, QJsonDocu
 
     connect(reply, &QNetworkReply::finished, [=](){ this->readReply(reply);} );
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(replyError(QNetworkReply::NetworkError)));
-    //connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(slotSslErrors(QList<QSslError>)));
+    connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(handleSSlErrors(QList<QSslError>)));
     connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(replyProgress(qint64, qint64)));
     connect(reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(replyProgress(qint64, qint64)));
 

@@ -29,7 +29,7 @@ import Qt.labs.settings 1.0
 
 Pane {
     id: root
-    property alias register : registerSel.checked
+    readonly property bool register : bar.currentIndex === 1
 
     Connections{
         target:pm.wp
@@ -46,8 +46,20 @@ Pane {
         property string lastPassword : ""
     }
 
+    TabBar{
+        id:bar
+        width : parent.width
+        TabButton {
+            text: qsTr("Sign in")
+        }
+        TabButton {
+            text: qsTr("Register")
+        }
+    }
+
     ColumnLayout{
         anchors.fill: parent
+        anchors.topMargin: bar.height
 
 
         TextField{
@@ -59,6 +71,7 @@ Pane {
         TextField{
             id:email
             Layout.fillWidth: true
+            visible : root.register
             placeholderText: qsTr("fill in here your contact email")
         }
         TextField{
@@ -79,19 +92,6 @@ Pane {
             echoMode: TextInput.Password
             passwordMaskDelay: 1000
         }
-        Switch{
-            id:registerSel
-            text:qsTr("Register")
-            checked: root.register
-        }
-        FAButton{
-            decorate : false
-            visible: !root.register
-            color :"blue"
-            text:qsTr("Reset password")
-            enabled:username.text.length > 0
-            onClicked: pm.wp.passwordReset(username.text)
-        }
 
         Label{
             id:error
@@ -99,10 +99,28 @@ Pane {
             color : "red"
             text:pm.wp.error
         }
-        FAButton{
-            text: root.register ? qsTr("Register") : qsTr("Log in")
-            enabled : root.register ? username.text && email.text && password.text && password2.text === password.text: username.text && password.text
-            onClicked: root.register ? pm.wp.signup(username.text, email.text, password.text) : pm.wp.logIn( username.text, password.text)
+        Label{
+            visible:pm.wp.sslSupported
+            color : "red"
+            text:qsTr("OpenSSL v.%1 is required (installed version is %2)").arg(pm.wp.sslLibraryBuildVersionString).arg(pm.wp.sslLibraryVersionString)
+        }
+        RowLayout{
+            Layout.fillWidth: true
+            FAButton{
+                Layout.fillWidth: true
+                text: root.register ? qsTr("Register") : qsTr("Log in")
+                enabled : root.register ? username.text && email.text && password.text && password2.text === password.text: username.text && password.text
+                onClicked: root.register ? pm.wp.signup(username.text, email.text, password.text) : pm.wp.logIn( username.text, password.text)
+            }
+            FAButton{
+                Layout.fillWidth: true
+                decorate : false
+                visible: !root.register
+                color :"lightblue"
+                text:qsTr("Reset password")
+                enabled:username.text.length > 0
+                onClicked: pm.wp.passwordReset(username.text)
+            }
         }
         Label{
             visible : pm.wp.loggedIn

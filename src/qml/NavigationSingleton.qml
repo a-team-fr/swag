@@ -43,7 +43,9 @@ Item {
         property alias windowWidth : root.windowWidth
         property alias windowHeight : root.windowHeight
 
+        property string swagBackend : "https://swagsoftware.net/"
         property string profileAuthor : ""
+        property bool signinAtStartup : true
 
         property color materialAccent : "#f48fb1"
         property color materialBackground : "#303030"

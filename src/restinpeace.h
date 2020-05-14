@@ -40,13 +40,18 @@ class RestInPeace : public QObject
     Q_PROPERTY( QString httpResponse READ httpResponse WRITE setHttpResponse NOTIFY httpResponseChanged)
     Q_PROPERTY( bool ready READ ready NOTIFY readyChanged)
 
+    Q_PROPERTY( bool sslSupported READ sslSupported NOTIFY hostChanged)
+    Q_PROPERTY( QString sslLibraryBuildVersionString READ sslLibraryBuildVersionString NOTIFY hostChanged)
+    Q_PROPERTY( QString sslLibraryVersionString READ sslLibraryVersionString NOTIFY hostChanged)
+
+
 
 public:
 
     explicit RestInPeace(QObject *parent = 0);
     virtual ~RestInPeace();
 
-    enum Operation{ GET, POST, PUT, DELETE};
+    //enum OperationType{ GET, POST, PUT, DELETE};
 
 public: // property access
     QString hostURI() const;
@@ -63,11 +68,11 @@ private slots: // common network operations
     void readReply( QNetworkReply *reply );
     void replyError(QNetworkReply::NetworkError);
     void replyProgress(qint64 bytesSent, qint64 bytesTotal);
-
+    void handleSSlErrors(QList<QSslError>);
 
 protected:
 
-    QNetworkReply* request( RestInPeace::Operation operation, QJsonDocument data = QJsonDocument());
+    QNetworkReply* request( QNetworkAccessManager::Operation operation, QJsonDocument data = QJsonDocument());
 
     void setError(const QString& res);
     void setPercComplete(qreal res);
@@ -96,7 +101,16 @@ signals: // operation notifications
     void readyChanged();
 
 private:
-    QNetworkReply* request( RestInPeace::Operation operation, QUrl url, QJsonDocument data = QJsonDocument()  );
+    bool sslSupported(){
+        return QSslSocket::supportsSsl();
+    }
+    QString sslLibraryBuildVersionString(){
+        return QSslSocket::sslLibraryBuildVersionString();
+    }
+    QString sslLibraryVersionString(){
+        return QSslSocket::sslLibraryVersionString();
+    }
+    QNetworkReply* request( QNetworkAccessManager::Operation operation, QUrl url, QJsonDocument data = QJsonDocument()  );
     QNetworkAccessManager *m_pNAM = nullptr;
     QMap<QByteArray, QByteArray> m_rawHeader;
     QString m_hostURI = "";

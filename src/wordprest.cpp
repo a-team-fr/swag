@@ -31,9 +31,7 @@ Wordprest::Wordprest(QObject *parent) : RestInPeace(parent)
 {
     //Defines default headers
     setHostURI("https://swagsoftware.net/");
-    //setExtraHostURI("");
     setRawHeader("Accept","application/json");
-
 }
 
 bool Wordprest::isLoggedIn() const
@@ -98,12 +96,12 @@ bool Wordprest::logIn(const QString &username, const QString &password)
                 }
 
             } );
-            request( RestInPeace::GET);
+            request( QNetworkAccessManager::GetOperation);
         }
 
     } );
 
-    request( RestInPeace::GET);
+    request( QNetworkAccessManager::GetOperation);
     return true;
 }
 
@@ -164,12 +162,12 @@ bool Wordprest::signup(const QString &username, const QString &email, const QStr
                 }
 
             } );
-            request( RestInPeace::GET);
+            request( QNetworkAccessManager::GetOperation);
         }
 
     } );
 
-    request( RestInPeace::GET);
+    request( QNetworkAccessManager::GetOperation);
     return true;
 
 
@@ -204,7 +202,7 @@ bool Wordprest::getAvatar(bool full)
 
     } );
 
-    request( RestInPeace::GET);
+    request( QNetworkAccessManager::GetOperation);
 
     return true;
 }
@@ -242,12 +240,12 @@ bool Wordprest::deleteAccount()
                 }
 
             } );
-            request( RestInPeace::GET);
+            request( QNetworkAccessManager::GetOperation);
         }
 
     } );
 
-    request( RestInPeace::GET);
+    request( QNetworkAccessManager::GetOperation);
     return true;
 }
 
@@ -276,7 +274,7 @@ bool Wordprest::passwordReset(const QString& username)
 
     } );
 
-    request( RestInPeace::GET);
+    request( QNetworkAccessManager::GetOperation);
 
     return true;
 }

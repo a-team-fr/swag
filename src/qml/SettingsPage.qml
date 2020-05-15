@@ -100,12 +100,32 @@ Frame{
                     }
                 }
             }
+            GroupBox{
+                title: qsTr("Swag backend")
+                width:parent.width
+
+                TextField{
+                    text:pm.wp.hostURI
+                    width:parent.width
+                    onEditingFinished: {
+                        pm.wp.hostURI = text
+                        NavMan.settings.swagBackend = text
+                    }
+                }
+            }
 
             Switch{
                 text:qsTr("Open last document at startup")
                 checked : NavMan.settings.openLastPrezAtStartup
                 onToggled: NavMan.settings.openLastPrezAtStartup = checked
             }
+
+            Switch{
+                text:qsTr("Sign in to backend at startup (using last successfully credentials)")
+                checked : NavMan.settings.signinAtStartup
+                onToggled: NavMan.settings.signinAtStartup = checked
+            }
+
             Switch{
                 text:qsTr("enable Element3d")
                 checked : NavMan.settings.loadElement3d

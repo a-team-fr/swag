@@ -46,8 +46,9 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
     m_wp = new Wordprest(this);
 
     startSwagApp();
-
-    m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
+    m_wp->setHostURI( m_settings.value("swagBackend").toString() );
+    if (m_settings.value("signinAtStartup").toBool())
+        m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
 
 }
 PrezManager::~PrezManager()

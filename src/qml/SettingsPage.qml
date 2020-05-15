@@ -145,12 +145,13 @@ Frame{
             }
 
             GroupBox{
-                title:qsTr("Profile")
-                Layout.fillWidth: true
+                title:qsTr("User name")
+                width:parent.width
                 TextField{
                     width:parent.width
-                    placeholderText: "Please fill in your profile identifier"
-                    text:NavMan.settings.profileAuthor
+                    readOnly: pm.wp.loggedIn
+                    placeholderText: "Please fill in your user name"
+                    text:pm.wp.loggedIn ? pm.wp.username : NavMan.settings.profileAuthor
                     onEditingFinished: NavMan.settings.profileAuthor = text
                 }
             }
@@ -205,7 +206,7 @@ Frame{
             }
             GroupBox{
                 title:qsTr("Theme")
-                Layout.fillWidth: true
+                width:parent.width
                 Flow{
                     spacing : 10
                     width:parent.width

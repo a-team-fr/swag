@@ -100,7 +100,7 @@ Pane {
             text:pm.wp.error
         }
         Label{
-            visible:pm.wp.sslSupported
+            visible:!pm.wp.sslSupported
             color : "red"
             text:qsTr("OpenSSL v.%1 is required (installed version is %2)").arg(pm.wp.sslLibraryBuildVersionString).arg(pm.wp.sslLibraryVersionString)
         }

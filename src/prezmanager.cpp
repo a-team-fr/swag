@@ -55,6 +55,8 @@ PrezManager::~PrezManager()
 {
     if (m_pendingChanges)
         saveToDisk();
+    if (m_loaded)
+        unload();
     delete m_pEngine;
 }
 
@@ -369,7 +371,7 @@ void PrezManager::unload()
     compressSwag( m_currentSlideDeckPath);
     m_prezProperties = QJsonObject();
     m_currentSlideDeckPath = QString();
-    m_settings.setValue("pathLastPrezOpened", "");
+    //m_settings.setValue("pathLastPrezOpened", "");
     m_loaded = false;
     setDisplayType(Welcome);
     emit prezLoaded();
@@ -538,7 +540,9 @@ void PrezManager::create( const QUrl& swagDocumentPath)
 
     obj.insert("title", QJsonValue::fromVariant( tr("New document")));
     obj.insert("displayMode", QJsonValue::fromVariant("Loader"));
-    obj.insert("author", QJsonValue::fromVariant( m_settings.value("profileAuthor").toString() ));
+    if (m_wp->isLoggedIn())
+        obj.insert("author", m_wp->property("username").toString());
+    else obj.insert("author", QJsonValue::fromVariant( m_settings.value("profileAuthor").toString() ));
     obj.insert("defaultBackground", QJsonValue::fromVariant( ""));
     obj.insert("defaultTextColor", QJsonValue::fromVariant( "black"));
 
@@ -698,6 +702,13 @@ bool PrezManager::load(const QUrl& url)
     QFileInfo file( url.toLocalFile() );
     if ( file.exists() ) {
         return loadDirectory( extractSwag( file.filePath() ));
+    }
+    else{
+        //
+        QUrl newUrl = QUrl::fromLocalFile(url.path());
+        file = newUrl.toLocalFile( );
+        if (file.exists())
+            return loadDirectory( extractSwag( file.filePath() ));
     }
 
     return false;

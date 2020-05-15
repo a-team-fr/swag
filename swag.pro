@@ -26,14 +26,13 @@ SOURCES += \
 
 HEADERS += \
     deps/miniz-2.1.0/miniz.h \
-    deps/miniz-cpp/zip_file.hpp \
     src/pdfexporter.h \
     src/prezmanager.h \
     src/qclearablecacheqmlengine.hpp \
     src/qttshelper.hpp \
     src/restinpeace.h \
     src/wordprest.h \
-    ziputils.hpp
+    src/ziputils.hpp
 
 RESOURCES += qml.qrc \
 

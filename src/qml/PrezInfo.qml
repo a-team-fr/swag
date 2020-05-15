@@ -57,8 +57,7 @@ Frame{
                      Layout.fillWidth: true
                      Label{
                          width:parent.width
-                         text:NavMan.settings.profileAuthor
-                         //onEditingFinished: pm.savePrezSettings("author", pm.prezProperties.author)
+                         text:pm.prezProperties.author
                      }
                  }
 

@@ -29,9 +29,15 @@ MenuBar {
 
     FileDialog{
         id: fileDialog
+        //fileMode: FileDialog.OpenFile
+        nameFilters: [ "Swag document (*.swag)" ]
+        defaultSuffix:"swag"
+        selectExisting: fileAction == "Open"
+        title:fileAction=="Open" ? qsTr("Open a swag document")  : qsTr("Select a new Swag document name")
         property string fileAction :""
-        folder:"file://"+pm.slideDecksFolderPath
-        selectFolder: true
+        folder:pm.slideDecksFolderPath//folder:"file://"+pm.slideDecksFolderPath
+        //modality: Qt.ApplicationModal
+
         onAccepted: {
             if (fileAction == "Open")
                 pm.load( fileUrl )

@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        deps/miniz-2.1.0/miniz.c \
         src/main.cpp \
         src/pdfexporter.cpp \
         src/prezmanager.cpp \
@@ -24,12 +25,15 @@ SOURCES += \
         src/wordprest.cpp
 
 HEADERS += \
+    deps/miniz-2.1.0/miniz.h \
+    deps/miniz-cpp/zip_file.hpp \
     src/pdfexporter.h \
     src/prezmanager.h \
     src/qclearablecacheqmlengine.hpp \
     src/qttshelper.hpp \
     src/restinpeace.h \
-    src/wordprest.h
+    src/wordprest.h \
+    ziputils.hpp
 
 RESOURCES += qml.qrc \
 

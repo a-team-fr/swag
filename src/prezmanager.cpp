@@ -26,6 +26,9 @@
 #include <QQmlContext>
 #include <QTimer>
 #include <QStandardPaths>
+
+#include "ziputils.hpp"
+
 //#include <filesystem>
 
 PrezManager::PrezManager(QObject *parent) : QObject(parent)
@@ -37,7 +40,7 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
         QString pathLastPrezOpened = m_settings.value("pathLastPrezOpened").toString();
         qDebug() << "opened last :" << pathLastPrezOpened;
         if ( !pathLastPrezOpened.isEmpty() )
-            load( QDir(pathLastPrezOpened));
+            load( pathLastPrezOpened +".swag");
     }
 
     m_wp = new Wordprest(this);
@@ -52,6 +55,33 @@ PrezManager::~PrezManager()
     if (m_pendingChanges)
         saveToDisk();
     delete m_pEngine;
+}
+
+
+
+QDir PrezManager::extractSwag(const QString &localfilePath) const
+{
+    QDir extractDir = ZipUtils::unzip(localfilePath);
+    if (extractDir != ZipUtils::invalidDir())
+    {
+        //cleanup no longer needed swag
+        QFile::remove( localfilePath );
+    }
+    return extractDir;
+}
+
+
+bool PrezManager::compressSwag(const QString& srcDirectoryPath) const
+{
+    QFileInfo swag = ZipUtils::zip( srcDirectoryPath, srcDirectoryPath + ".swag" );
+    if ( ! swag.path().isEmpty() )
+    {
+        //remove no longer needed extracted folder
+        QDir(srcDirectoryPath).removeRecursively();
+        return true;
+    }
+    return false;
+
 }
 
 void PrezManager::reload(bool restartApp )
@@ -299,7 +329,7 @@ QUrl PrezManager::lookForLocalFile(const QString &filePath) const
     return QUrl(filePath);
 }
 
-bool PrezManager::load(QDir prezFolder)
+bool PrezManager::loadDirectory(QDir prezFolder)
 {
     if (!m_currentSlideDeckPath.isEmpty())
         unload();
@@ -335,6 +365,7 @@ void PrezManager::unload()
     if (m_pendingChanges)
         saveToDisk();
 
+    compressSwag( m_currentSlideDeckPath);
     m_prezProperties = QJsonObject();
     m_currentSlideDeckPath = QString();
     m_settings.setValue("pathLastPrezOpened", "");
@@ -480,21 +511,26 @@ QVariantList PrezManager::urlSlides() const
 
 QString PrezManager::proposeNewNameAvailable(int retry) const
 {
-    QString documentName = retry > 0 ? tr("NewSwag%1").arg(retry) : tr("NewSwag");
-    QDir tmpDir( slideDecksFolderPath() + "/" + documentName);
-    if ( tmpDir.exists() )
-        return proposeNewNameAvailable(retry+1);
-    return tmpDir.path();
+    QString documentName = retry > 0 ? tr("NewSwag%1.swag").arg(retry) : tr("NewSwag.swag");
+    QFileInfo tmpDoc( slideDecksFolderPath() + QDir::separator() + documentName);
+    if ( tmpDoc.exists() )
+        return proposeNewNameAvailable( retry + 1 );
+    return tmpDoc.filePath();
 }
 
-void PrezManager::create(QString url)
+void PrezManager::create( const QUrl& swagDocumentPath)
 {
-    if (url.isEmpty())
-        url = proposeNewNameAvailable();
-    QDir tmpDir(url);
+    QFileInfo swagDoc = swagDocumentPath.toLocalFile();
 
-    if ( !tmpDir.exists() )
-        tmpDir.mkpath(tmpDir.path());
+    if (swagDoc.path().isEmpty())
+        swagDoc = proposeNewNameAvailable();
+
+    QDir tmpDir = swagDoc.dir().path() + QDir::separator()+swagDoc.baseName();
+    if ( tmpDir.exists() ){
+        //we shouldn't have an existing directory - rename
+        tmpDir.rename(tmpDir.path(), tmpDir.path()+"_saved");
+    }
+    tmpDir.mkpath(tmpDir.path());
 
     QJsonObject obj;
 
@@ -515,16 +551,13 @@ void PrezManager::create(QString url)
 
 
     saveToDisk(tmpDir.path(), obj);
-    load(tmpDir);
+    loadDirectory(tmpDir);
 
     //There is no point creating a new document without any slide
     createSlide();
 
     selectSlide(0);
     setDisplayType(Slide);
-
-
-
 
 }
 
@@ -642,27 +675,32 @@ void copyPath(QString src, QString dst)
 }
 
 
-
 bool PrezManager::loadGalleryDocument()
 {
-    QDir galleryPath( slideDecksFolderPath() + "/Gallery");
+    QFile galleryPath( slideDecksFolderPath() + "/gallery.swag");
+    //QDir galleryPath( slideDecksFolderPath() + "/Gallery");
     if (!galleryPath.exists())
     {
-        galleryPath.mkdir( galleryPath.path());
         //std::filesystem::copy( QString(installPath()+"examples/Gallery").toStdString(), galleryPath.path().toStdString(), std::filesystem::copy_options::recursive);
-        copyPath(installPath()+"/examples/Gallery" , galleryPath.path());
+        //copyPath(installPath()+"/examples/Gallery" , galleryPath.path());
+        QFile::copy(installPath()+"/examples/gallery.swag", slideDecksFolderPath() + "/gallery.swag");
     }
-    return load( galleryPath.path() );
+    //return load( galleryPath);
+    return loadDirectory( extractSwag(slideDecksFolderPath() + "/gallery.swag") );
 }
 
-bool PrezManager::load(QString url)
+bool PrezManager::load(const QUrl& url)
 {
     if (url.isEmpty())
         return loadGalleryDocument();
-    QDir tmpDir(url);
-    if ( !tmpDir.exists() )
-        tmpDir = QDir( QUrl(url).toLocalFile());
-    return load( tmpDir);
+
+    QFileInfo file( url.toLocalFile() );
+    if ( file.exists() ) {
+        return loadDirectory( extractSwag( file.filePath() ));
+    }
+
+    return false;
+
 }
 
 /*

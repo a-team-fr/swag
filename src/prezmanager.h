@@ -37,6 +37,7 @@
 #include "src/qclearablecacheqmlengine.hpp"
 #include "wordprest.h"
 
+
 /**
  * @brief The PrezManager class (the Swag C++ backend, available in QML engine as "pm")
  * This class handle the slide deck and navigation
@@ -142,7 +143,7 @@ public slots:
      * @param url : file path to the document to open. If empty, the Gallery will be opened
      * @return false in case of error
      */
-    bool load(QString url);
+    bool load(const QUrl& url);
     void unload();
 
     void savePrezSettings(QString key, QVariant value);
@@ -159,7 +160,7 @@ public slots:
     void nextSlide(){ selectSlide( m_selectedSlide+1); }
     void previousSlide(){ selectSlide( m_selectedSlide-1); }
 
-    void create(QString url);
+    void create(const QUrl& swagDocumentPath);
     void createSlide();
     void cloneSlide(int idxSlide = -1);
     void removeSlide(int idxSlide = -1);
@@ -184,6 +185,13 @@ public slots:
 
 
 private:
+
+    /**
+     * @brief addDirectoryContentToArchive
+     */
+    QDir extractSwag(const QString& localfilePath) const;
+    bool compressSwag(const QString& srcDirectoryPath) const;
+
     QString installPath() const;
     void setInstallPath(QString newPath) ;
 
@@ -207,7 +215,7 @@ private:
     QString defaultBackround() const;
     QString defaultTextColor() const;
 
-    bool load(QDir prezFolder);
+    bool loadDirectory(QDir prezFolder);
     bool m_loaded = false;
     QString m_currentSlideDeckPath = QString();
     bool loadGalleryDocument();

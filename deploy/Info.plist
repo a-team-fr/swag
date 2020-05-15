@@ -30,6 +30,23 @@
 	<string>NSApplication</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>
 	<true/>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>swag</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>swag.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Swag document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+		</dict>
+	</array>
 	<key>NSHumanReadableCopyright</key>
 	<string>GPL Copyright A-Team.fr</string>
 </dict>

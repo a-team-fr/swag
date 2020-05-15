@@ -21,6 +21,7 @@
 ****************************************************************************/
 #include <QGuiApplication>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDebug>
 #include <QIcon>
 #include "src/prezmanager.h"
@@ -34,10 +35,24 @@ int main(int argc, char *argv[])
     app.setOrganizationName("A-Team");
     app.setOrganizationDomain("a-team.fr");
     app.setApplicationName("swag");
+    app.setApplicationVersion(QString(VERSION));
     app.setWindowIcon(QIcon(":/res/SwagLogo.iconset/icon1024.png"));
 
+    QCommandLineParser parser;
+    parser.setApplicationDescription("a free presentation system based on Qt");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("swagdoc", QCoreApplication::translate("main", "The swag document (.swag) to open"));
+    parser.process(app);
+    const QStringList args = parser.positionalArguments();
 
     PrezManager prezManager;
+
+    if ( (args.count() > 0) && !args[0].isEmpty())
+    {
+        qInfo() << "opening from command line :" << args[0];
+        prezManager.load( args[0] );
+    }
 
     return app.exec();
 }

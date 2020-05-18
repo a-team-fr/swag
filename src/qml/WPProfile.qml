@@ -35,12 +35,12 @@ Frame {
         clip:true
         contentHeight: content.childrenRect.height
 
-        ColumnLayout{
+        Column{
             id:content
             anchors.fill: parent
 
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("username")
                 TextField{
                     id:username
@@ -49,7 +49,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("email")
                 TextField{
                     id:email
@@ -58,7 +58,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("registered")
                 Label{
                     id:registered
@@ -67,7 +67,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("description")
                 Label{
                     id:description
@@ -76,7 +76,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("displayname")
                 Label{
                     id:displayname
@@ -85,7 +85,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("firstname")
                 Label{
                     id:firstname
@@ -94,7 +94,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("lastname")
                 Label{
                     id:lastname
@@ -103,7 +103,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("nicename")
                 Label{
                     id:nicename
@@ -112,7 +112,7 @@ Frame {
                 }
             }
             GroupBox{
-                Layout.fillWidth: true
+                width: parent.width
                 title: qsTr("nickname")
                 Label{
                     id:nickname

@@ -47,8 +47,8 @@ Filename: {tmp}\vcredist_x64.exe; \
     Parameters: "/q /passive /Q:a /c:""msiexec /q /i vcredist.msi"""; \
     StatusMsg: "Installing VC++ 2019 Redistributables..."
 
-[Registry]
-Root: HKCR; Subkey: ".swag"; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; ValueType: string;  ValueName: ""
-Root: HKCR; Subkey: "{#MyAppName}"; ValueData: "Program {#MyAppName}";  Flags: uninsdeletekey; ValueType: string;  ValueName: ""
-Root: HKCR; Subkey: "{#MyAppName}\DefaultIcon"; ValueData: "{app}\{#MyAppExeName},0"; ValueType: string;  ValueName: ""
-Root: HKCR; Subkey: "{#MyAppName}\shell\open\command";  ValueData: """{app}\{#MyAppExeName}"" ""%1"""; ValueType: string;  ValueName: ""
+;[Registry]
+;Root: HKCR; Subkey: ".swag"; ValueData: "{#MyAppName}"; Flags: uninsdeletevalue; ValueType: string;  ValueName: ""
+;Root: HKCR; Subkey: "{#MyAppName}"; ValueData: "Program {#MyAppName}";  Flags: uninsdeletekey; ValueType: string;  ValueName: ""
+;Root: HKCR; Subkey: "{#MyAppName}\DefaultIcon"; ValueData: "{app}\{#MyAppExeName},0"; ValueType: string;  ValueName: ""
+;Root: HKCR; Subkey: "{#MyAppName}\shell\open\command";  ValueData: """{app}\{#MyAppExeName}"" ""%1"""; ValueType: string;  ValueName: ""

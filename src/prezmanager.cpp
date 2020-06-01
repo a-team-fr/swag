@@ -47,9 +47,12 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
 
     startSwagApp();
     m_wp->setHostURI( m_settings.value("swagBackend").toString() );
+
+    m_net = new Networking( this);
+    connect( m_wp, &Wordprest::loginChanged, this, &PrezManager::loginChanged);
+
     if (m_settings.value("signinAtStartup").toBool())
         m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
-
 }
 PrezManager::~PrezManager()
 {
@@ -97,6 +100,12 @@ void PrezManager::reload(bool restartApp )
         m_pEngine->clearCache();
         emit slideChanged();
     }
+}
+
+void PrezManager::loginChanged() const{
+    m_net->onLoginChanged(
+                m_wp->property("userId").toUInt(),
+                m_wp->property("username").toString());
 }
 
 void PrezManager::startSwagApp()
@@ -393,6 +402,8 @@ QString PrezManager::title() const
         case GlobalSettings: return tr("Settings");
         case WPConnect : return tr("Connection to swagsoftware.net");
         case WPProfile : return tr("Profile");
+        case NetworkingTest : return tr("Test WS");
+
         case PrezSettings: return "Deck Settings";
         case SlideSettings: return "Slide Settings";
         case SlideExport: return "Slides Export";
@@ -472,6 +483,7 @@ QUrl PrezManager::currentDisplay() const
         case GlobalSettings: return documentUrl("SettingsPage.qml");
         case WPConnect : return documentUrl("WPConnect.qml");
         case WPProfile : return documentUrl("WPProfile.qml");
+        case NetworkingTest : return documentUrl("Networking.qml");
         case PrezSettings: return documentUrl("PrezInfo.qml");
         case SlideSettings: return documentUrl("SlideInfo.qml");
         case SlideExport: return documentUrl("SlidesExporter.qml");

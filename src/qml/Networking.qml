@@ -25,15 +25,9 @@ import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
 import FontAwesome 1.0
-//import SortFilterProxyModel 0.2
 
 Frame {
     id: root
-
-    /*SortFilterProxyModel{
-        id:sortedLstMessage
-        sourceModel: pm.net.lstMessage
-    }*/
 
     property var lstTestMessageJSArray : [
         {text: "hello", time : 147559985, userName:"test", userColor:"red", userId:1},

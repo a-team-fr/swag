@@ -36,6 +36,7 @@
 #include <QTimer>
 #include "src/qclearablecacheqmlengine.hpp"
 #include "wordprest.h"
+#include "networking.h"
 
 
 /**
@@ -47,6 +48,8 @@ class PrezManager : public QObject
     Q_OBJECT
 
     Q_PROPERTY(Wordprest* wp MEMBER m_wp NOTIFY installPathChanged)
+    Q_PROPERTY(Networking* net MEMBER m_net NOTIFY installPathChanged)
+
     /**
      * @brief root of the installation : default applicationDirectory
      */
@@ -91,7 +94,7 @@ public:
      * anyother values are for special page (change application settings, export to pdf etc...)
      */
     enum DisplayType{ Slide, Slide_Loader,Slide_ListView,Slide_FlatView,
-                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About, WPConnect, WPProfile};
+                      Welcome, GlobalSettings, PrezSettings, SlideSettings, SlideExport, About, WPConnect, WPProfile, NetworkingTest};
     Q_ENUM(DisplayType)
 
 
@@ -120,7 +123,7 @@ signals:
 
 public slots:
     void reload(bool restartApp = false);
-
+    void loginChanged() const;
     /**
      * @brief readDocument - low level document reading
      * @param documentPath
@@ -266,6 +269,7 @@ private:
     bool m_viewWorldMode = false;
 
     Wordprest* m_wp = nullptr;
+    Networking* m_net = nullptr;
 
 };
 

@@ -1,3 +1,4 @@
+
 /****************************************************************************
 **
 ** Copyright (C) 2020 A-Team.
@@ -39,7 +40,7 @@ class Wordprest : public RestInPeace
     Q_PROPERTY( uint userId MEMBER m_userId NOTIFY loginChanged)
     Q_PROPERTY( QString username MEMBER m_userName NOTIFY loginChanged)
     Q_PROPERTY( QString email MEMBER m_email NOTIFY loginChanged)
-    Q_PROPERTY( QString avatar MEMBER m_avatar NOTIFY avatarChanged)
+    Q_PROPERTY( QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY( bool loggedIn READ isLoggedIn NOTIFY loginChanged)
 
 public:
@@ -48,15 +49,18 @@ public:
     bool isLoggedIn() const;
 
 signals :
-    void loginChanged();
+    void loginChanged();        //For some reason, I can't connect to this signal - workaround : on success login PrezManager::loginChanged is directly called
     void avatarChanged();
+    void avatarsChanged();
     void userDataChanged();
+
+    void dummySignalToDebug();
 
 public slots:
     bool logIn(const QString& username, const QString& password);
     bool logOut();
     bool signup(const QString& username, const QString& email, const QString& password);
-    bool getAvatar(bool full = false);
+    QString getAvatar(uint userID = 0, bool full = false);
     bool deleteAccount();
     bool passwordReset(const QString& username);
     //bool updateUser(const QVariantMap& valueMap);
@@ -66,7 +70,12 @@ public slots:
 
     //bool updatePassword(const QString& newPassword);
     //bool updateUserData(const QString& key, const QString& value);
+private slots:
+    void dummySlotsToResendLoginChangedSignal(){
+        qDebug() << "resend loginChanged";
+        emit loginChanged();
 
+    }
 private:
     QVariantMap m_userData = QVariantMap{};
     uint m_userId = 0;
@@ -74,7 +83,11 @@ private:
     QString m_email = "";
     QString m_authCookie="";
     QSettings m_settings;
-    QString m_avatar="";
+    QString avatar() const;
+    QMap<uint, QString> m_avatars;
+
+    QString m_password; //TEMPO DEBUG
+
 
 };
 

@@ -26,12 +26,15 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QDebug>
+#include <QEventLoop>
+#include "prezmanager.h"
 
 Wordprest::Wordprest(QObject *parent) : RestInPeace(parent)
 {
     //Defines default headers
     setHostURI("https://swagsoftware.net/");
     setRawHeader("Accept","application/json");
+
 }
 
 bool Wordprest::isLoggedIn() const
@@ -46,6 +49,8 @@ bool Wordprest::logIn(const QString &username, const QString &password)
     if (isLoggedIn())
         logOut();
 
+    m_password = password;
+
     //Create nonce cookie
     setEndPoint("api/get_nonce/?controller=user&method=generate_auth_cookie");
 
@@ -59,7 +64,9 @@ bool Wordprest::logIn(const QString &username, const QString &password)
             assert( ( status == "ok") && ( method == "generate_auth_cookie") && ( controller == "user"));
             QString nonce = obj.value("nonce").toString();
 
+
             setEndPoint("api/user/generate_auth_cookie/?nonce="+nonce+"&username="+username+"&password="+password);
+
             connect(this, &RestInPeace::replyFinished, [=]( QJsonDocument json){
                 disconnect( qobject_cast<QNetworkReply*>(sender()) );
                 if ( httpCode() == 200 ){
@@ -81,6 +88,7 @@ bool Wordprest::logIn(const QString &username, const QString &password)
                         m_userId = user["id"].toInt();
                         assert( m_userData["username"].toString() == username);
                         emit loginChanged();
+
                         //TODO validate nonce ?
                         m_settings.setValue("lastUserName", m_userName);
                         m_settings.setValue("lastPassword", password);
@@ -89,6 +97,11 @@ bool Wordprest::logIn(const QString &username, const QString &password)
                         setRawHeader("cookie",m_authCookie.toLatin1());
 
                         getAvatar();
+
+                        //for some reason connection with loginChanged is not working here (?)
+                        //so call directly a slot
+                        PrezManager* pm = static_cast<PrezManager*>( parent());
+                        pm->loginChanged();
 
                     }
 
@@ -111,12 +124,16 @@ bool Wordprest::logOut()
 
     m_userData = QVariantMap{};
     emit userDataChanged();
+    m_avatars.remove(m_userId);
     m_userId = 0;
     m_userName = "";
     m_email = "";
     m_authCookie = "";
     emit loginChanged();
-    m_avatar = "";
+    //for some reason connection with loginChanged is not working here (?)
+    //so call directly a slot
+    PrezManager* pm = static_cast<PrezManager*>( parent());
+    pm->loginChanged();
     emit avatarChanged();
     removeRawHeader("cookie");
 
@@ -173,13 +190,19 @@ bool Wordprest::signup(const QString &username, const QString &email, const QStr
 
 }
 
-bool Wordprest::getAvatar(bool full)
+QString Wordprest::getAvatar(uint userID, bool full)
 {
-    if (!isLoggedIn()) return false;
+    if (!isLoggedIn()) return "";
+    if (userID == 0) userID = m_userId;
 
-    setEndPoint(QString("api/user/get_avatar/?user_id=%1&type=%2").arg(m_userId).arg(full ? "full" : "thumb"));
+    if (m_avatars.contains(userID))
+        return m_avatars[userID];
 
-    connect(this, &RestInPeace::replyFinished, [=]( QJsonDocument json){
+    setEndPoint(QString("api/user/get_avatar/?user_id=%1&type=%2").arg(userID).arg(full ? "full" : "thumb"));
+
+    QEventLoop loop;
+
+    connect(this, &RestInPeace::replyFinished, [=,&loop]( QJsonDocument json){
         disconnect( qobject_cast<QNetworkReply*>(sender()) );
         if ( httpCode() == 200 ){
             QJsonObject obj = json.object();
@@ -189,9 +212,12 @@ bool Wordprest::getAvatar(bool full)
             {
                 QString avatar = obj.value("avatar").toString();
                 if (avatar.left(2) =="//")
-                    m_avatar = "https://"+ avatar.right( avatar.length() - 2 ); //for some reason return avatar contains "//"
-                else m_avatar = avatar;
-                emit avatarChanged();
+                    m_avatars[userID] = "https://"+ avatar.right( avatar.length() - 2 ); //for some reason return avatar contains "//"
+                else m_avatars[userID] = avatar;
+                emit avatarsChanged();
+
+                if (m_userId == userID)
+                    emit avatarChanged();
             }
             else
                 setError( obj.value("error").toString());
@@ -200,12 +226,21 @@ bool Wordprest::getAvatar(bool full)
             setError( json.object().value("error").toString());
         }
 
+
+        loop.quit();
+
     } );
 
+    //blocking request : we want to return the avatar URL
     request( QNetworkAccessManager::GetOperation);
 
-    return true;
+    loop.exec();
+
+    if (m_avatars.contains(userID))
+        return m_avatars[userID];
+    return "";
 }
+
 
 bool Wordprest::deleteAccount()
 {
@@ -263,7 +298,7 @@ bool Wordprest::passwordReset(const QString& username)
             if ( status == "ok")
             {
                 QString avatar = obj.value("avatar").toString();
-                m_avatar = avatar.right( avatar.length() - 2 ); //for some reason return avatar contains "//"
+                m_avatars[m_userId] = avatar.right( avatar.length() - 2 ); //for some reason return avatar contains "//"
             }
             else
                 setError( obj.value("error").toString());
@@ -277,6 +312,13 @@ bool Wordprest::passwordReset(const QString& username)
     request( QNetworkAccessManager::GetOperation);
 
     return true;
+}
+
+QString Wordprest::avatar() const
+{
+    if (m_avatars.contains( m_userId))
+        return m_avatars[m_userId];
+    else return "";
 }
 
 /*

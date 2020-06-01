@@ -1,6 +1,3 @@
 [submodule "deps/fontawesome.pri"]
 	path = deps/fontawesome.pri
 	url = https://github.com/benlau/fontawesome.pri
-[submodule "deps/SortFilterProxyModel"]
-	path = deps/SortFilterProxyModel
-	url = https://github.com/oKcerG/SortFilterProxyModel.git

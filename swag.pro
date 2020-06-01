@@ -1,4 +1,4 @@
-    QT += quick multimedia location positioning texttospeech sensors bluetooth quickcontrols2 printsupport webview charts datavisualization
+    QT += quick multimedia location positioning texttospeech sensors bluetooth quickcontrols2 printsupport webview charts datavisualization websockets
 QT += 3dcore 3drender 3dinput 3dlogic 3dquick 3danimation
 CONFIG += c++17
 
@@ -18,6 +18,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
         deps/miniz-2.1.0/miniz.c \
+        src/networking.cpp \
         src/main.cpp \
         src/pdfexporter.cpp \
         src/prezmanager.cpp \
@@ -26,6 +27,7 @@ SOURCES += \
 
 HEADERS += \
     deps/miniz-2.1.0/miniz.h \
+    src/networking.h \
     src/pdfexporter.h \
     src/prezmanager.h \
     src/qclearablecacheqmlengine.hpp \
@@ -107,6 +109,7 @@ else:win32{
 
 DISTFILES += \
     Swag/TextFieldDelegate.qml \
+    src/qml/Networking.qml \
     src/qml/WPConnect.qml \
     src/qml/WPProfile.qml
 

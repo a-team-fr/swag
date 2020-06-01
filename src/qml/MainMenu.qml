@@ -143,6 +143,11 @@ MenuBar {
             enabled: pm.loaded && pm.lstSlides.length
             onTriggered: pm.displayType = PM.SlideSettings
         }
+        MenuItem {
+            text: qsTr("Test WS")
+            onTriggered: pm.displayType = PM.NetworkingTest
+        }
+
     }
     Menu {
         title: qsTr("?")

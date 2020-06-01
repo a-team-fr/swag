@@ -73,7 +73,7 @@ ToolBar{
                     visible : pm.wp.loggedIn && pm.wp.avatar
                     fillMode: Image.PreserveAspectFit
                     source : visible ? pm.wp.avatar : ""
-                    onSourceChanged: console.log(source)
+                    //onSourceChanged: console.log(source)
                 }
                 Menu{
                     id:wpmenu

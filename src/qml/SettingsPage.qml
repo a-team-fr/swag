@@ -156,6 +156,58 @@ Frame{
                 }
             }
 
+            GroupBox{
+                title:qsTr("Local Websocket server")
+                width:parent.width
+                RowLayout{
+                    width:parent.width
+                    Label{
+                        Layout.fillWidth:true
+                        text:pm.net.localServer.serverUrl
+                        visible:pm.net.localServer.serverRunning
+                    }
+                    TextField{
+                        id:wsServerPort
+                        placeholderText: "port number - leave empty for automatic selection"
+                        visible:!pm.net.localServer.serverRunning
+                    }
+
+                    FAButton{
+                        text:pm.net.localServer.serverRunning ? qsTr("Stop server") : qsTr("Start server")
+                        onClicked: pm.net.localServer.serverRunning ? pm.net.localServer.stopServer() : pm.net.localServer.startServer(wsServerPort.text.length > 0 ? Number(wsServerPort.text) : 0)
+                        ToolTip.visible:hovered && pm.net.localServer.serverRunning
+                        ToolTip.text : pm.net.localServer.serverUrl
+                    }
+
+
+                }
+
+            }
+            GroupBox{
+                title:pm.net.clientRunning ? qsTr("Client Websocket (running)") : qsTr("Client Websocket")
+                width:parent.width
+                RowLayout{
+                    width:parent.width
+                    TextField{
+                        id:serverUrl
+                        Layout.fillWidth: true
+                        placeholderText:qsTr("url of the websocket server")
+                        enabled : !pm.net.clientRunning
+                        text: pm.net.clientRunning ? pm.net.url : ( pm.net.localServer.serverRunning ? pm.net.localServer.serverUrl : pm.net.lastWSConnectionUrl )
+                    }
+                    FAButton{
+                        text:pm.net.clientRunning ? qsTr("Stop client") : qsTr("Start client")
+                        ToolTip.text: qsTr("You need to be connected to swag backend to use the WS client")
+                        ToolTip.visible: hovered && !pm.wp.loggedIn
+                        onClicked: pm.net.clientRunning ? pm.net.stopClient() : pm.wp.loggedIn ? pm.net.startClient( serverUrl.text ) : null
+                    }
+
+
+
+                }
+
+            }
+
             ListModel{
                 id:lstMaterialColor
                 ListElement{ v:"#ffffff"; l:"White"}

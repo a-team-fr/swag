@@ -1,8 +1,8 @@
 "use strict";
 const PORT = process.env.PORT || 8100;
-const HOST = process.env.HOST || "fd00::3:329c";//"127.0.0.1"
+const HOST = process.env.HOST || "127.0.0.1";
 const HISTORY_LENGTH = 100;
-const ActionType = Object.freeze({"history":1, "hello":2, "message":3, "channel":4 , "clients":5 })
+const ActionType = Object.freeze({"history":1, "hello":2, "message":3, "channel":4 , "clients":5, "document":6 })
 var webSocketServer = require('websocket').server;
 var http = require('http');
 var colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
@@ -35,6 +35,8 @@ wsServer.on('request', function(request) {
     };
 
     connection.sendUTF(JSON.stringify( { type: ActionType.history, data: MessagesInChannel(clientInfo.channel)} ));
+    connection.sendUTF(JSON.stringify( { type: ActionType.channel, data: channels()} ));
+
 
     lstClients.push(clientInfo);
 
@@ -92,6 +94,8 @@ wsServer.on('request', function(request) {
 
             var oldChannelClients = clientsInChannel(oldChannel);
             var newChannelClients = clientsInChannel(clientInfo.channel);
+            var lstChannels = channels();
+
             for (var i=0; i < lstConnections.length; i++)
             {
                 var client = lstClients[i];
@@ -99,10 +103,25 @@ wsServer.on('request', function(request) {
                   lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.clients, data: newChannelClients} ));
                 else if (client.channel === oldChannel)
                   lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.clients, data: oldChannelClients} ));
+
+                lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.channel, data: lstChannels} ));
             }
 
             connection.sendUTF(JSON.stringify( { type: ActionType.history, data: MessagesInChannel(clientInfo.channel)} ));
 
+
+
+        }
+        else if (messageType == ActionType.document)
+        {
+            var channel = lstClients[index].channel;
+            for (var i=0; i < lstConnections.length; i++)
+            {
+                var client = lstClients[i];
+
+                if ( (client.channel === channel) && (lstConnections[i] != connection))
+                  lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.document, data: messageData } ));
+            }
         }
     });
 
@@ -118,12 +137,15 @@ wsServer.on('request', function(request) {
             // remove user from the list of connected lstConnections
             lstConnections.splice(index, 1);
             lstClients.splice(index, 1);
+            var lstChannels = channels();
             var selectedClients = clientsInChannel(clientInfo.channel);
             for (var i=0; i < lstConnections.length; i++)
             {
                 var client = lstClients[i];
                 if (client.channel === clientInfo.channel)
                   lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.clients, data: selectedClients} ));
+
+                lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.channel, data: lstChannels} ));
             }
             colors.push(clientInfo.userColor);
 
@@ -147,4 +169,16 @@ function clientsInChannel(selectChannel)
   return lstClients.filter(function(client){
       return client.channel === selectChannel
   });
+}
+
+function channels()
+{
+  var lstChannels = [];
+  for (var i=0; i < lstClients.length; i++)
+  {
+      var client = lstClients[i];
+      if (client.presenter === true)
+        lstChannels.push( { channel: client.channel, owner: client.userName } );
+  }
+  return lstChannels;
 }

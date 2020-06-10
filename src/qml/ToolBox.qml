@@ -37,7 +37,7 @@ Frame{
     ListModel{
         id:lstTools
         ListElement{
-            icon: "\uf0f6"//FontAwesome.fileTextO
+            icon: "\uf1ea"//FontAwesome.newspaper
             elementType:"TextElement.qml"
             tooltip:qsTr("Add a text element")
         }
@@ -72,12 +72,12 @@ Frame{
             tooltip:qsTr("Add an Input element")
         }
         ListElement{
-            icon: "\uf278"//FontAwesome.mapO
+            icon: "\uf279"//FontAwesome.map
             elementType:"MapElement.qml"
             tooltip:qsTr("Add a Map element")
         }
         ListElement{
-            icon: "\uf29c"//FontAwesome.questionCircleO
+            icon: "\uf059"//FontAwesome.questionCircle
             elementType:"FlipableElement.qml"
             tooltip:qsTr("Add an Flipable element")
         }

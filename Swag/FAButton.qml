@@ -69,6 +69,8 @@ Control{
         Text{
             id:icon
             font.family:FontAwesome.fontFamily
+            //font.weight : Font.Black
+            //font.styleName: "solid"
             width:visible ? root.height : 0
             color: root.iconColor
             Layout.maximumHeight:root.height - 2*root.padding

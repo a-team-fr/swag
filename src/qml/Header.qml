@@ -63,8 +63,8 @@ ToolBar{
                 id:loginAlias
                 height:parent.height
                 width:height
-                icon: pm.wp.loggedIn ? FontAwesome.signOut : FontAwesome.signIn
-                onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
+                icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
+                //onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
                 //ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
                 //ToolTip.visible: hovered
                 onHoveredChanged: { if (hovered) wpmenu.open()}

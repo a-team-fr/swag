@@ -137,7 +137,7 @@ DownloadJob::DownloadJob(const QUrl &url, const QString &localfilePath):m_url(ur
 
     connect(reply, &QNetworkReply::finished, this, &DownloadJob::downloadFinished);
     connect(reply, &QNetworkReply::downloadProgress, this, &DownloadJob::downloadProgress);
-    connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){ qDebug() << "Donwload error : " << code;});
+    //connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){ qDebug() << "Download error : " << code;});
 }
 
 void DownloadJob::downloadProgress(qint64 bytesSent, qint64 bytesTotal)

@@ -26,6 +26,7 @@ import QtQuick.Controls.Material 2.14
 import fr.ateam.swag 1.0
 import Swag 1.0
 import FontAwesome 1.0
+import QtQuick.Dialogs 1.3
 
 ApplicationWindow {
     id: mainApp
@@ -46,7 +47,36 @@ ApplicationWindow {
     Material.theme : pm.loaded ? pm.prezProperties.materialTheme : NavMan.settings.materialTheme
 
 
-    menuBar:MainMenu{}
+    //menuBar:MainMenu{}
+    MainMenu{
+        onOpenDocument:{
+            fileDialog.fileAction = "Open";
+            fileDialog.open();
+        }
+        onNewDocument:{
+            fileDialog.fileAction = "New";
+            fileDialog.open();
+        }
+    }
+
+    FileDialog{
+        id: fileDialog
+        //fileMode: FileDialog.OpenFile
+        nameFilters: [ "Swag document (*.swag)" ]
+        defaultSuffix:"swag"
+        selectExisting: fileAction == "Open"
+        title:fileAction=="Open" ? qsTr("Open a swag document")  : qsTr("Select a new Swag document name")
+        property string fileAction :""
+        folder:pm.slideDecksFolderPath//folder:"file://"+pm.slideDecksFolderPath
+        //modality: Qt.ApplicationModal
+
+        onAccepted: {
+            if (fileAction == "Open")
+                pm.load( fileUrl )
+            else if (fileAction == "New")
+            pm.create( fileUrl )
+        }
+    }
 
     header:Header{
         id:toolBar
@@ -57,7 +87,8 @@ ApplicationWindow {
         id:leftMenu
         width:Math.min(150, mainApp.contentItem.width * .3)
         height:mainApp.contentItem.height
-        y:menuBar.height + toolBar.height
+        //y:menuBar.height + toolBar.height
+        y:toolBar.height
     }
 
 

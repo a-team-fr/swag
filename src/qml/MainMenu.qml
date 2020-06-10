@@ -22,56 +22,27 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.5
 import fr.ateam.swag 1.0
-import QtQuick.Dialogs 1.3
+
+import Qt.labs.platform 1.1
 
 MenuBar {
     id: menuBar
 
-    FileDialog{
-        id: fileDialog
-        //fileMode: FileDialog.OpenFile
-        nameFilters: [ "Swag document (*.swag)" ]
-        defaultSuffix:"swag"
-        selectExisting: fileAction == "Open"
-        title:fileAction=="Open" ? qsTr("Open a swag document")  : qsTr("Select a new Swag document name")
-        property string fileAction :""
-        folder:pm.slideDecksFolderPath//folder:"file://"+pm.slideDecksFolderPath
-        //modality: Qt.ApplicationModal
-
-        onAccepted: {
-            if (fileAction == "Open")
-                pm.load( fileUrl )
-            else if (fileAction == "New")
-            pm.create( fileUrl )
-        }
-    }
-
-    Shortcut {
-        sequence: StandardKey.Open
-        context: Qt.ApplicationShortcut
-        onActivated: {           
-            fileDialog.fileAction = "Open";
-            fileDialog.open();
-        }
-    }
-
+    signal newDocument();
+    signal openDocument();
 
 
     Menu {
         title: qsTr("File")
         MenuItem {
             text: qsTr("New")
-            onTriggered: {
-                fileDialog.fileAction = "New";
-                fileDialog.open();
-            }
+            onTriggered: menuBar.newDocument()
+            shortcut:"Ctrl+N"
         }
         MenuItem {
             text: qsTr("Open")
-            onTriggered: {
-                fileDialog.fileAction = "Open";
-                fileDialog.open();
-            }
+            onTriggered: menuBar.openDocument()
+            shortcut:"Ctrl+O"
         }
 
         /*MenuItem {
@@ -79,18 +50,23 @@ MenuBar {
             onTriggered: NavMan.saveCurrentSlide()//pm.saveToDisk()
         }*/
         MenuItem {
-            text: qsTr("Save (Ctrl+S)")
+            text: qsTr("Save")
             onTriggered: NavMan.actionSave()
             enabled:pm.loaded
+            shortcut:"Ctrl+S"
+
         }
         MenuItem {
             text: qsTr("Close")
             onTriggered: pm.unload()
             enabled:pm.loaded
+            shortcut:"Ctrl+W"
         }
         MenuItem {
             text: qsTr("Quit")
+            role:MenuItem.QuitRole
             onTriggered: Qt.quit()
+            shortcut:"Ctrl+Q"
         }
     }
     Menu {
@@ -99,6 +75,7 @@ MenuBar {
             text: qsTr("New slide")
             onTriggered: pm.createSlide()
             enabled:pm.loaded
+            shortcut:"Ctrl+Shift+N"
         }
         MenuItem {
             text: qsTr("PrintPdf")
@@ -106,30 +83,34 @@ MenuBar {
             enabled:pm.loaded
         }
         MenuItem {
-            text: qsTr("Edit mode (Ctrl+E)")
+            text: qsTr("Edit mode")
             onTriggered:pm.editMode = !pm.editMode
             checkable: true
             checked: pm.editMode
             enabled:pm.loaded
+            shortcut:"Ctrl+E"
         }
         MenuItem {
-            text: qsTr("Edit deck world (Ctrl+D)")
+            text: qsTr("Edit deck world")
             onTriggered: pm.viewWorldMode = !pm.viewWorldMode
             enabled:pm.loaded && (pm.displayType == PM.Slide_FlatView)
             checkable: true
             checked: pm.viewWorldMode
+            shortcut:"Ctrl+D"
         }
         MenuItem {
-            text: qsTr("Show code (Ctrl+T)")
+            text: qsTr("Show code")
             onTriggered: pm.showDocumentCode = !pm.showDocumentCode
             checkable: true
             checked: pm.showDocumentCode
             enabled:pm.loaded
+            shortcut:"Ctrl+T"
         }
     }
     Menu {
         title: qsTr("View")
         MenuItem {
+            //role:MenuItem.PreferencesRole
             text: qsTr("Settings")
             onTriggered: pm.displayType = PM.GlobalSettings
         }
@@ -144,14 +125,16 @@ MenuBar {
             onTriggered: pm.displayType = PM.SlideSettings
         }
         MenuItem {
-            text: qsTr("Test WS")
+            text: qsTr("Message")
             onTriggered: pm.displayType = PM.NetworkingTest
+            shortcut:"Ctrl+M"
         }
 
     }
     Menu {
         title: qsTr("?")
         MenuItem {
+            role:MenuItem.AboutRole
             text: qsTr("About s🤘ag")
             onTriggered: pm.displayType = PM.About
         }

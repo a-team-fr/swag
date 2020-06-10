@@ -54,8 +54,6 @@ signals :
     void avatarsChanged();
     void userDataChanged();
 
-    void dummySignalToDebug();
-
 public slots:
     bool logIn(const QString& username, const QString& password);
     bool logOut();
@@ -70,12 +68,7 @@ public slots:
 
     //bool updatePassword(const QString& newPassword);
     //bool updateUserData(const QString& key, const QString& value);
-private slots:
-    void dummySlotsToResendLoginChangedSignal(){
-        qDebug() << "resend loginChanged";
-        emit loginChanged();
 
-    }
 private:
     QVariantMap m_userData = QVariantMap{};
     uint m_userId = 0;

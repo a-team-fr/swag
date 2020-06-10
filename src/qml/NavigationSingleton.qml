@@ -53,6 +53,11 @@ Item {
         property color materialForeground : "#ffffff"
         property color materialPrimary : "#3f51b5"
         property int materialTheme :  Material.Dark
+
+        property string ftpHost : "ftp.swagsoftware.net"
+        property string ftpUser : "swagapp@swagsoftware.net"
+        property string ftpPassword : "eWbsKg7~Kh^@"
+        property int ftpPort : 21
     }
 
     property var currentDocument : null //the object is either a slide, or prezSettings or slideSettings...

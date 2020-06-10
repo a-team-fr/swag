@@ -25,6 +25,159 @@
 #include <QJsonDocument>
 #include <QNetworkInterface>
 #include <QCborValue>
+#include "prezmanager.h"
+
+QNetworkAccessManager* SingletonQNam::m_nam = nullptr;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////// UploadJob ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+UploadJob::UploadJob(const QString &localfilePath, const QString &remoteDocName, QObject* parent):QObject(parent), m_localFile(localfilePath)
+{
+
+    QFileInfo inf (localfilePath);
+    //qDebug() << inf.size();
+    //qDebug() << inf.exists();
+
+    if (! m_localFile.open(QIODevice::ReadOnly)){
+        QString error = tr("error reading file %1").arg( localfilePath);
+        emit failed( error);
+        qDebug() << error;
+        deleteLater();
+    }
+    else{
+        m_url = remoteDocName;
+        m_url.setScheme("ftp");
+
+        m_url.setHost( m_settings.value("ftpHost", "ftp.swagsoftware.net").toString() );
+        m_url.setUserName( m_settings.value("ftpUser", "swagapp@swagsoftware.net").toString());
+        m_url.setPassword( m_settings.value("ftpPassword", "eWbsKg7~Kh^@").toString());
+        m_url.setPort( m_settings.value("ftpPort", 21).toInt() );
+        m_url.setPath(remoteDocName);
+
+        QNetworkReply* reply = SingletonQNam::qnam()->put( QNetworkRequest( m_url ), &m_localFile );
+        nr = reply;
+        connect(reply, &QNetworkReply::finished, this, &UploadJob::uploadFinished);
+        connect(reply, &QNetworkReply::uploadProgress, this, &UploadJob::uploadProgress);
+
+    }
+
+}
+
+UploadJob::~UploadJob()
+{
+    if ( m_localFile.isOpen())
+        m_localFile.close();
+
+}
+
+
+
+void UploadJob::uploadFinished()
+{
+    qDebug() << "upload finished";
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+
+    if (reply && reply->error() == QNetworkReply::NoError)
+    {
+        emit finish( m_url );
+        qDebug() << tr("Success uploading %1 to %2").arg( m_localFile.fileName()).arg(m_url.toDisplayString()) ;
+    }
+    else {
+        emit failed( tr("ERROR uploading file %1 with error :%2").arg( m_localFile.fileName()).arg(reply->errorString()) );
+        qDebug() << reply->errorString();
+    }
+
+    reply->deleteLater();
+
+    deleteLater();
+
+}
+
+void UploadJob::uploadProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+    if (bytesTotal==0 ) return;
+    emit progressed( m_localFile.fileName(), 100 * bytesSent / bytesTotal);
+    qDebug() << QString("Sending %1 : %2 / %3").arg(m_localFile.fileName()).arg(bytesSent).arg(bytesTotal);
+    if (bytesSent == bytesTotal)
+    {
+        QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+        qDebug() << "isFinished : " << reply->isFinished();
+        startTimer(1000);
+    }
+
+}
+
+void UploadJob::timerEvent(QTimerEvent *event)
+{
+    if (nr && nr->isFinished())
+        killTimer( event->timerId());
+    else
+    qDebug() << "still not finished !";
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////// DownloadJob ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DownloadJob::DownloadJob(const QUrl &url, const QString &localfilePath):m_url(url), m_localFilePath(localfilePath)
+{
+    QFileInfo fileinfo( m_localFilePath );
+    QDir dir( fileinfo.path() );
+
+    //ensure directory exists
+    if (!dir.exists())
+    {
+        dir.mkpath( fileinfo.path() );
+        qDebug()<< "create directory:" << fileinfo.path();
+    }
+
+    QNetworkRequest request(url);
+    QNetworkReply* reply = SingletonQNam::qnam()->get(request);
+
+    connect(reply, &QNetworkReply::finished, this, &DownloadJob::downloadFinished);
+    connect(reply, &QNetworkReply::downloadProgress, this, &DownloadJob::downloadProgress);
+    connect(reply, &QNetworkReply::errorOccurred, this, [=](QNetworkReply::NetworkError code){ qDebug() << "Donwload error : " << code;});
+}
+
+void DownloadJob::downloadProgress(qint64 bytesSent, qint64 bytesTotal)
+{
+    if (bytesTotal==0 ) return;
+    emit progressed( m_localFilePath, 100 * bytesSent / bytesTotal);
+    qDebug() << QString("receiving %1 : %2 / %3").arg(m_url.toString()).arg(bytesSent).arg(bytesTotal);
+}
+
+void DownloadJob::downloadFinished()
+{
+    QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
+
+    if (reply && reply->error() == QNetworkReply::NoError)
+    {
+        if (reply->bytesAvailable() > 0)
+        {
+            //int httpStatusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+            //if( httpStatusCode == 200 ) {
+                QFile file( m_localFilePath);
+                if ( !file.open(QIODevice::WriteOnly ) )
+                    emit failed( tr("File error : cannot open file %1").arg(m_localFilePath) );
+                if ( file.write( reply->readAll() ) == -1)
+                    emit failed( tr("File error : cannot write file %1").arg(m_localFilePath) );
+                emit finish( m_localFilePath );
+                file.deleteLater();
+            //} else emit failed( tr("download error %1").arg(httpStatusCode) );
+        }
+    } else emit failed( tr("ERROR loading file %1 with error :%2").arg(m_localFilePath).arg(reply->errorString()) );
+
+    reply->deleteLater();
+
+    deleteLater();
+
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////// WSServer ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 WSServer::WSServer(QObject *parent): QObject(parent)
 {
@@ -77,7 +230,9 @@ void WSServer::onNewConnection()
     connect( pSocket, &QWebSocket::disconnected, this, &WSServer::socketDisconnected);
 
     //Send back history to the new client
-    sendToClient( pSocket, WS_ActionsType::history, channelHistory("0") );
+    sendToClient( pSocket, WS_ActionsType::WS_HISTORY, channelHistory("0") );
+    //Send the list of channel
+    sendToClient( pSocket, WS_ActionsType::WS_CHANNEL, channels() );
 
     QVariantMap client;
     client["userName"]="";
@@ -141,19 +296,21 @@ bool WSServer::processAction(QWebSocket* pSender, WSServer::WS_ActionsType actio
 
     switch(action)
     {
-    case WS_ActionsType::channel:
+    case WS_ActionsType::WS_CHANNEL:
         senderInfo["channel"] = data["channel"];
         senderInfo["presenter"] = data["presenter"];
         m_clients[pSender] = senderInfo;
         //send channel clients to old channel
-        sendToChannel( channel, WS_ActionsType::clients, channelClients(channel) );
+        sendToChannel( channel, WS_ActionsType::WS_CLIENTS, channelClients(channel) );
         //send channel clients to current channel
         channel = data["channel"].toString();
-        sendToChannel( channel, WS_ActionsType::clients, channelClients(channel) );
+        sendToChannel( channel, WS_ActionsType::WS_CLIENTS, channelClients(channel) );
+        //Send to everyone the new channel list
+        sendToClients( m_clients.keys(), WS_ActionsType::WS_CHANNEL, channels() );
         //send to sender the history
-        sendToClient( pSender, WS_ActionsType::history, channelHistory(channel) );
+        sendToClient( pSender, WS_ActionsType::WS_HISTORY, channelHistory(channel) );
         break;
-    case WS_ActionsType::message:
+    case WS_ActionsType::WS_MESSAGE:
         //build message
         msg["time"] = time.toString();
         msg["text"] = data["message"];
@@ -166,20 +323,24 @@ bool WSServer::processAction(QWebSocket* pSender, WSServer::WS_ActionsType actio
             lastMessages.pop_front();
         lastMessages.push_back( msg);
         //send message to all channel clients
-        sendToChannel( channel, WS_ActionsType::message, msg );
+        sendToChannel( channel, WS_ActionsType::WS_MESSAGE, msg );
 
         break;
-    case WS_ActionsType::hello:
+    case WS_ActionsType::WS_HELLO:
         senderInfo["userName"] = data["userName"];
         senderInfo["userId"] = data["userId"];
         senderInfo["userColor"] = colors[m_lastUsedColors++ % colors.length()];
         m_clients[pSender] = senderInfo;
         //send back to channel clients the list of channel clients
-        sendToChannel( channel, WS_ActionsType::clients, channelClients(channel) );
+        sendToChannel( channel, WS_ActionsType::WS_CLIENTS, channelClients(channel) );
+        break;
+     //Simple forward to channel
+    case WS_ActionsType::WS_DOCUMENT:
+        sendToChannel( channel, action, data, pSender );
         break;
     //Actions not relevant for server
-    case WS_ActionsType::clients:
-    case WS_ActionsType::history:
+    case WS_ActionsType::WS_CLIENTS:
+    case WS_ActionsType::WS_HISTORY:
         qDebug() << "invalid actions:" << action << " with data:" << data;
 
     }
@@ -200,18 +361,20 @@ void WSServer::socketDisconnected()
         if (m_clients.isEmpty())
             lastMessages.clear();
         //send back to channel clients the list of channel clients
-        sendToChannel( channel, WS_ActionsType::clients, channelClients(channel) );
+        sendToChannel( channel, WS_ActionsType::WS_CLIENTS, channelClients(channel) );
+        //Send to everyone the new channel list
+        sendToClients( m_clients.keys(), WS_ActionsType::WS_CHANNEL, channels() );
 
     }
 }
 
-void WSServer::sendToChannel(const QString& channel, WS_ActionsType action, const QJsonValue& data)
+void WSServer::sendToChannel(const QString& channel, WS_ActionsType action, const QJsonValue& data,  QWebSocket* excludeSender )
 {
     //List of recipients
     QList<QWebSocket*> lstRecipients;
     for (QWebSocket* client : m_clients.keys())
     {
-        if ( channel == m_clients[client]["channel"].toString() )
+        if ( client != excludeSender && channel == m_clients[client]["channel"].toString() )
             lstRecipients.push_back(client);
     }
 
@@ -266,6 +429,22 @@ QJsonValue WSServer::channelClients(const QString &channel) const
     return lstClients;
 }
 
+QJsonValue WSServer::channels() const
+{
+    QJsonArray LstChannels;
+    for (QVariantMap client : m_clients)
+    {
+        if ( client["presenter"].toBool() )
+        {
+            QJsonObject channel;
+            channel["channel"]= client["channel"].toString();
+            channel["owner"]= client["userName"].toString();
+            LstChannels.push_back( channel );
+        }
+    }
+    return LstChannels;
+}
+
 QString WSServer::serverUrl() const
 {
     if (!serverRunning()) return "";
@@ -283,33 +462,33 @@ QString WSServer::serverUrl() const
     return QString("%1://%2:%3").arg(prefix).arg( ipv4addr).arg(m_pWSServer->serverPort());
 }
 
-/////////////////////// CLIENT /////////////////////////////////////////////////
-
-Networking::Networking(QObject *parent) : QObject(parent)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////// WSClient ////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+WSClient::WSClient(QObject *parent) : QObject(parent)
 {
     m_pServer = new WSServer(parent);
-
 }
 
-Networking::~Networking()
+WSClient::~WSClient()
 {
     if ( clientRunning() )
         stopClient();
 }
 
-void Networking::startClient(const QUrl &url)
+void WSClient::startClient(const QUrl &url)
 {
     if ( clientRunning() )
         stopClient();
 
-    m_url = url;
+    m_WSHostUrl = url;
     m_pWSClient = new QWebSocket();
     emit clientRunningChanged();
 
-    connect( m_pWSClient, &QWebSocket::connected, this, &Networking::onConnected);
-    connect( m_pWSClient, &QWebSocket::disconnected, this, &Networking::onDisconnected);
-    connect( m_pWSClient, &QWebSocket::textMessageReceived, this, &Networking::onTextMessageReceived);
-    connect( m_pWSClient, &QWebSocket::binaryMessageReceived, this, &Networking::onBinaryMessageReceived);
+    connect( m_pWSClient, &QWebSocket::connected, this, &WSClient::onConnected);
+    connect( m_pWSClient, &QWebSocket::disconnected, this, &WSClient::onDisconnected);
+    connect( m_pWSClient, &QWebSocket::textMessageReceived, this, &WSClient::onTextMessageReceived);
+    connect( m_pWSClient, &QWebSocket::binaryMessageReceived, this, &WSClient::onBinaryMessageReceived);
     connect( m_pWSClient, &QWebSocket::sslErrors, this, [=](){ qDebug()<< m_pWSClient->errorString();});
     connect( m_pWSClient, QOverload<QAbstractSocket::SocketError>::of(&QWebSocket::error), this, [=](){ qDebug()<< m_pWSClient->errorString(); });
 
@@ -321,7 +500,7 @@ void Networking::startClient(const QUrl &url)
 
 }
 
-void Networking::stopClient()
+void WSClient::stopClient()
 {
     if ( !clientRunning() ) return;
 
@@ -331,11 +510,11 @@ void Networking::stopClient()
     emit clientRunningChanged();
 }
 
-QUrl Networking::lastWSConnectionUrl() const{
+QUrl WSClient::lastWSConnectionUrl() const{
     return m_settings.value("lastWSConnectionUrl", "ws://swagsoftware.alwaysdata.net/:8100").toUrl();
 }
 
-void Networking::onLoginChanged(uint userId, const QString& userAlias)
+void WSClient::onLoginChanged(uint userId, const QString& userAlias)
 {
     qDebug() << "now logged in as " <<  userAlias << " and id:" << userId;
     m_alias = userAlias;
@@ -347,7 +526,29 @@ void Networking::onLoginChanged(uint userId, const QString& userAlias)
     emit aliasChanged();
 }
 
-void Networking::sendActionToServer(Networking::WS_ActionsType action, const QJsonValue& data)
+void WSClient::notifyDocumentPositionChanged()
+{
+    PrezManager *pSender = qobject_cast<PrezManager *>(sender());
+    if (!pSender || !m_isPresenting) return;
+
+    //get current document position
+    QDir docLocalPath = pSender->property("currentSlideDeckPath").toString();
+    QString documentName = docLocalPath.dirName();
+    int slideIdx = pSender->property("slideSelected").toInt();
+    QUrl uploadURL = pSender->property("uploadURL").toUrl();
+
+    //upload document if it is not already done
+    if (uploadURL.isEmpty() && !documentName.isEmpty())
+            pSender->uploadPrez();
+
+    QJsonObject obj;
+    obj["docUrl"] = QJsonValue::fromVariant( uploadURL);
+    obj["slideIdx"] = slideIdx;
+    sendActionToServer(WS_ActionsType::WS_DOCUMENT, obj);
+
+}
+
+void WSClient::sendActionToServer(WSClient::WS_ActionsType action, const QJsonValue& data)
 {
     if (!m_bIsConnected) return;
     QJsonDocument doc;
@@ -361,7 +562,7 @@ void Networking::sendActionToServer(Networking::WS_ActionsType action, const QJs
 
 }
 
-void Networking::sendMessage(const QString &message)
+void WSClient::sendMessage(const QString &message)
 {
     if (!m_bIsConnected) return;
 
@@ -369,11 +570,11 @@ void Networking::sendMessage(const QString &message)
     obj["message"] = message;
 
 
-    sendActionToServer(WS_ActionsType::message, obj);
+    sendActionToServer(WS_ActionsType::WS_MESSAGE, obj);
 
 }
 
-void Networking::modifyChannel(const QString &channelId, bool isPresenter)
+void WSClient::modifyChannel(const QString &channelId, bool isPresenter)
 {
     if (!m_bIsConnected) return;
 
@@ -381,11 +582,15 @@ void Networking::modifyChannel(const QString &channelId, bool isPresenter)
     obj["channel"] = channelId;
     obj["presenter"] = isPresenter;
 
-    sendActionToServer(WS_ActionsType::channel, obj);
+    m_isPresenting = isPresenter;
+    m_channel = channelId;
+    emit channelChanged();
+
+    sendActionToServer(WS_ActionsType::WS_CHANNEL, obj);
 
 }
 
-void Networking::onConnected()
+void WSClient::onConnected()
 {
     qDebug() << "WebSocket connected";
     qDebug() << "peerName:"<< m_pWSClient->peerName();
@@ -401,20 +606,24 @@ void Networking::onConnected()
     QJsonObject data;
     data["userName"]= m_alias;
     data["userId"]= static_cast<int>(m_userId);
-    sendActionToServer(WS_ActionsType::hello, data);
+    sendActionToServer(WS_ActionsType::WS_HELLO, data);
     //sendTextMessage(data);
 
 }
 
-void Networking::onDisconnected()
+void WSClient::onDisconnected()
 {
     qDebug() << "WebSocket disconnected";
     m_bIsConnected = false;
     emit connectedChanged();
 
+    m_isPresenting = false;
+    m_channel = "";
+    emit channelChanged();
+
 }
 
-void Networking::onTextMessageReceived(QString message)
+void WSClient::onTextMessageReceived(QString message)
 {
     qDebug() << "Message received:" << message;
 
@@ -430,7 +639,7 @@ void Networking::onTextMessageReceived(QString message)
 
 }
 
-void Networking::onBinaryMessageReceived(QByteArray message)
+void WSClient::onBinaryMessageReceived(QByteArray message)
 {
     qDebug() << "binary message received:" << message;
 
@@ -445,25 +654,58 @@ void Networking::onBinaryMessageReceived(QByteArray message)
 
 }
 
-bool Networking::processMessage(Networking::WS_ActionsType action, const QJsonValue &data)
+bool WSClient::isChannelExists(const QString& channelName) const{
+    for (QVariant channel : m_lstChannels )
+    {
+        if (channel.toJsonObject().value("channel") == channelName)
+            return true;
+    }
+    return false;
+}
+
+bool WSClient::processMessage(WSClient::WS_ActionsType action, const QJsonValue &data)
 {
+    PrezManager *pm = qobject_cast<PrezManager *>(parent());
+    QUrl docUrl;
+
     switch(action)
     {
-    case WS_ActionsType::history:
+    case WS_ActionsType::WS_HISTORY:
         m_lstMessage.clear();
         for (QJsonValue c : data.toArray() )
             m_lstMessage.append( c );
         emit receivedChatMessage( data );
         break;
-    case WS_ActionsType::message:
+    case WS_ActionsType::WS_MESSAGE:
         m_lstMessage.append( data );
         emit receivedChatMessage( data );
         break;
-    case WS_ActionsType::clients:
+    case WS_ActionsType::WS_CLIENTS:
         m_lstConnectedClients.clear();
         for (QJsonValue c : data.toArray() )
             m_lstConnectedClients.append(c);
         emit lstClientsChanged();
+        break;
+    case WS_ActionsType::WS_CHANNEL:
+        m_lstChannels.clear();
+        for (QJsonValue c : data.toArray() )
+            m_lstChannels.append(c);
+        emit lstChannelsChanged();
+        //check if the current channel is no longer existing
+        if ( m_channel != "0" && !isChannelExists( m_channel ) )
+            modifyChannel("0", false);
+
+        break;
+    case WS_ActionsType::WS_DOCUMENT:
+        if (!m_isPresenting){
+        docUrl = data["docUrl"].toVariant().toUrl();
+        if (docUrl.isEmpty())
+            pm->unload();
+        else if (pm->property("uploadURL").toUrl() != docUrl)
+            pm->downloadPrez( docUrl, data["slideIdx"].toInt());
+        else pm->selectSlide( data["slideIdx"].toInt());
+
+        }
         break;
     default:
         qDebug() << "invalid actions:" << action << " with data:" << data;

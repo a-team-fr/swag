@@ -113,6 +113,40 @@ Frame{
                     }
                 }
             }
+            GroupBox{
+                title: qsTr("Ftp repository")
+                width:parent.width
+                Flow{
+                    width:parent.width
+                    TextField{
+                        width:parent.width
+                        Component.onCompleted: text = NavMan.settings.ftpHost
+                        onEditingFinished: NavMan.settings.ftpHost = text
+
+                    }
+                    TextField{
+                        width:parent.width
+                        Component.onCompleted: text = NavMan.settings.ftpUser
+                        onEditingFinished: NavMan.settings.ftpUser = text
+
+                    }
+                    TextField{
+                        width:parent.width
+                        Component.onCompleted: text = NavMan.settings.ftpPassword
+                        echoMode:TextInput.PasswordEchoOnEdit
+                        onEditingFinished: NavMan.settings.ftpPassword = text
+
+                    }
+                    TextField{
+                        width:parent.width
+                        Component.onCompleted: text = NavMan.settings.ftpPort
+                        onEditingFinished: NavMan.settings.ftpPort = Number(text)
+
+                    }
+                }
+
+
+            }
 
             Switch{
                 text:qsTr("Open last document at startup")
@@ -145,18 +179,6 @@ Frame{
             }
 
             GroupBox{
-                title:qsTr("User name")
-                width:parent.width
-                TextField{
-                    width:parent.width
-                    readOnly: pm.wp.loggedIn
-                    placeholderText: "Please fill in your user name"
-                    text:pm.wp.loggedIn ? pm.wp.username : NavMan.settings.profileAuthor
-                    onEditingFinished: NavMan.settings.profileAuthor = text
-                }
-            }
-
-            GroupBox{
                 title:qsTr("Local Websocket server")
                 width:parent.width
                 RowLayout{
@@ -177,6 +199,7 @@ Frame{
                         onClicked: pm.net.localServer.serverRunning ? pm.net.localServer.stopServer() : pm.net.localServer.startServer(wsServerPort.text.length > 0 ? Number(wsServerPort.text) : 0)
                         ToolTip.visible:hovered && pm.net.localServer.serverRunning
                         ToolTip.text : pm.net.localServer.serverUrl
+                        icon: pm.net.localServer.serverRunning ? FontAwesome.stop : FontAwesome.play
                     }
 
 
@@ -200,13 +223,12 @@ Frame{
                         ToolTip.text: qsTr("You need to be connected to swag backend to use the WS client")
                         ToolTip.visible: hovered && !pm.wp.loggedIn
                         onClicked: pm.net.clientRunning ? pm.net.stopClient() : pm.wp.loggedIn ? pm.net.startClient( serverUrl.text ) : null
+                        icon: pm.net.clientRunning ? FontAwesome.stop : FontAwesome.play
                     }
-
-
-
                 }
-
             }
+
+
 
             ListModel{
                 id:lstMaterialColor

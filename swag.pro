@@ -109,6 +109,7 @@ else:win32{
 
 DISTFILES += \
     Swag/TextFieldDelegate.qml \
+    src/qml/FileTransfertView.qml \
     src/qml/Networking.qml \
     src/qml/WPConnect.qml \
     src/qml/WPProfile.qml

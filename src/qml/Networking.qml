@@ -29,14 +29,18 @@ import FontAwesome 1.0
 Frame {
     id: root
 
-    property var lstTestMessageJSArray : [
-        {text: "hello", time : 147559985, userName:"test", userColor:"red", userId:1},
-        {text: "coucou", time : new Date(), userName:"test2", userColor:"red", userId:2}
-    ]
+//    property var lstTestMessageJSArray : [
+//        {text: "hello", time : 147559985, userName:"test", userColor:"red", userId:1},
+//        {text: "coucou", time : new Date(), userName:"test2", userColor:"red", userId:2}
+//    ]
 
     ColumnLayout{
         id:content
         anchors.fill: parent
+        Label{
+            text:qsTr("Currently in channel : %1").arg( pm.net.channel === "0" ? "general" : pm.net.channel)
+            Layout.fillWidth: true
+        }
 
         SplitView{
             width:parent.width
@@ -104,13 +108,15 @@ Frame {
 
 
             }
+
             ListView{
                 SplitView.preferredWidth: parent.width / 4
                 SplitView.fillHeight: true
                 model:pm.net.lstConnectedClients
-                header:Label{ text:qsTr("Connected clients")}
+                header:Label{ text:qsTr("Currently connected :")}
                 headerPositioning:ListView.OverlayHeader
                 clip:true
+                spacing: 10
                 delegate: ItemDelegate{
                     width:parent.width
                     RowLayout{
@@ -125,7 +131,7 @@ Frame {
                         Label{
                             Layout.fillWidth: true
                             color:modelData.userColor
-                            text: qsTr("%1 (%2)").arg( modelData.userName).arg(modelData.channel)
+                            text: modelData.userName
                         }
                     }
 
@@ -143,29 +149,11 @@ Frame {
                 onAccepted: pm.net.sendMessage(txtMessage.text)
             }
             FAButton{
-              text:"Send message"
               enabled: txtMessage.text && pm.net.connected
               onClicked: pm.net.sendMessage(txtMessage.text)
-            }
-        }
-
-        RowLayout{
-            width:parent.width
-
-            Switch{
-                id:presenting
-                text:"Presenter"
-                checked:false
-            }
-            TextField{
-                id:channel
-                text:"0"
-                onAccepted:pm.net.modifyChannel(channel.text, presenting.checked)
-            }
-            FAButton{
-              text:"Update channel"
-              enabled: pm.net.connected
-              onClicked: pm.net.modifyChannel(channel.text, presenting.checked)
+              ToolTip.visible:hovered
+              ToolTip.text : qsTr("Send message")
+              icon: FontAwesome.paperPlane
             }
         }
 

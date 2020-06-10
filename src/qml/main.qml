@@ -156,6 +156,11 @@ ApplicationWindow {
         }
     }
 
+    FileTransfertView{
+        anchors.right:parent.right
+        anchors.bottom:parent.bottom
+    }
+
     footer:Footer{
         width:mainApp.width
         height:40

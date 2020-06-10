@@ -48,11 +48,14 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
     startSwagApp();
     m_wp->setHostURI( m_settings.value("swagBackend").toString() );
 
-    m_net = new Networking( this);
+    m_net = new WSClient( this);
     connect( m_wp, &Wordprest::loginChanged, this, &PrezManager::loginChanged);
+    connect( this, &PrezManager::documentPositionChanged, m_net, &WSClient::notifyDocumentPositionChanged);
 
     if (m_settings.value("signinAtStartup").toBool())
         m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
+
+    emit init();
 }
 PrezManager::~PrezManager()
 {
@@ -65,10 +68,10 @@ PrezManager::~PrezManager()
 
 
 
-QDir PrezManager::extractSwag(const QString &localfilePath) const
+QDir PrezManager::extractSwag(const QString &localfilePath, bool removeFile) const
 {
     QDir extractDir = ZipUtils::unzip(localfilePath);
-    if (extractDir != ZipUtils::invalidDir())
+    if (removeFile && extractDir != ZipUtils::invalidDir())
     {
         //cleanup no longer needed swag
         QFile::remove( localfilePath );
@@ -77,16 +80,15 @@ QDir PrezManager::extractSwag(const QString &localfilePath) const
 }
 
 
-bool PrezManager::compressSwag(const QString& srcDirectoryPath) const
+QString PrezManager::compressSwag(const QString& srcDirectoryPath, bool removeDir) const
 {
     QFileInfo swag = ZipUtils::zip( srcDirectoryPath, srcDirectoryPath + ".swag" );
-    if ( ! swag.path().isEmpty() )
+    if ( removeDir && ! swag.path().isEmpty() )
     {
         //remove no longer needed extracted folder
         QDir(srcDirectoryPath).removeRecursively();
-        return true;
     }
-    return false;
+    return swag.filePath();
 
 }
 
@@ -369,6 +371,7 @@ bool PrezManager::loadDirectory(QDir prezFolder)
     emit prezLoaded();
     emit slidesReordered();
     emit slideChanged();
+    emit documentPositionChanged();
     return true;
 }
 
@@ -388,9 +391,69 @@ void PrezManager::unload()
 
     //Slide is updated as a side effect
     m_selectedSlide = -1;
+    emit documentPositionChanged();
     emit slideChanged();
 
+    m_uploadUrl =QUrl();
+    emit uploadURLChanged();
 
+}
+
+bool PrezManager::uploadPrez()
+{
+    //do nothing when no document is opened or the user is not connected
+    if (!m_loaded || !m_wp->isLoggedIn()) return false;
+
+
+    QFileInfo swagPath = compressSwag( m_currentSlideDeckPath, false);
+
+    QString uploadSwagName = QString("%1_%2").arg( m_wp->property("userId").toUInt() ).arg( swagPath.fileName() );
+    UploadJob* up = new UploadJob( swagPath.filePath(), uploadSwagName);
+    connect(up, &UploadJob::finish, this, [=](const QUrl& url){
+        m_uploadUrl = url;
+        emit uploadURLChanged();
+        emit transfertCompleted( swagPath.filePath() );
+        emit documentPositionChanged();
+        QFile::remove( swagPath.filePath() );
+    });
+
+    connect(up, &UploadJob::progressed, this, [=](const QString& localfilePath, qint64 percProgress){
+        emit transfertProgress(localfilePath, percProgress, true);
+    });
+    return true;
+}
+
+bool PrezManager::downloadPrez(const QUrl& url, int slideIdx)
+{
+    //QStringList path = url.path().split("_");
+    QString path = url.path();
+    int idx = path.indexOf('_');
+    Q_ASSERT( idx > 1);
+    path.replace(idx, 1, QDir::separator());
+
+    QString localFilePath( slideDecksFolderPath() + path);
+
+    DownloadJob* dlw = new DownloadJob(url, localFilePath);
+
+    connect(dlw, &DownloadJob::finish, this, [=](const QString& localFilePath){
+        //save uploadURL to know what document is already downloaded
+        m_uploadUrl = url;
+        emit uploadURLChanged();
+        emit transfertCompleted( localFilePath );
+        //load swag
+        if (slideIdx >= 0)
+        {
+            load( QUrl::fromLocalFile( localFilePath ) );
+            selectSlide( slideIdx);
+        }
+
+    });
+
+    connect(dlw, &DownloadJob::progressed, this, [=](const QString& localfilePath, qint64 percProgress){
+        emit transfertProgress(localfilePath, percProgress, false);
+    });
+
+    return true;
 }
 
 QString PrezManager::title() const
@@ -443,6 +506,7 @@ void PrezManager::selectSlide(int slideIdx)
     m_selectedSlide = slideIdx ;
 
     emit slideChanged();
+    emit documentPositionChanged();
 }
 
 void PrezManager::setDisplayType(DisplayType request)
@@ -644,6 +708,7 @@ void PrezManager::removeSlide(int idxSlide)
 
     m_selectedSlide = std::min(m_selectedSlide,slides.count()-1);
     emit slidesReordered();
+    emit documentPositionChanged();
 }
 void PrezManager::editSlide(int idxSlide)
 {

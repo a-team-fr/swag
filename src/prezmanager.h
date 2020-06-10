@@ -34,6 +34,7 @@
 #include "pdfexporter.h"
 #include <QQmlContext>
 #include <QTimer>
+
 #include "src/qclearablecacheqmlengine.hpp"
 #include "wordprest.h"
 #include "networking.h"
@@ -47,8 +48,8 @@ class PrezManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(Wordprest* wp MEMBER m_wp NOTIFY installPathChanged)
-    Q_PROPERTY(Networking* net MEMBER m_net NOTIFY installPathChanged)
+    Q_PROPERTY(Wordprest* wp MEMBER m_wp NOTIFY init)
+    Q_PROPERTY(WSClient* net MEMBER m_net NOTIFY init)
 
     /**
      * @brief root of the installation : default applicationDirectory
@@ -86,6 +87,8 @@ class PrezManager : public QObject
     Q_PROPERTY(bool editMode MEMBER m_editMode WRITE setEditMode NOTIFY editModeChanged)
     Q_PROPERTY(bool viewWorldMode MEMBER m_viewWorldMode WRITE setViewWorldMode NOTIFY viewWorldModeChanged)
 
+    Q_PROPERTY(QUrl uploadURL MEMBER m_uploadUrl NOTIFY uploadURLChanged)
+
 
 public:
     /**
@@ -107,6 +110,7 @@ public:
     void startSwagApp();
 
 signals:
+    void init();
     void prezLoaded();
     void slideChanged();
     void displayTypeChanged();
@@ -119,6 +123,12 @@ signals:
     void showDocumentCodeChanged();
     void editModeChanged();
     void viewWorldModeChanged();
+
+    void documentPositionChanged();
+    void uploadURLChanged();
+
+    void transfertProgress( const QString& localfilePath, qint64 percProgress, bool upload);
+    void transfertCompleted( const QString& localfilePath);
 
 
 public slots:
@@ -148,6 +158,9 @@ public slots:
      */
     bool load(const QUrl& url);
     void unload();
+
+    bool uploadPrez();
+    bool downloadPrez(const QUrl& url , int slideIdx = -1);
 
     void savePrezSettings(QString key, QVariant value);
     void saveSlideSettings(QString key, QVariant value);
@@ -192,8 +205,8 @@ private:
     /**
      * @brief addDirectoryContentToArchive
      */
-    QDir extractSwag(const QString& localfilePath) const;
-    bool compressSwag(const QString& srcDirectoryPath) const;
+    QDir extractSwag(const QString& localfilePath, bool removeFile= true) const;
+    QString compressSwag(const QString& srcDirectoryPath, bool removeDir = true) const;
 
     QString installPath() const;
     void setInstallPath(QString newPath) ;
@@ -203,8 +216,6 @@ private:
     void setSlideDecksFolderPath(const QString& newPath);
 
     QJsonArray lstSlides() const{ return m_prezProperties.value("slides").toArray();}
-
-
 
 
     DisplayType m_displayType = Welcome;                    /// cached value of the displayType member
@@ -269,7 +280,9 @@ private:
     bool m_viewWorldMode = false;
 
     Wordprest* m_wp = nullptr;
-    Networking* m_net = nullptr;
+    WSClient* m_net = nullptr;
+
+    QUrl m_uploadUrl;
 
 };
 

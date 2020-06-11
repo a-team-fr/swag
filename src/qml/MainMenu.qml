@@ -37,10 +37,12 @@ MenuBar {
         MenuItem {
             text: qsTr("New")
             onTriggered: menuBar.newDocument()
+            enabled : pm.net && !pm.net.following
             shortcut:"Ctrl+N"
         }
         MenuItem {
             text: qsTr("Open")
+            enabled : pm.net && !pm.net.following
             onTriggered: menuBar.openDocument()
             shortcut:"Ctrl+O"
         }
@@ -52,14 +54,15 @@ MenuBar {
         MenuItem {
             text: qsTr("Save")
             onTriggered: NavMan.actionSave()
-            enabled:pm.loaded
+            enabled:pm.loaded && pm.net && !pm.net.following
+
             shortcut:"Ctrl+S"
 
         }
         MenuItem {
             text: qsTr("Close")
             onTriggered: pm.unload()
-            enabled:pm.loaded
+            enabled:pm.loaded && pm.net && !pm.net.following
             shortcut:"Ctrl+W"
         }
         MenuItem {
@@ -74,26 +77,26 @@ MenuBar {
         MenuItem {
             text: qsTr("New slide")
             onTriggered: pm.createSlide()
-            enabled:pm.loaded
+            enabled:pm.loaded && pm.net && !pm.net.following
             shortcut:"Ctrl+Shift+N"
         }
         MenuItem {
             text: qsTr("PrintPdf")
             onTriggered:pm.displayType = PM.SlideExport
-            enabled:pm.loaded
+            enabled:pm.loaded && pm.net && !pm.net.following
         }
         MenuItem {
             text: qsTr("Edit mode")
             onTriggered:pm.editMode = !pm.editMode
             checkable: true
             checked: pm.editMode
-            enabled:pm.loaded
+            enabled:pm.loaded && pm.net && !pm.net.following
             shortcut:"Ctrl+E"
         }
         MenuItem {
             text: qsTr("Edit deck world")
             onTriggered: pm.viewWorldMode = !pm.viewWorldMode
-            enabled:pm.loaded && (pm.displayType == PM.Slide_FlatView)
+            enabled:pm.loaded && (pm.displayType == PM.Slide_FlatView) && pm.net && !pm.net.following
             checkable: true
             checked: pm.viewWorldMode
             shortcut:"Ctrl+D"
@@ -116,12 +119,12 @@ MenuBar {
         }
         MenuItem {
             text: qsTr("Deck settings")
-            enabled: pm.loaded
+            enabled: pm.loaded && pm.net && !pm.net.following
             onTriggered: pm.displayType = PM.PrezSettings
         }
         MenuItem {
             text: qsTr("Slide settings")
-            enabled: pm.loaded && pm.lstSlides.length
+            enabled: pm.loaded && pm.lstSlides.length && pm.net && !pm.net.following
             onTriggered: pm.displayType = PM.SlideSettings
         }
         MenuItem {

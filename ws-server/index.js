@@ -10,6 +10,7 @@ var history = [ ];
 var lstConnections = [ ];                           //array of WS connection objects
 var lstClients = [ ];                                //array of Clients information (ID)
 var server = http.createServer();
+var lastDocumentPosition = {};                      //map of last Document type message data per channel
 
 server.listen({ host:HOST, port: PORT }, function() {
   console.log((new Date()) + ' Server is listening '+server.address().address + ' port:' + server.address().port);
@@ -33,6 +34,7 @@ wsServer.on('request', function(request) {
       channel : "0",
       presenter : false
     };
+
 
     connection.sendUTF(JSON.stringify( { type: ActionType.history, data: MessagesInChannel(clientInfo.channel)} ));
     connection.sendUTF(JSON.stringify( { type: ActionType.channel, data: channels()} ));
@@ -109,12 +111,18 @@ wsServer.on('request', function(request) {
 
             connection.sendUTF(JSON.stringify( { type: ActionType.history, data: MessagesInChannel(clientInfo.channel)} ));
 
+            if ((oldChannel !== "0") && (clientInfo.presenter))
+              lastDocumentPosition[oldChannel]={}
+            else if ( (clientInfo.channel !== "0") && lastDocumentPosition[clientInfo.channel])
+              connection.sendUTF(JSON.stringify( { type: ActionType.document, data: lastDocumentPosition[clientInfo.channel]} ));
 
 
         }
         else if (messageType == ActionType.document)
         {
             var channel = lstClients[index].channel;
+            lastDocumentPosition[channel] = messageData;
+
             for (var i=0; i < lstConnections.length; i++)
             {
                 var client = lstClients[i];
@@ -148,6 +156,9 @@ wsServer.on('request', function(request) {
                 lstConnections[i].sendUTF(JSON.stringify( { type: ActionType.channel, data: lstChannels} ));
             }
             colors.push(clientInfo.userColor);
+
+            if ((clientInfo.channel !== "0") && (clientInfo.presenter))
+              lastDocumentPosition[clientInfo.channel]={}
 
             //no more clients => no longer needed to keep history
             if (lstClients.length == 0)

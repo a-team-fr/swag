@@ -36,6 +36,7 @@ RowLayout{
         text:qsTr("Edit")
         checked: pm.editMode
         onToggled: pm.editMode = ! pm.editMode
+        visible : pm.net && !pm.net.following
         height:footer.height
 
     }
@@ -43,13 +44,14 @@ RowLayout{
     FAButton{
         icon:FontAwesome.arrowLeft
         onClicked:NavMan.actionPrevious(true)
+        visible : pm.net && !pm.net.following
         opacity : pm.slideSelected > 0 ? 1 : 0
         decorate:false
     }
     FAButton{
         icon:FontAwesome.arrowCircleLeft
         onClicked: NavMan.actionPrevious(false)
-        visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode
+        visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode && !pm.net.following
         decorate:false
     }
     Label{
@@ -63,6 +65,7 @@ RowLayout{
             y:-height
             parent:footer
             width:200
+            enabled:pm.net && !pm.net.following
             height:150
             opacity:0.7
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -79,12 +82,13 @@ RowLayout{
     FAButton{
         icon:FontAwesome.arrowCircleRight
         onClicked:NavMan.actionNext(false)
-        visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode
+        visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode && !pm.net.following
         decorate:false
     }
     FAButton{
         icon:FontAwesome.arrowRight
         onClicked:NavMan.actionNext(true)
+        visible : pm.net && !pm.net.following
         decorate:false
     }
     Label{

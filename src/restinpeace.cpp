@@ -125,7 +125,7 @@ void RestInPeace::readReply( QNetworkReply *reply )
         }
         reply->deleteLater();
     }
-    qInfo() << "REPLYFINISHED" << json;
+    //qInfo() << "REPLYFINISHED" << json;
     emit replyFinished(json);
 }
 
@@ -201,7 +201,7 @@ QNetworkReply* RestInPeace::request( QNetworkAccessManager::Operation operation,
     qsUrl += m_extraHostURI.isEmpty() ? "" : "/" + m_extraHostURI;
     qsUrl += m_endPoint.isEmpty() ? "" : "/" + m_endPoint;
 
-    qDebug() << "Start request - " << operation << "- url:" << qsUrl;
+    //qDebug() << "Start request - " << operation << "- url:" << qsUrl;
     QNetworkReply *reply = request(operation, QUrl( qsUrl), data );
 
 

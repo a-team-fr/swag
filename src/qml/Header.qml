@@ -64,6 +64,7 @@ ToolBar{
                 height:parent.height
                 width:height
                 icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
+                onClicked: wpmenu.close
                 //onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
                 //ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
                 //ToolTip.visible: hovered
@@ -98,7 +99,7 @@ ToolBar{
                         FAButton{
                             anchors.fill:parent
                             text:pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
-                            onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
+                            onClicked: {pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect; wpmenu.close()}
                             icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
                             decorate: false
                         }
@@ -108,7 +109,7 @@ ToolBar{
                         FAButton{
                             anchors.fill:parent
                             text:qsTr("show profile");
-                            onClicked: pm.displayType = PM.WPProfile
+                            onClicked: { pm.displayType = PM.WPProfile; wpmenu.close()}
                             icon: FontAwesome.userAlt
                             decorate: false
                         }
@@ -123,26 +124,36 @@ ToolBar{
                         text:qsTr("Presenting");
                         onClicked: pm.net.modifyChannel(pm.net.presenting ? "0" : pm.net.me, !pm.net.presenting)
                     }
-                    GroupBox{
-                        title:qsTr("Following :")
-                        height : visible ? children.height : 0
+                    MenuItem{
+                        height : visible ? followGroup.height : 0
+                        width:parent.width
                         visible: pm.net ? (!pm.net.presenting && (pm.net.lstChannels.length > 0)) : false
-                        Row{
-                            width:parent.width
-                            ComboBox{
-                                id:channelSelect
-                                model:pm.net ? pm.net.lstChannels : null
-                                textRole: "channel"
-                                enabled : pm.net ? !pm.net.following : false
-                                Component.onCompleted: currentIndex = indexOfValue( pm.net ? pm.net.channel : "")
 
-                            }
-                            FAButton{
+                        GroupBox{
+                            id:followGroup
+                            title:qsTr("Following :")
+                            width:parent.width
+                            Row{
+                                width:parent.width
                                 height:channelSelect.height
-                              onClicked: pm.net.modifyChannel(channelSelect.enabled ? channelSelect.currentText : "0", false)
-                              ToolTip.visible:hovered
-                              ToolTip.text : channelSelect.enabled ? qsTr("Follow") : qsTr("Leave")
-                              icon: channelSelect.enabled ? FontAwesome.link : FontAwesome.unlink
+                                ComboBox{
+                                    id:channelSelect
+                                    model:pm.net ? pm.net.lstChannels : null
+                                    textRole: "channel"
+                                    enabled : pm.net ? !pm.net.following : false
+                                    Component.onCompleted: currentIndex = indexOfValue( pm.net ? pm.net.channel : "")
+
+                                }
+                                FAButton{
+                                    height:channelSelect.height
+                                    onClicked: {
+                                      pm.net.modifyChannel(channelSelect.enabled ? channelSelect.currentText : "0", false);
+                                      wpmenu.close();
+                                    }
+                                    ToolTip.visible:hovered
+                                    ToolTip.text : channelSelect.enabled ? qsTr("Follow") : qsTr("Leave")
+                                    icon: channelSelect.enabled ? FontAwesome.link : FontAwesome.unlink
+                                }
                             }
                         }
                     }
@@ -153,7 +164,7 @@ ToolBar{
                             anchors.fill:parent
                             enabled:parent.enabled
                             text:qsTr("upload current document")
-                            onClicked: pm.uploadPrez()
+                            onClicked: {pm.uploadPrez(); wpmenu.close()}
                             icon: FontAwesome.upload
                             decorate: false
                         }

@@ -50,6 +50,7 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
 
     m_net = new WSClient( this);
     connect( m_wp, &Wordprest::loginChanged, this, &PrezManager::loginChanged);
+    connect( m_net, &WSClient::channelChanged, this, &PrezManager::documentPositionChanged);
     connect( this, &PrezManager::documentPositionChanged, m_net, &WSClient::notifyDocumentPositionChanged);
 
     if (m_settings.value("signinAtStartup").toBool())
@@ -133,6 +134,7 @@ void PrezManager::startSwagApp()
 
     m_pEngine->load(documentUrl("main.qml"));
 
+    emit init();
 
 }
 
@@ -377,6 +379,8 @@ bool PrezManager::loadDirectory(QDir prezFolder)
 
 void PrezManager::unload()
 {
+    if (!m_loaded) return;
+
     if (m_pendingChanges)
         saveToDisk();
 

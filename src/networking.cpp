@@ -53,7 +53,7 @@ UploadJob::UploadJob(const QString &localfilePath, const QString &remoteDocName,
         m_url.setUserName( m_settings.value("ftpUser", "swagapp@swagsoftware.net").toString());
         m_url.setPassword( m_settings.value("ftpPassword", "eWbsKg7~Kh^@").toString());
         m_url.setPort( m_settings.value("ftpPort", 21).toInt() );
-        m_url.setPath(remoteDocName);
+        m_url.setPath("/"+remoteDocName);
 
         QNetworkReply* reply = SingletonQNam::qnam()->put( QNetworkRequest( m_url ), &m_localFile );
         nr = reply;
@@ -297,6 +297,8 @@ bool WSServer::processAction(QWebSocket* pSender, WSServer::WS_ActionsType actio
     switch(action)
     {
     case WS_ActionsType::WS_CHANNEL:
+        if ( (senderInfo["channel"].toString() != "0") && (data["channel"].toString()=="0") && ( senderInfo["presenter"].toBool() ) )
+            m_lstPresentingDocuments.remove(senderInfo["channel"].toString());
         senderInfo["channel"] = data["channel"];
         senderInfo["presenter"] = data["presenter"];
         m_clients[pSender] = senderInfo;
@@ -309,6 +311,10 @@ bool WSServer::processAction(QWebSocket* pSender, WSServer::WS_ActionsType actio
         sendToClients( m_clients.keys(), WS_ActionsType::WS_CHANNEL, channels() );
         //send to sender the history
         sendToClient( pSender, WS_ActionsType::WS_HISTORY, channelHistory(channel) );
+        //Send to sender the current document position
+        if ( (senderInfo["channel"].toString() != "0") && ( !senderInfo["presenter"].toBool() ) && m_lstPresentingDocuments.contains( channel))
+            sendToClient( pSender, WS_ActionsType::WS_HISTORY, m_lstPresentingDocuments[ channel]);
+
         break;
     case WS_ActionsType::WS_MESSAGE:
         //build message
@@ -336,6 +342,7 @@ bool WSServer::processAction(QWebSocket* pSender, WSServer::WS_ActionsType actio
         break;
      //Simple forward to channel
     case WS_ActionsType::WS_DOCUMENT:
+        m_lstPresentingDocuments.insert(channel, data);
         sendToChannel( channel, action, data, pSender );
         break;
     //Actions not relevant for server
@@ -355,6 +362,10 @@ void WSServer::socketDisconnected()
     qDebug() << "socketDisconnected:" << pClient;
     if (pClient) {
         QString channel = m_clients[pClient]["channel"].toString();
+        bool isPresenter = m_clients[pClient]["presenter"].toBool();
+        if ( isPresenter &&  channel != "0")
+            m_lstPresentingDocuments.remove(channel);
+
         m_clients.remove(pClient);
         pClient->deleteLater();
         emit lstClientsChanged();
@@ -505,8 +516,9 @@ void WSClient::stopClient()
     if ( !clientRunning() ) return;
 
     m_pWSClient->close();
-    delete(m_pWSClient);//m_pWSClient->deleteLater() ;
+    delete m_pWSClient;
     m_pWSClient = nullptr;
+    //m_pWSClient->deleteLater() ;
     emit clientRunningChanged();
 }
 
@@ -592,6 +604,7 @@ void WSClient::modifyChannel(const QString &channelId, bool isPresenter)
 
 void WSClient::onConnected()
 {
+    /*
     qDebug() << "WebSocket connected";
     qDebug() << "peerName:"<< m_pWSClient->peerName();
     qDebug() << "peerAddress:"<< m_pWSClient->peerAddress();
@@ -599,7 +612,7 @@ void WSClient::onConnected()
     qDebug() << "resourceName:"<< m_pWSClient->resourceName();
     qDebug() << "peerPort:"<< m_pWSClient->peerPort();
     qDebug() << "isValid:" << m_pWSClient->isValid();
-
+    */
 
     m_bIsConnected = true;
     emit connectedChanged();
@@ -618,14 +631,14 @@ void WSClient::onDisconnected()
     emit connectedChanged();
 
     m_isPresenting = false;
-    m_channel = "";
+    m_channel = "0";
     emit channelChanged();
 
 }
 
 void WSClient::onTextMessageReceived(QString message)
 {
-    qDebug() << "Message received:" << message;
+    //qDebug() << "Message received:" << message;
 
     QJsonDocument doc = QJsonDocument::fromJson( message.toUtf8());
     QJsonObject obj = doc.object();

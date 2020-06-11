@@ -171,6 +171,7 @@ private:
     QString serverUrl() const;
     QWebSocketServer *m_pWSServer = nullptr;
     QMap<QWebSocket *, QVariantMap> m_clients;                      /// list of currently connected clients
+    QMap<QString, QJsonValue>       m_lstPresentingDocuments;       /// the last data part of the Document message for every channel
 
     QStringList colors{"red","green","blue","magenta","purple","plum","orange"};
     uint m_lastUsedColors = 0;
@@ -237,7 +238,7 @@ private slots:
 
 private:
     QUrl lastWSConnectionUrl() const;
-    bool following() const{ return m_channel != "0"; }
+    bool following() const{ return (m_channel != "0") && !m_isPresenting; }
     bool isChannelExists(const QString& channelName) const;
     bool processMessage(WS_ActionsType action, const QJsonValue& data);
     bool m_bIsConnected = false;                /// when the client is connected

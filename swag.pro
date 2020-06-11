@@ -108,6 +108,7 @@ else:win32{
 }
 
 DISTFILES += \
+    Swag/FormItem.qml \
     Swag/TextFieldDelegate.qml \
     src/qml/FileTransfertView.qml \
     src/qml/Networking.qml \

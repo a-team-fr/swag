@@ -26,3 +26,4 @@ Entity3DElement 1.0 Entity3DElement.qml
 TocElement 1.0 TocElement.qml
 PDFElement 1.0 PDFElement.qml
 TextFieldDelegate 1.0 TextFieldDelegate.qml
+FormItem 1.0 FormItem.qml

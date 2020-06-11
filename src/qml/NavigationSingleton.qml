@@ -149,42 +149,9 @@ Item {
     }
 
     Shortcut {
-        sequence: "Ctrl+D"
-        context: Qt.ApplicationShortcut
-        onActivated: pm.viewWorldMode = !pm.viewWorldMode
-    }
-
-    Shortcut {
-        sequence: "Ctrl+E"
-        context: Qt.ApplicationShortcut
-        onActivated: pm.editMode = !pm.editMode
-    }
-    Shortcut {
         sequence: "Ctrl+R"
         context: Qt.ApplicationShortcut
         onActivated: pm.reload(true);
-    }
-    Shortcut {
-        sequence: "Ctrl+S"
-        context: Qt.ApplicationShortcut
-        onActivated: actionSave()
-    }
-    Shortcut {
-        sequence: "Ctrl+T"
-        context: Qt.ApplicationShortcut
-        onActivated: pm.showDocumentCode = !pm.showDocumentCode
-    }
-
-    Shortcut {
-        sequence: StandardKey.Quit
-        context: Qt.ApplicationShortcut
-        onActivated: Qt.quit()
-    }
-
-    Shortcut {
-        sequence: StandardKey.Close
-        context: Qt.ApplicationShortcut
-        onActivated: pm.unload()
     }
 
 

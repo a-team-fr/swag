@@ -52,47 +52,31 @@ Frame{
         Column{
             id:content
             width:parent.width
-            spacing:5
+            spacing:15
 
             GroupBox{
-                title: qsTr("Swag install path")
+                title: qsTr("Swag paths")
                 width:parent.width
-
-                RowLayout{
+                Column{
                     width:parent.width
-                    TextField{
-                        text:pm.installPath
-                        Layout.fillWidth: true
+                    FormItem{
+                        width:parent.width
+                        title:qsTr("Install path")
                         readOnly: true
                         placeholderText: qsTr("install path is not defined")
                         placeholderTextColor: "red"
+                        text:pm.installPath
                     }
-//                    Button{
-//                        text:"..."
-//                        onClicked:  {
-//                            fileDialog.modifyInstallPath = true
-//                            fileDialog.folder = pm.installPath
-//                            fileDialog.open()
-//                        }
-//                    }
-                }
-            }
-            GroupBox{
-                title: qsTr("Swag document path")
-                width:parent.width
 
-                RowLayout{
-                    width:parent.width
-                    TextField{
-                        text:pm.slideDecksFolderPath
-                        Layout.fillWidth: true
+                    FormItem{
+                        width:parent.width
+                        title:qsTr("Swag document path")
                         readOnly: true
                         placeholderText: qsTr("document path is not defined")
                         placeholderTextColor: "red"
-                    }
-                    Button{
-                        text:"..."
-                        onClicked: {
+                        text:pm.slideDecksFolderPath
+                        showButton : true
+                        onConfirmed: {
                             fileDialog.modifyInstallPath = false
                             fileDialog.folder = pm.slideDecksFolderPath
                             fileDialog.open()
@@ -100,135 +84,185 @@ Frame{
                     }
                 }
             }
-            GroupBox{
-                title: qsTr("Swag backend")
-                width:parent.width
 
-                TextField{
-                    text:pm.wp.hostURI
+            GroupBox{
+                title: qsTr("Behavior at startup")
+                width:parent.width
+                Column{
                     width:parent.width
-                    onEditingFinished: {
-                        pm.wp.hostURI = text
-                        NavMan.settings.swagBackend = text
+                    Switch{
+                        text:qsTr("Open last document")
+                        checked : NavMan.settings.openLastPrezAtStartup
+                        onToggled: NavMan.settings.openLastPrezAtStartup = checked
+                    }
+
+                    Switch{
+                        text:qsTr("Sign in using the last successfull credentials")
+                        checked : NavMan.settings.signinAtStartup
+                        onToggled: NavMan.settings.signinAtStartup = checked
+                    }
+
+                    Switch{
+                        text:qsTr("enable Element3d")
+                        checked : NavMan.settings.loadElement3d
+                        onToggled: NavMan.settings.loadElement3d = checked
                     }
                 }
             }
+
             GroupBox{
-                title: qsTr("Ftp repository")
+                title: qsTr("Network settings")
                 width:parent.width
-                Flow{
+                Column{
                     width:parent.width
-                    TextField{
+                    FormItem{
                         width:parent.width
+                        title:qsTr("Backend host")
+                        text:pm.wp.hostURI
+                        onEditingFinished: {
+                            pm.wp.hostURI = text
+                            NavMan.settings.swagBackend = text
+                        }
+                    }
+                    FormItem{
+                        width:parent.width
+                        title:qsTr("FTP host")
                         Component.onCompleted: text = NavMan.settings.ftpHost
                         onEditingFinished: NavMan.settings.ftpHost = text
 
                     }
-                    TextField{
+                    FormItem{
                         width:parent.width
+                        title:qsTr("FTP user")
                         Component.onCompleted: text = NavMan.settings.ftpUser
                         onEditingFinished: NavMan.settings.ftpUser = text
 
                     }
-                    TextField{
+                    FormItem{
                         width:parent.width
+                        title:qsTr("FTP password")
                         Component.onCompleted: text = NavMan.settings.ftpPassword
                         echoMode:TextInput.PasswordEchoOnEdit
                         onEditingFinished: NavMan.settings.ftpPassword = text
 
                     }
-                    TextField{
+                    FormItem{
+                        title:qsTr("FTP port number")
                         width:parent.width
                         Component.onCompleted: text = NavMan.settings.ftpPort
                         onEditingFinished: NavMan.settings.ftpPort = Number(text)
 
                     }
-                }
-
-
-            }
-
-            Switch{
-                text:qsTr("Open last document at startup")
-                checked : NavMan.settings.openLastPrezAtStartup
-                onToggled: NavMan.settings.openLastPrezAtStartup = checked
-            }
-
-            Switch{
-                text:qsTr("Sign in to backend at startup (using last successfully credentials)")
-                checked : NavMan.settings.signinAtStartup
-                onToggled: NavMan.settings.signinAtStartup = checked
-            }
-
-            Switch{
-                text:qsTr("enable Element3d")
-                checked : NavMan.settings.loadElement3d
-                onToggled: NavMan.settings.loadElement3d = checked
-            }
-
-            GroupBox{
-                title: qsTr("Default syntax highlighting style")
-                width:parent.width
-
-                ComboBox{
-                    model:["qtcreator_light", "qtcreator_dark"]
-                    width:parent.width
-                    displayText: NavMan.settings.defaultSyntaxHighlightingStyle
-                    onCurrentTextChanged: NavMan.settings.defaultSyntaxHighlightingStyle = currentText
-                }
-            }
-
-            GroupBox{
-                title:qsTr("Local Websocket server")
-                width:parent.width
-                RowLayout{
-                    width:parent.width
-                    Label{
-                        Layout.fillWidth:true
-                        text:pm.net.localServer.serverUrl
-                        visible:pm.net.localServer.serverRunning
-                    }
-                    TextField{
+                    FormItem{
                         id:wsServerPort
-                        placeholderText: "port number - leave empty for automatic selection"
-                        visible:!pm.net.localServer.serverRunning
+                        width:parent.width
+                        title:qsTr("local WebSocket server port")
+                        placeholderText: qsTr("port number - leave empty for automatic selection")
+                        readOnly : pm.net.localServer.serverRunning
+
                     }
-
-                    FAButton{
-                        text:pm.net.localServer.serverRunning ? qsTr("Stop server") : qsTr("Start server")
-                        onClicked: pm.net.localServer.serverRunning ? pm.net.localServer.stopServer() : pm.net.localServer.startServer(wsServerPort.text.length > 0 ? Number(wsServerPort.text) : 0)
-                        ToolTip.visible:hovered && pm.net.localServer.serverRunning
-                        ToolTip.text : pm.net.localServer.serverUrl
-                        icon: pm.net.localServer.serverRunning ? FontAwesome.stop : FontAwesome.play
+                    Switch{
+                        width:parent.width
+                        text:checked ? qsTr("WebSocket server running (%1)").arg(pm.net.localServer.serverUrl) : qsTr("activate WebSocket server")
+                        checked : pm.net.localServer.serverRunning
+                        onToggled: pm.net.localServer.serverRunning ? pm.net.localServer.stopServer() : pm.net.localServer.startServer( wsServerPort.text.length > 0 ? Number(wsServerPort.text) : 0)
                     }
-
-
-                }
-
-            }
-            GroupBox{
-                title:pm.net.clientRunning ? qsTr("Client Websocket (running)") : qsTr("Client Websocket")
-                width:parent.width
-                RowLayout{
-                    width:parent.width
-                    TextField{
+                    FormItem{
                         id:serverUrl
-                        Layout.fillWidth: true
-                        placeholderText:qsTr("url of the websocket server")
-                        enabled : !pm.net.clientRunning
+                        width:parent.width
+                        title: qsTr("WebSocket server url")
+                        placeholderText:qsTr("url of the WebSocket server")
+                        readOnly : pm.net.clientRunning
                         text: pm.net.clientRunning ? pm.net.url : ( pm.net.localServer.serverRunning ? pm.net.localServer.serverUrl : pm.net.lastWSConnectionUrl )
                     }
-                    FAButton{
-                        text:pm.net.clientRunning ? qsTr("Stop client") : qsTr("Start client")
-                        ToolTip.text: qsTr("You need to be connected to swag backend to use the WS client")
+
+                    Switch{
+                        width:parent.width
+                        text:pm.net.clientRunning ?qsTr("WebSocket connected with (%1)").arg(serverUrl.text) : qsTr("activate WebSocket")
+                        checked : pm.net.clientRunning
+                        ToolTip.text: qsTr("You need to be connected to a swag backend to use WebSocket")
                         ToolTip.visible: hovered && !pm.wp.loggedIn
-                        onClicked: pm.net.clientRunning ? pm.net.stopClient() : pm.wp.loggedIn ? pm.net.startClient( serverUrl.text ) : null
-                        icon: pm.net.clientRunning ? FontAwesome.stop : FontAwesome.play
+                        onToggled: pm.net.clientRunning ? pm.net.stopClient() : pm.wp.loggedIn ? pm.net.startClient( serverUrl.text ) : null
                     }
+
                 }
             }
 
 
+
+            GroupBox{
+                title: qsTr("Preferences")
+                width:parent.width
+                Column{
+                    width:parent.width
+
+                    FormItem{
+                        title:qsTr("Default syntax highlighting style")
+                        comboBox.model:["qtcreator_light", "qtcreator_dark"]
+                        width:parent.width
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.defaultSyntaxHighlightingStyle)
+                        onActivated: NavMan.settings.defaultSyntaxHighlightingStyle = comboBox.currentText
+
+                    }
+
+                    FormItem{
+                        title:qsTr("Theme name")
+                        width:parent.width
+                        comboBox.model:[{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
+                        comboBox.textRole: "l";comboBox.valueRole: "v"
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialTheme)
+                        onActivated: NavMan.settings.materialTheme = comboBox.currentValue
+
+                    }
+                    FormItem{
+                        title:qsTr("Theme accent")
+                        width:parent.width
+                        comboBox.model:lstMaterialColor
+                        comboBox.textRole: "l";comboBox.valueRole: "v"
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialAccent)
+                        onActivated: NavMan.settings.materialAccent = comboBox.currentValue
+
+                    }
+
+                    FormItem{
+                        title:qsTr("Theme background color")
+                        width:parent.width
+                        comboBox.model:lstMaterialColor
+                        comboBox.textRole: "l";comboBox.valueRole: "v"
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialBackground)
+                        onActivated: NavMan.settings.materialBackground = comboBox.currentValue
+
+                    }
+                    FormItem{
+                        title:qsTr("Theme foreground color")
+                        width:parent.width
+                        comboBox.model:lstMaterialColor
+                        comboBox.textRole: "l";comboBox.valueRole: "v"
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialForeground)
+                        onActivated: NavMan.settings.materialForeground = comboBox.currentValue
+
+                    }
+                    FormItem{
+                        title:qsTr("Theme primary color")
+                        width:parent.width
+                        comboBox.model:lstMaterialColor
+                        comboBox.textRole: "l";comboBox.valueRole: "v"
+                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialPrimary)
+                        onActivated: NavMan.settings.materialPrimary = comboBox.currentValue
+
+                    }
+
+                    FormItem{
+                        title:qsTr("Theme elevation")
+                        width:parent.width
+                        text:NavMan.settings.materialElevation
+                        onEditingFinished: NavMan.settings.materialElevation = text
+
+                    }
+                }
+
+
+            }
 
             ListModel{
                 id:lstMaterialColor
@@ -278,73 +312,73 @@ Frame{
                 ListElement{ v:"#9E9E9E"; l:"Grey (light)"}
                 ListElement{ v:"#607D8B"; l:"BlueGrey (light)"}
             }
-            GroupBox{
-                title:qsTr("Theme")
-                width:parent.width
-                Flow{
-                    spacing : 10
-                    width:parent.width
-                    GroupBox{
-                        title:qsTr("Name")
-                        ComboBox{
-                            width:parent.width
-                            model: [{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
-                            textRole: "l";valueRole: "v"
-                            onActivated: NavMan.settings.materialTheme = currentValue
-                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialTheme)
-                        }
-                    }
+//            GroupBox{
+//                title:qsTr("Theme")
+//                width:parent.width
+//                Flow{
+//                    spacing : 10
+//                    width:parent.width
+//                    GroupBox{
+//                        title:qsTr("Name")
+//                        ComboBox{
+//                            width:parent.width
+//                            model: [{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
+//                            textRole: "l";valueRole: "v"
+//                            onActivated: NavMan.settings.materialTheme = currentValue
+//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialTheme)
+//                        }
+//                    }
 
-                    GroupBox{
-                        title:qsTr("Accent")
-                        ComboBox{
-                            width:parent.width
-                            model: lstMaterialColor
-                            textRole: "l";valueRole: "v"
-                            onActivated: NavMan.settings.materialAccent = currentValue
-                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialAccent)
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("Background")
-                        ComboBox{
-                            width:parent.width
-                            model: lstMaterialColor
-                            textRole: "l";valueRole: "v"
-                            onActivated: NavMan.settings.materialBackground = currentValue
-                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialBackground)
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("Elevation")
-                        TextField{
-                            width:parent.width
-                            text:NavMan.settings.materialElevation
-                            onEditingFinished: NavMan.settings.materialElevation = text
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("Foreground")
-                        ComboBox{
-                            width:parent.width
-                            model: lstMaterialColor
-                            textRole: "l";valueRole: "v"
-                            onActivated: NavMan.settings.materialForeground = currentValue
-                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialForeground)
-                        }
-                    }
-                    GroupBox{
-                        title:qsTr("Primary")
-                        ComboBox{
-                            width:parent.width
-                            model: lstMaterialColor
-                            textRole: "l";valueRole: "v"
-                            onActivated: NavMan.settings.materialPrimary = currentValue
-                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialPrimary)
-                        }
-                    }
-                }
-            }
+//                    GroupBox{
+//                        title:qsTr("Accent")
+//                        ComboBox{
+//                            width:parent.width
+//                            model: lstMaterialColor
+//                            textRole: "l";valueRole: "v"
+//                            onActivated: NavMan.settings.materialAccent = currentValue
+//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialAccent)
+//                        }
+//                    }
+//                    GroupBox{
+//                        title:qsTr("Background")
+//                        ComboBox{
+//                            width:parent.width
+//                            model: lstMaterialColor
+//                            textRole: "l";valueRole: "v"
+//                            onActivated: NavMan.settings.materialBackground = currentValue
+//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialBackground)
+//                        }
+//                    }
+//                    GroupBox{
+//                        title:qsTr("Elevation")
+//                        TextField{
+//                            width:parent.width
+//                            text:NavMan.settings.materialElevation
+//                            onEditingFinished: NavMan.settings.materialElevation = text
+//                        }
+//                    }
+//                    GroupBox{
+//                        title:qsTr("Foreground")
+//                        ComboBox{
+//                            width:parent.width
+//                            model: lstMaterialColor
+//                            textRole: "l";valueRole: "v"
+//                            onActivated: NavMan.settings.materialForeground = currentValue
+//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialForeground)
+//                        }
+//                    }
+//                    GroupBox{
+//                        title:qsTr("Primary")
+//                        ComboBox{
+//                            width:parent.width
+//                            model: lstMaterialColor
+//                            textRole: "l";valueRole: "v"
+//                            onActivated: NavMan.settings.materialPrimary = currentValue
+//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialPrimary)
+//                        }
+//                    }
+//                }
+//            }
 
 
 

@@ -26,7 +26,6 @@ import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
-import FontAwesome 1.0
 
 Frame{
     id:root

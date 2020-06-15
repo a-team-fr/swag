@@ -24,7 +24,6 @@ import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.14
 import QtQuick.Controls.Material 2.14
 import fr.ateam.swag 1.0
-import FontAwesome 1.0
 import Swag 1.0
 
 Control{
@@ -77,7 +76,7 @@ Control{
         Label{
             id:label
             //Layout.fillWidth: true
-            color : Material.primary
+            color : Material.accent
             Layout.minimumWidth : root.labelMinimumWidth
             Layout.maximumWidth : root.labelMaximumWidth
             elide: Text.ElideRight

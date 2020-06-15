@@ -24,7 +24,7 @@ import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import QtQuick.Controls.Material 2.14
-import FontAwesome 1.0
+import MaterialIcons 1.0
 
 Element {
     id: root
@@ -169,7 +169,7 @@ Element {
                 ColumnLayout{
                     width:parent.width
                     FAButton{
-                        icon:FontAwesome.plusSquare
+                        icon:MaterialIcons.add_box
                         onClicked:{ target.fields.push({"name":"newField", "type":DataElement.FieldType.TextField});
                             lst.fieldsReloader++;
                         }
@@ -215,7 +215,7 @@ Element {
                                     Row{
                                         width:parent.width
                                         FAButton{
-                                            icon:FontAwesome.plusSquare
+                                            icon:MaterialIcons.add_box
                                             onClicked:{
                                                 if (target.fields[fieldRow.fieldIndex].values === undefined)
                                                     target.fields[fieldRow.fieldIndex].values = [];
@@ -248,7 +248,7 @@ Element {
                                                         lst.reload()}
                                                 }
                                                 FAButton{
-                                                    icon:FontAwesome.remove
+                                                    icon:MaterialIcons.remove
                                                     decorate: false
                                                     onClicked:{target.fields[fieldRow.fieldIndex].values.splice(index,1); lst.reload()}
                                                     iconColor: "red"
@@ -266,7 +266,7 @@ Element {
 
                             FAButton{
                                 Layout.alignment: Qt.AlignTop
-                                icon:FontAwesome.remove
+                                icon:MaterialIcons.remove
 
                                 onClicked:{target.fields.splice(index,1); lst.fieldsReloader++;}
                                 text:qsTr("Remove field")
@@ -293,7 +293,7 @@ Element {
                     }
                     FAButton{
                         enabled:lst.currentIndex > 0
-                        icon:FontAwesome.arrowCircleOLeft
+                        icon:MaterialIcons.keyboard_arrow_left
                         onClicked: lst.currentIndex = Math.max(0, lst.currentIndex-1)
                     }
                     Label{
@@ -306,14 +306,14 @@ Element {
                     }
                     FAButton{
                         enabled:lst.currentIndex < (target.lstModel.count -1)
-                        icon:FontAwesome.arrowCircleORight
+                        icon:MaterialIcons.keyboard_arrow_right
                         onClicked: lst.currentIndex = Math.min(target.lstModel.count-1, lst.currentIndex+1)
                     }
 
                 }
 
                 FAButton{
-                    icon:FontAwesome.plusSquare
+                    icon:MaterialIcons.add_box
                     enabled: target.fields.length
                     onClicked:{
                         var newObj = {}
@@ -346,7 +346,7 @@ Element {
                 }
 
                 FAButton{
-                    icon:FontAwesome.remove
+                    icon:MaterialIcons.remove
                     visible:lst.isData
                     onClicked:{
 

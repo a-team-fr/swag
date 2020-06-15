@@ -24,7 +24,7 @@ import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import QtMultimedia 5.14
-import FontAwesome 1.0
+import MaterialIcons 1.0
 
 Element {
     id: root
@@ -89,7 +89,7 @@ Element {
             FAButton{
                 width:0.3 * Math.min(parent.width,parent.height)
                 height: width
-                icon:FontAwesome.playCircle
+                icon:MaterialIcons.play_circle_outline
                 visible:player.playbackState !== MediaPlayer.PlayingState
                 decorate: false
                 onClicked: player.play()
@@ -100,17 +100,17 @@ Element {
                 anchors.bottom:parent.bottom
                 visible:player.availability === MediaPlayer.Available
                 FAButton{
-                    icon:FontAwesome.backward
+                    icon:MaterialIcons.fast_rewind
                     enabled: player.seekable
                     onClicked: player.seek(Math.max(0,player.position - 1000))
                 }
                 FAButton{
-                    icon:(player.playbackState === MediaPlayer.PlayingState ) ? FontAwesome.pause : FontAwesome.pause
+                    icon:(player.playbackState === MediaPlayer.PlayingState ) ? MaterialIcons.play_arrow : MaterialIcons.pause
                     onClicked: (player.playbackState === MediaPlayer.PlayingState ) ? player.pause() : player.play()
 
                 }
                 FAButton{
-                    icon:FontAwesome.forward
+                    icon:MaterialIcons.fast_forward
                     enabled: player.seekable
                     onClicked: player.seek(Math.min(player.duration,player.position + 1000))
                 }
@@ -132,7 +132,7 @@ Element {
             FAButton{
                 width:0.3 * Math.min(parent.width,parent.height)
                 height: width
-                icon:FontAwesome.playCircle
+                icon:MaterialIcons.play_circle_filled
                 decorate: false
                 onClicked: cam.start()
                 anchors.centerIn: parent

@@ -22,7 +22,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
 
@@ -42,14 +42,14 @@ RowLayout{
     }
 
     FAButton{
-        icon:FontAwesome.arrowLeft
+        icon:MaterialIcons.chevron_left
         onClicked:NavMan.actionPrevious(true)
         visible : pm.net && !pm.net.following
         opacity : pm.slideSelected > 0 ? 1 : 0
         decorate:false
     }
     FAButton{
-        icon:FontAwesome.arrowCircleLeft
+        icon:MaterialIcons.keyboard_arrow_left
         onClicked: NavMan.actionPrevious(false)
         visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode && !pm.net.following
         decorate:false
@@ -80,13 +80,13 @@ RowLayout{
     }
 
     FAButton{
-        icon:FontAwesome.arrowCircleRight
+        icon:MaterialIcons.keyboard_arrow_right
         onClicked:NavMan.actionNext(false)
         visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode && !pm.net.following
         decorate:false
     }
     FAButton{
-        icon:FontAwesome.arrowRight
+        icon:MaterialIcons.chevron_right
         onClicked:NavMan.actionNext(true)
         visible : pm.net && !pm.net.following
         decorate:false

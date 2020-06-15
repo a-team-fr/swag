@@ -24,7 +24,7 @@ import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 
 Frame {
     id: root
@@ -153,7 +153,7 @@ Frame {
               onClicked: pm.net.sendMessage(txtMessage.text)
               ToolTip.visible:hovered
               ToolTip.text : qsTr("Send message")
-              icon: FontAwesome.paperPlane
+              icon: MaterialIcons.send
             }
         }
 

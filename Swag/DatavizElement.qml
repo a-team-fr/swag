@@ -24,7 +24,6 @@ import QtQuick.Controls 2.14
 import QtDataVisualization 1.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
-import FontAwesome 1.0
 
 Element {
     id: root

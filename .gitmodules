@@ -1,3 +1,6 @@
-[submodule "deps/fontawesome.pri"]
+[submodule "fontawesome"]
 	path = deps/fontawesome.pri
-	url = https://github.com/gcharbonnier/fontawesome.pri
+	url = https://github.com/gcharbonnier/fontawesome.pri.git
+[submodule "materialicons"]
+	path = deps/materialicons
+	url = https://github.com/a-team-fr/materialicons.git

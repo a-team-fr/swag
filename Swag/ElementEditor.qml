@@ -24,7 +24,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import fr.ateam.swag 1.0
 import Swag 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 import QtQuick.Layouts 1.14
 
 Frame {
@@ -41,7 +41,7 @@ Frame {
             TextFieldDelegate{
                 title: qsTr("Id")
                 width: parent.width
-                text: target.idAsAString
+                text: target ? target.idAsAString : ""
                 onEditingFinished: {
                     //TODO : check unicity of id among slide elements
                     //TODO : enforce naming policy
@@ -54,7 +54,7 @@ Frame {
             TextFieldDelegate{
                 title: qsTr("z")
                 width: parent.width
-                text: target.z ? target.z : 0
+                text: target ? target.z : 0
                 onEditingFinished: target.z = Number(text)
                 content.validator: IntValidator{}
             }
@@ -62,7 +62,7 @@ Frame {
             TextFieldDelegate{
                 title: qsTr("rotation")
                 width: parent.width
-                text: target.rotation ? target.rotation : 0
+                text: target ? target.rotation : 0
                 onEditingFinished: target.rotation = Number(text)
                 content.validator: DoubleValidator{}
             }
@@ -140,7 +140,7 @@ Frame {
 
         FAButton{
             //decorate:false
-            icon:FontAwesome.crop
+            icon:MaterialIcons.crop
             width:parent.width
             text: qsTr("Resize and reposition")
             onClicked: NavMan.elementItemToPosition = target
@@ -148,14 +148,14 @@ Frame {
 
         FAButton{
             //decorate:false
-            icon:FontAwesome.save
+            icon:MaterialIcons.save
             width:parent.width
             text: qsTr("save slide")
             onClicked: NavMan.actionSave()
         }
 
         FAButton{
-            icon:FontAwesome.trash
+            icon:MaterialIcons.remove
             color:"red"
             width: parent.width
             text: qsTr("Remove element")

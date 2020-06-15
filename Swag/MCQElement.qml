@@ -23,7 +23,7 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 
 Element {
     id: root
@@ -73,9 +73,11 @@ Element {
     contentItem: ColumnLayout{
         id:theQuestion
         property bool reveal : false
+        anchors.fill:parent
         Label{
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            id: questionLabel
+            //width:parent.width
+            Layout.fillWidth:true
             text:root.question
             fontSizeMode: Text.Fit
             minimumPointSize: 14
@@ -84,30 +86,28 @@ Element {
         }
         ButtonGroup{ id:radioGroup}
         ScrollView{
-            id:scroll
-            width:parent.width
-            Layout.fillHeight: true
+            Layout.fillWidth:true
+            Layout.fillHeight:true
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
             clip:true
             ListView{
-
+                anchors.fill:parent
                 model:root.dataMCQ.lstModel
-                //anchors.fill:parent
                 spacing: 5
                 delegate:Rectangle{
                     height:root.answerHeight
-                    width:scroll.width
+                    width:parent.width
                     color:"transparent"
                     property bool isChecked: checkItem.item.checked
                     border.color : (model.isCorrect && isChecked) ? "green" : "red"
                     border.width: (theQuestion.reveal && (model.isCorrect || isChecked  )) ? 3 : 0
-                    RowLayout{
-                        anchors.fill: parent
-                        anchors.margins: 5
+                    Row{
+                        anchors.fill : parent
                         Loader{
-                            enabled:!theQuestion.reveal
                             id:checkItem
+                            height:root.answerHeight
+                            enabled:!theQuestion.reveal
                             sourceComponent: root.nbCorrectAnswer === 1 ? radioButton : checkBox
-
                             Component{
                                 id:checkBox
                                 CheckBox{
@@ -125,7 +125,7 @@ Element {
 
 
                         FlipableElement{
-                            Layout.fillWidth: true
+                            width: parent.width - checkItem.width
                             height:parent.height
                             clickable : false
                             flipped: theQuestion.reveal && (model.backText || model.backImage)
@@ -147,7 +147,8 @@ Element {
         }
 
         FAButton{
-            icon:FontAwesome.arrowRight
+            id:validateButton
+            icon:MaterialIcons.send
             text:qsTr("Validate my answer(s)")
             onClicked:theQuestion.reveal = !theQuestion.reveal
         }

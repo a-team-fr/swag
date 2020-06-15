@@ -24,8 +24,9 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 //import SortFilterProxyModel 0.2
-import FontAwesome 1.0
+import MaterialIcons 1.0
 import fr.ateam.swag 1.0
+import Swag 1.0
 
 Drawer {
     id: root
@@ -83,9 +84,8 @@ Drawer {
                         spacing: 1
                         visible: content.parent.hovered
 
-                        Button {
-                            text: FontAwesome.arrowUp
-                            font.family: FontAwesome.fontFamily
+                        FAButton {
+                            icon: MaterialIcons.keyboard_arrow_up
                             onClicked: pm.changeSlideOrder(index, index - 1)
                             enabled: index > 0
                             width: 30
@@ -95,9 +95,8 @@ Drawer {
                             ToolTip.visible: hovered
                             ToolTip.text: qsTr("Move slide up")
                         }
-                        Button {
-                            text: FontAwesome.copy
-                            font.family: FontAwesome.fontFamily
+                        FAButton {
+                            icon: MaterialIcons.content_copy
                             width: 30
                             height: width
                             enabled: true
@@ -107,9 +106,8 @@ Drawer {
                             ToolTip.visible: hovered
                             ToolTip.text: qsTr("clone")
                         }
-                        Button {
-                            text: FontAwesome.edit
-                            font.family: FontAwesome.fontFamily
+                        FAButton {
+                            icon: MaterialIcons.edit
                             width: 30
                             height: width
                             enabled: true
@@ -122,9 +120,8 @@ Drawer {
                             ToolTip.visible: hovered
                             ToolTip.text: qsTr("edit slide")
                         }
-                        Button {
-                            text: FontAwesome.arrowDown
-                            font.family: FontAwesome.fontFamily
+                        FAButton {
+                            icon: MaterialIcons.keyboard_arrow_down
                             width: 30
                             height: width
                             enabled: index < (listView.count - 1)

@@ -25,6 +25,7 @@ import QtQuick.Layouts 1.14
 import QtQuick.Controls.Material 2.14
 import fr.ateam.swag 1.0
 import FontAwesome 1.0
+import MaterialIcons 1.0
 import Swag 1.0
 
 Control{
@@ -42,6 +43,8 @@ Control{
 
     property bool toggleButton : false
     property bool checked : false
+
+    property bool useFontAwesome : false
 
     background: Rectangle {
         visible:root.decorate
@@ -68,7 +71,7 @@ Control{
         id:content
         Text{
             id:icon
-            font.family:FontAwesome.fontFamily
+            font.family: root.useFontAwesome ? FontAwesome.fontFamily : MaterialIcons.fontFamily
             //font.weight : Font.Black
             //font.styleName: "solid"
             width:visible ? root.height : 0

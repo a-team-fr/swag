@@ -22,6 +22,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
+import MaterialIcons 1.0
 import FontAwesome 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
@@ -35,7 +36,7 @@ ToolBar{
             spacing: 5
 
             FAButton{
-                icon:FontAwesome.alignJustify
+                icon:MaterialIcons.menu
                 height:parent.height
                 width:height
                 visible: pm.loaded
@@ -64,6 +65,7 @@ ToolBar{
                 height:parent.height
                 width:height
                 icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
+                useFontAwesome: true
                 onClicked: wpmenu.close
                 //onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
                 //ToolTip.text : pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
@@ -101,6 +103,7 @@ ToolBar{
                             text:pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
                             onClicked: {pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect; wpmenu.close()}
                             icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
+                            useFontAwesome: true
                             decorate: false
                         }
                     }
@@ -110,7 +113,7 @@ ToolBar{
                             anchors.fill:parent
                             text:qsTr("show profile");
                             onClicked: { pm.displayType = PM.WPProfile; wpmenu.close()}
-                            icon: FontAwesome.userAlt
+                            icon: MaterialIcons.account_circle
                             decorate: false
                         }
                     }
@@ -152,7 +155,7 @@ ToolBar{
                                     }
                                     ToolTip.visible:hovered
                                     ToolTip.text : channelSelect.enabled ? qsTr("Follow") : qsTr("Leave")
-                                    icon: channelSelect.enabled ? FontAwesome.link : FontAwesome.unlink
+                                    icon: channelSelect.enabled ? MaterialIcons.phonelink : MaterialIcons.phonelink_off
                                 }
                             }
                         }
@@ -165,7 +168,7 @@ ToolBar{
                             enabled:parent.enabled
                             text:qsTr("upload current document")
                             onClicked: {pm.uploadPrez(); wpmenu.close()}
-                            icon: FontAwesome.upload
+                            icon: MaterialIcons.file_upload
                             decorate: false
                         }
                     }
@@ -178,7 +181,7 @@ ToolBar{
             FAButton{
                 id:closeButton
                 decorate:false
-                icon:FontAwesome.windowClose
+                icon:MaterialIcons.close
                 height:parent.height
                 width:visible ? height:0
                 visible : pm.displayType != PM.Welcome && (!pm.loaded || !pm.isSlideDisplayed)

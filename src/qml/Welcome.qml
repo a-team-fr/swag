@@ -24,7 +24,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 
 Pane {
     ListModel{
@@ -114,7 +114,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
     FAButton{
         anchors.top: view.bottom
         anchors.left: parent.left
-        icon :FontAwesome.arrowCircleLeft
+        icon :MaterialIcons.keyboard_arrow_left
         decorate : false
         visible: view.currentIndex > 0
         onClicked:view.decrementCurrentIndex()
@@ -131,7 +131,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
     FAButton{
         anchors.top: view.bottom
         anchors.right: parent.right
-        icon : FontAwesome.arrowCircleRight
+        icon : MaterialIcons.keyboard_arrow_right
         decorate : false
         visible : (view.currentIndex !== view.count -1)
         onClicked:view.incrementCurrentIndex()
@@ -145,13 +145,13 @@ One can find an example of using these elements with the \"Gallery\" swag.")
         spacing:5
         FAButton{
             width : 150
-            icon : FontAwesome.magic
+            icon : MaterialIcons.create_new_folder
             text:qsTr("Create new")
             onClicked:pm.create("")
         }
         FAButton{
             width : 150
-            icon : FontAwesome.folderOpen
+            icon : MaterialIcons.stars
             text:qsTr("Open gallery")
             onClicked:pm.load("")
         }

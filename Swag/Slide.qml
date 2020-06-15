@@ -22,7 +22,6 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.5
 import QtQml.Models 2.13
-import FontAwesome 1.0
 import fr.ateam.swag 1.0
 import QtQuick.Layouts 1.12
 

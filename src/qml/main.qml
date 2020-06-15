@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.14
 import QtQuick.Controls.Material 2.14
 import fr.ateam.swag 1.0
 import Swag 1.0
-import FontAwesome 1.0
+import MaterialIcons 1.0
 import QtQuick.Dialogs 1.3
 
 ApplicationWindow {
@@ -145,9 +145,8 @@ ApplicationWindow {
 
 
 
-    Button{
-        font.family : FontAwesome.fontFamily
-        text:FontAwesome.save
+    FAButton{
+        icon:MaterialIcons.save
         width:30;height:width
         visible:renderer.showEditor
         onClicked: {

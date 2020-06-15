@@ -163,7 +163,7 @@ ApplicationWindow {
     footer:Footer{
         width:mainApp.width
         height:40
-        visible:pm.loaded
+        visible:pm.loaded && pm.isSlideDisplayed
     }
 }
 

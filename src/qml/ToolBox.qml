@@ -127,12 +127,13 @@ Frame{
             id:content
             anchors.fill:parent
             anchors.margins:5
-            spacing: 5
+            spacing: 15
             Repeater{
                 model:lstTools
                 delegate:FAButton{
                     icon:model.icon
                     width:content.width
+                    height : 75
                     onClicked:NavMan.currentSlide.createElement(model.elementType)
                     hoverEnabled:true
                     ToolTip.visible: hovered

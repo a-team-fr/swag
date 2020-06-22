@@ -24,6 +24,7 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QIcon>
+#include <QTranslator>
 #include "src/prezmanager.h"
 
 
@@ -38,6 +39,8 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QString(VERSION));
     app.setWindowIcon(QIcon(":/res/SwagLogo.iconset/icon1024.png"));
 
+
+
     QCommandLineParser parser;
     parser.setApplicationDescription("a free presentation system based on Qt");
     parser.addHelpOption();
@@ -47,6 +50,17 @@ int main(int argc, char *argv[])
     const QStringList args = parser.positionalArguments();
 
     PrezManager prezManager;
+
+    //----------- TRANSLATOR
+    QTranslator translator;
+    //if (true == translator.load(QLocale(), QLatin1String("swag"), QLatin1String("_"), QLatin1String(":/translations")) ) {
+    if (translator.load( QLocale(), QLatin1String("swag"), QLatin1String("_"), prezManager.property("installPath").toString()+"/translations")) {
+        app.installTranslator(&translator);
+    } else {
+        qDebug() << "Translator couldn't be loaded [Failed]";
+        return 0;
+    }
+    //----------- TRANSLATOR
 
     if ( (args.count() > 0) && !args[0].isEmpty())
     {

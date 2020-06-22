@@ -129,6 +129,15 @@ Control{
         NavMan.elementItemToPosition = obj
     }
 
+    //default area to deactivate current selection
+    MouseArea{
+        anchors.fill:parent
+        onClicked: {
+            if (pm.editMode)
+                NavMan.elementItemToModify = null
+        }
+    }
+
     MouseArea{
         id:elementPositionner
         anchors.fill:parent

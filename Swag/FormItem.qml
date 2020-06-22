@@ -96,7 +96,7 @@ Control{
             onAccepted: root.editingFinished()
             onTextEdited : root.textEdited()
             visible: root.showTextField
-
+            passwordMaskDelay: 1000
         }
 
         ComboBox{

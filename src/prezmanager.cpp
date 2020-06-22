@@ -37,18 +37,21 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
 
     if (m_settings.value("openLastPrezAtStartup").toBool())
     {
-        QString pathLastPrezOpened = m_settings.value("pathLastPrezOpened").toString();
+        m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
+        emit lastOpenedFilesChanged();
+
+        QString pathLastPrezOpened = m_lastOpenedFiles.first();
         qDebug() << "opened last :" << pathLastPrezOpened;
         if ( !pathLastPrezOpened.isEmpty() )
             load( pathLastPrezOpened +".swag");
     }
 
     m_wp = new Wordprest(this);
+    m_net = new WSClient( this);
 
     startSwagApp();
     m_wp->setHostURI( m_settings.value("swagBackend").toString() );
-
-    m_net = new WSClient( this);
+    setShowNavigator( m_settings.value("showNavigator", true).toBool() );
     connect( m_wp, &Wordprest::loginChanged, this, &PrezManager::loginChanged);
     connect( m_net, &WSClient::channelChanged, this, &PrezManager::documentPositionChanged);
     connect( this, &PrezManager::documentPositionChanged, m_net, &WSClient::notifyDocumentPositionChanged);
@@ -116,8 +119,22 @@ void PrezManager::startSwagApp()
     QClearableCacheQmlEngine* pOldEngine = m_pEngine;
     if (pOldEngine)
     {
+
+        /*
+        QEventLoop waitLoop;
+        QTimer::singleShot(2000, &waitLoop, [&](){
+            qDebug() << "delete engine";
+            delete pOldEngine;
+        });
+
+        connect( pOldEngine, &QClearableCacheQmlEngine::destroyed, [&](QObject* obj){
+            Q_ASSERT(pOldEngine == obj);
+            qDebug() << "old engine destroyed";
+            waitLoop.quit();
+        });*/
         pOldEngine->close();
         pOldEngine->deleteLater();
+        //waitLoop.exec();
     }
 
 
@@ -260,15 +277,28 @@ QUrl PrezManager::documentUrl(const QString& docName, const QString& dir) const
 
 }
 
+void PrezManager::removeLastOpenedFilesEntry(int index)
+{
+    if (index <0 || index >= m_lastOpenedFiles.size() ) return;
+    m_lastOpenedFiles.removeAt( index);
+    m_settings.setValue("pathLastPrezOpened", m_lastOpenedFiles);
+    emit lastOpenedFilesChanged();
+
+
+}
+
 QString PrezManager::readSlideQMLCode(int idxSlide) const
 {
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
+    if (-1 == idxSlide) return "";
 
     return readDocument( urlSlide( idxSlide ) );
 }
 
 QString PrezManager::readDocument(QUrl documentUrl) const
 {
+    if (documentUrl.isEmpty()) return "";
+
     return readDocument(documentUrl.toLocalFile());
 }
 
@@ -353,18 +383,37 @@ bool PrezManager::loadDirectory(QDir prezFolder)
     QFile file( prezFolder.path() + "/content.json" );
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        //remove invalid document from history list
+        m_lastOpenedFiles.removeAll(prezFolder.path() );
+        m_settings.setValue("pathLastPrezOpened", m_lastOpenedFiles);
+        emit lastOpenedFilesChanged();
         return false;
+    }
     QJsonDocument doc = QJsonDocument::fromJson( file.readAll());
 
     if (doc.isNull() || !doc.isObject())
+    {
+        //remove invalid document from history list
+        m_lastOpenedFiles.removeAll(prezFolder.path() );
+        m_settings.setValue("pathLastPrezOpened", m_lastOpenedFiles);
+        emit lastOpenedFilesChanged();
         return false;
+    }
 
 
     m_prezProperties = doc.object();
     m_currentSlideDeckPath = prezFolder.path();
 
     //Save path of the prezFolder in history
-    m_settings.setValue("pathLastPrezOpened", m_currentSlideDeckPath);
+    m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
+    m_lastOpenedFiles.removeAll(m_currentSlideDeckPath );
+    m_lastOpenedFiles.push_front(m_currentSlideDeckPath);
+    if (m_lastOpenedFiles.length() > 50)
+        m_lastOpenedFiles.pop_back();
+    m_settings.setValue("pathLastPrezOpened", m_lastOpenedFiles);
+    emit lastOpenedFilesChanged();
+
     qDebug() << "saving path for opening next time :" << m_currentSlideDeckPath;
 
     m_loaded = true;
@@ -374,6 +423,9 @@ bool PrezManager::loadDirectory(QDir prezFolder)
     emit slidesReordered();
     emit slideChanged();
     emit documentPositionChanged();
+
+    setEditMode(true);
+
     return true;
 }
 
@@ -387,7 +439,6 @@ void PrezManager::unload()
     compressSwag( m_currentSlideDeckPath);
     m_prezProperties = QJsonObject();
     m_currentSlideDeckPath = QString();
-    //m_settings.setValue("pathLastPrezOpened", "");
     m_loaded = false;
     setDisplayType(Welcome);
     emit prezLoaded();
@@ -599,6 +650,39 @@ QString PrezManager::proposeNewNameAvailable(int retry) const
     if ( tmpDoc.exists() )
         return proposeNewNameAvailable( retry + 1 );
     return tmpDoc.filePath();
+}
+
+void PrezManager::setShowDocumentCode(bool mode){
+    if (mode == m_showDocumentCode) return;
+    m_showDocumentCode = mode;
+    emit showDocumentCodeChanged();
+}
+
+void PrezManager::setShowNavigator(bool show){
+    if (show == m_showNavigator) return;
+    m_showNavigator = show;
+    m_settings.setValue("showNavigator", show);
+    emit showNavigatorChanged();
+}
+
+void PrezManager::setEditMode(bool mode)
+{
+    if ( (mode == m_editMode) || m_viewWorldMode)  return;
+
+    m_editMode = mode;
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
+    emit editModeChanged();
+}
+
+void PrezManager::setViewWorldMode(bool mode){
+    if (mode == m_viewWorldMode) return;
+    m_viewWorldMode = mode;
+    setEditMode(false);
+    emit viewWorldModeChanged();
 }
 
 void PrezManager::create( const QUrl& swagDocumentPath)

@@ -36,7 +36,7 @@ HEADERS += \
     src/wordprest.h \
     src/ziputils.hpp
 
-RESOURCES += qml.qrc \
+RESOURCES += qml.qrc
 
 TARGET.CAPABILITY += SwEvent
 
@@ -107,10 +107,25 @@ else:win32{
     RC_ICONS = res/swag.ico
 }
 
+lupdate_only{
+    SOURCES = *.qml \
+              *.cpp \
+              *.js \
+              src/qml/*.qml \
+              Swag/*.qml
+}
+
+TRANSLATIONS = translations/swag_fr_FR.ts
+
+
 DISTFILES += \
     Swag/FormItem.qml \
     Swag/TextFieldDelegate.qml \
+    src/qml/CloseButton.qml \
     src/qml/FileTransfertView.qml \
+    src/qml/IconPicker.qml \
+    src/qml/LeftMenu.qml \
+    src/qml/Navigator.qml \
     src/qml/Networking.qml \
     src/qml/WPConnect.qml \
     src/qml/WPProfile.qml

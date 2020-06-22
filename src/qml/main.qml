@@ -39,12 +39,12 @@ ApplicationWindow {
 
     title: pm.currentSlideDeckPath.length > 0 ? qsTr("SwagSoftware (%1%2)").arg( pm.currentSlideDeckPath ).arg(pm.pendingChanges ? "*":"") : qsTr("Swag")
 
-    Material.accent : pm.loaded ? pm.prezProperties.materialAccent : NavMan.settings.materialAccent
-    Material.background : pm.loaded ? pm.prezProperties.materialBackground : NavMan.settings.materialBackground
-    Material.elevation : pm.loaded ? pm.prezProperties.materialElevation : NavMan.settings.materialElevation
-    Material.foreground : pm.loaded ? pm.prezProperties.materialForeground : NavMan.settings.materialForeground
-    Material.primary : pm.loaded ? pm.prezProperties.materialPrimary : NavMan.settings.materialPrimary
-    Material.theme : pm.loaded ? pm.prezProperties.materialTheme : NavMan.settings.materialTheme
+    Material.accent : NavMan.settings.materialAccent//pm.loaded ? pm.prezProperties.materialAccent : NavMan.settings.materialAccent
+    Material.background : NavMan.settings.materialBackground // pm.loaded ? pm.prezProperties.materialBackground : NavMan.settings.materialBackground
+    Material.elevation : NavMan.settings.materialElevation//pm.loaded ? pm.prezProperties.materialElevation : NavMan.settings.materialElevation
+    Material.foreground : NavMan.settings.materialForeground//pm.loaded ? pm.prezProperties.materialForeground : NavMan.settings.materialForeground
+    Material.primary : NavMan.settings.materialPrimary//pm.loaded ? pm.prezProperties.materialPrimary : NavMan.settings.materialPrimary
+    Material.theme : NavMan.settings.materialTheme//pm.loaded ? pm.prezProperties.materialTheme : NavMan.settings.materialTheme
 
 
     //menuBar:MainMenu{}
@@ -59,16 +59,17 @@ ApplicationWindow {
         }
     }
 
+
+
     FileDialog{
         id: fileDialog
-        //fileMode: FileDialog.OpenFile
+        visible: false
         nameFilters: [ "Swag document (*.swag)" ]
         defaultSuffix:"swag"
         selectExisting: fileAction == "Open"
         title:fileAction=="Open" ? qsTr("Open a swag document")  : qsTr("Select a new Swag document name")
         property string fileAction :""
-        folder:pm.slideDecksFolderPath//folder:"file://"+pm.slideDecksFolderPath
-        //modality: Qt.ApplicationModal
+        folder:pm.slideDecksFolderPath
 
         onAccepted: {
             if (fileAction == "Open")
@@ -76,40 +77,45 @@ ApplicationWindow {
             else if (fileAction == "New")
             pm.create( fileUrl )
         }
-    }
+    }    
 
     header:Header{
         id:toolBar
+        menuOpen: leftMenu.visible
         onToggleMenu:leftMenu.visible ? leftMenu.close() : leftMenu.open()
     }
 
     LeftMenu{
         id:leftMenu
+        width:60
+        height:mainApp.contentItem.height
+        y:toolBar.height
+        onOpenDocument:{
+            fileDialog.fileAction = "Open";
+            fileDialog.open();
+        }
+        onNewDocument:{
+            fileDialog.fileAction = "New";
+            fileDialog.open();
+        }
+    }
+
+    Navigator{
+        id:navigator
         width:Math.min(150, mainApp.contentItem.width * .3)
         height:mainApp.contentItem.height
-        //y:menuBar.height + toolBar.height
-        y:toolBar.height
+        x : leftMenu.width
+        visible : pm.showNavigator && pm.isSlideDisplayed
+
     }
 
 
 
 
     SplitView{
-        x:leftMenu.position * leftMenu.width
-        width:parent.width - x - elementToolBox.width
+        x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
+        width:parent.width - x //- elementToolBox.width
         height:parent.height
-
-        Loader{
-            SplitView.preferredWidth: parent.width / 4
-            SplitView.minimumWidth: 100
-            visible:active
-            active:pm.editMode && NavMan.elementItemToModify
-            sourceComponent:  ElementEditor{
-
-                target : NavMan.elementItemToModify
-            }
-        }
-
 
         CodeRenderer{
             id:renderer
@@ -135,12 +141,28 @@ ApplicationWindow {
 
         }
 
+        Loader{
+            SplitView.preferredWidth: parent.width / 4
+            SplitView.minimumWidth: 100
+            visible:active
+            active:pm.editMode && NavMan.currentSlide
+            sourceComponent: NavMan.elementItemToModify ? propertyPane : elementToolBox//ElementEditor{ target :  NavMan.elementItemToModify }
+        }
+
+    }
+    Component{
+        id:propertyPane
+        ElementEditor{
+            target :  NavMan.elementItemToModify
+        }
     }
 
-    ToolBox{
+    Component{
         id:elementToolBox
-        visible:pm.editMode && NavMan.currentSlide
-        anchors.right: parent.right
+        ToolBox{
+        //    visible:pm.editMode && NavMan.currentSlide
+        //    anchors.right: parent.right
+        }
     }
 
 
@@ -163,7 +185,10 @@ ApplicationWindow {
     footer:Footer{
         width:mainApp.width
         height:40
-        visible:pm.loaded && pm.isSlideDisplayed
+        //visible:pm.loaded && pm.isSlideDisplayed
     }
+
+
+
 }
 

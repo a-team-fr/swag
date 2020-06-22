@@ -46,13 +46,22 @@ Control{
 
     property bool useFontAwesome : false
 
+    property color borderColor : down ? Qt.lighter(Material.backgroundColor,4) : Qt.lighter(Material.backgroundColor,3)
+    property int borderWidth : 0
+
+    property color backgroundHoveredColor : Qt.lighter(Material.backgroundColor, 2 )
+    property color backgroundColor : Qt.lighter(Material.backgroundColor,1.5 * (down ? 2 :1))
+
+    property bool rounded : false
+
+
     background: Rectangle {
         visible:root.decorate
-        color: root.hovered ? Qt.lighter(Material.backgroundColor,2) : Qt.lighter(Material.backgroundColor,1.5)
+        color: root.hovered ? root.backgroundHoveredColor : root.backgroundColor
         opacity: enabled ? 1 : 0.3
-        border.color: root.down ? Qt.lighter(Material.backgroundColor,4) : Qt.lighter(Material.backgroundColor,3)
-        border.width: 1
-        radius: 2
+        border.color: root.borderColor
+        border.width: root.borderWidth
+        radius: root.rounded ? root.width / 2 : 2
     }
     padding: 3
     horizontalPadding: padding + 2
@@ -62,6 +71,7 @@ Control{
     leftInset:0
     rightInset: 0
 
+
     implicitHeight : 30
     implicitWidth : label.contentWidth + 50
 
@@ -69,6 +79,7 @@ Control{
 
     contentItem:RowLayout{
         id:content
+        opacity : root.enabled ? 1 : 0.4
         Text{
             id:icon
             font.family: root.useFontAwesome ? FontAwesome.fontFamily : MaterialIcons.fontFamily
@@ -110,7 +121,8 @@ Control{
         anchors.fill: parent
         onClicked: {
             root.clicked()
-            root.checked = toggleButton && !root.checked
+            if (root.toggleButton)
+                root.checked = !root.checked
         }
     }
 }

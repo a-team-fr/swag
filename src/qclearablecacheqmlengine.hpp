@@ -48,6 +48,7 @@ public slots:
         QQuickWindow* pMainWindow = qobject_cast<QQuickWindow*>(pRootObject);
         Q_ASSERT( pMainWindow );
         pMainWindow->close();
+        pMainWindow->deleteLater();
         for (auto obj : rootObjects())
             obj->deleteLater();
     }

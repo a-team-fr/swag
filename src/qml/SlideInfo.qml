@@ -30,6 +30,8 @@ import MaterialIcons 1.0
 Frame{
     id:root
 
+    CloseButton{}
+
     Flickable {
         anchors.fill:parent
         anchors.margins: 10

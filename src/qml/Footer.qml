@@ -31,20 +31,21 @@ RowLayout{
     height : 40
     id:footer
 
+    visible:pm.loaded
 
-    Switch{
-        text:qsTr("Edit")
-        checked: pm.editMode
-        onToggled: pm.editMode = ! pm.editMode
-        visible : pm.net && !pm.net.following
-        height:footer.height
+//    Switch{
+//        text:qsTr("Edit")
+//        checked: pm.editMode
+//        onToggled: pm.editMode = ! pm.editMode
+//        visible :  !pm.net.following
+//        height:footer.height
 
-    }
+//    }
 
     FAButton{
         icon:MaterialIcons.chevron_left
         onClicked:NavMan.actionPrevious(true)
-        visible : pm.net && !pm.net.following
+        visible :  !pm.net.following
         opacity : pm.slideSelected > 0 ? 1 : 0
         decorate:false
     }
@@ -65,7 +66,7 @@ RowLayout{
             y:-height
             parent:footer
             width:200
-            enabled:pm.net && !pm.net.following
+            enabled: !pm.net.following
             height:150
             opacity:0.7
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
@@ -88,7 +89,7 @@ RowLayout{
     FAButton{
         icon:MaterialIcons.chevron_right
         onClicked:NavMan.actionNext(true)
-        visible : pm.net && !pm.net.following
+        visible :  !pm.net.following
         decorate:false
     }
     Label{

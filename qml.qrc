@@ -7,5 +7,6 @@
         <file>gpl-3.0.md</file>
         <file>res/qt.png</file>
         <file>res/SwagLogo.iconset/icon1024.png</file>
+        <file>res/logo.png</file>
     </qresource>
 </RCC>

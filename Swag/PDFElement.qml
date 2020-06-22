@@ -42,9 +42,8 @@ Element{
 
     contentItem:WebView{
         //url:"file:///users/charby/Documents/Git/swag/deps/pdfjs/web/viewer.html?file=file://Users/charby/Documents/Swag/Gallery/pdfSample.pdf&permissive=false"
-
         url:"file:///"+pm.installPath + "/deps/pdfjs/web/viewer.html?file="+pm.lookForLocalFile(root.pdfPath) +"&permissive="+root.permissive
-        onUrlChanged:console.log("WebviewURL:"+url)
+        //onUrlChanged:console.log("WebviewURL:"+url)
     }
 
     editorComponent:Component{

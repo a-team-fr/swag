@@ -24,117 +24,91 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
+import MaterialIcons 1.0
 
 Frame {
     id: root
-
-    Flickable {
-        anchors.fill: parent
-        anchors.margins: 10
-        clip:true
-        contentHeight: content.childrenRect.height
-
-        Column{
-            id:content
-            anchors.fill: parent
-
-            GroupBox{
-                width: parent.width
-                title: qsTr("username")
-                TextField{
-                    id:username
-                    width: parent.width
-                    text:pm.wp.userData["username"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("email")
-                TextField{
-                    id:email
-                    width: parent.width
-                    text:pm.wp.userData["email"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("registered")
-                Label{
-                    id:registered
-                    width: parent.width
-                    text:pm.wp.userData["registered"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("description")
-                Label{
-                    id:description
-                    width: parent.width
-                    text:pm.wp.userData["description"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("displayname")
-                Label{
-                    id:displayname
-                    width: parent.width
-                    text:pm.wp.userData["displayname"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("firstname")
-                Label{
-                    id:firstname
-                    width: parent.width
-                    text:pm.wp.userData["firstname"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("lastname")
-                Label{
-                    id:lastname
-                    width: parent.width
-                    text:pm.wp.userData["lastname"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("nicename")
-                Label{
-                    id:nicename
-                    width: parent.width
-                    text:pm.wp.userData["nicename"]
-                }
-            }
-            GroupBox{
-                width: parent.width
-                title: qsTr("nickname")
-                Label{
-                    id:nickname
-                    width: parent.width
-                    text:pm.wp.userData["nickname"]
-                }
-            }
-
-//            GroupBox{
-//                Layout.fillWidth: true
-//                title: qsTr("Danger area")
-//                FAButton{
-//                    color : "red"
-//                    width: parent.width
-//                    text:qsTr("Delete account - (warning : no way back !)")
-//                    onClicked: pm.wp.deleteAccount();
-//                }
-//            }
+    anchors.fill: parent
+    anchors.margins: 5
 
 
-
+        FAButton{
+            width:parent.width/3
+            height:parent.height
+            icon : MaterialIcons.account_circle
+            decorate: false
+            Image{
+                anchors.centerIn: parent
+                width:parent.width / 2
+                height:parent.height / 2
+                visible : pm.wp.loggedIn && pm.wp.avatar
+                fillMode: Image.PreserveAspectFit
+                source : visible ? pm.wp.avatar : ""
+            }
 
         }
 
-    }
+        GroupBox{
+            title:"Profile information"
+            width:parent.width*2/3
+            anchors.right : parent.right
+            Column{
+                width:parent.width
+                FormItem{
+                    width:parent.width
+                    title: qsTr("username")
+                    text:pm.wp.userData["username"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("email")
+                    text:pm.wp.userData["email"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("registered")
+                    text:pm.wp.userData["registered"]
+                }
+
+                FormItem{
+                    width:parent.width
+                    title: qsTr("displayname")
+                    text:pm.wp.userData["displayname"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("firstname")
+                    text:pm.wp.userData["firstname"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("lastname")
+                    text:pm.wp.userData["lastname"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("nicename")
+                    text:pm.wp.userData["nicename"]
+                }
+                FormItem{
+                    width:parent.width
+                    title: qsTr("nickname")
+                    text:pm.wp.userData["nickname"]
+                }
+                FormItem{
+                    width: parent.width
+                    title: qsTr("description")
+                    text:pm.wp.userData["description"]
+                }
+
+            }
+        }
+
+
+
+
+
+
+
+
 }

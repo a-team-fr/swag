@@ -19,13 +19,13 @@
 **  along with SwagSoftware.  If not, see <https://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
+pragma Singleton
 import QtQuick 2.14
 //import Qt.labs.folderlistmodel 2.2
 //import QSyncable 1.0
 import Qt.labs.settings 1.0
-import fr.ateam.swag 1.0
+//import fr.ateam.swag 1.0
 import QtQuick.Controls.Material 2.14
-pragma Singleton
 
 Item {
     id:root
@@ -35,6 +35,7 @@ Item {
     property int slideWidth : 640
     property int slideHeight : 480
 
+    property bool welcomeAnimation : true
 
     property var settings : Settings{
         property bool openLastPrezAtStartup : false
@@ -72,7 +73,7 @@ Item {
     //signal rebuildNavigationFocusList( );
     //signal triggerElementPositionner(var element); //root is to be an Element item
 
-    property bool navigationManagedBySlide : (pm.displayType === PM.Slide_FlatView)
+    property bool navigationManagedBySlide : (pm.displayType === 3 /*PM.Slide_FlatView*/)
 
     property var elementItemToPosition : null
     property var elementItemToModify : null
@@ -119,17 +120,16 @@ Item {
 
     function actionCancel()
     {
-        elementItemToPosition = null;
-        elementItemToPosition = null;
-        pm.displayType = PM.Slide;
+        root.elementItemToPosition = null;
+        root.elementItemToModify = null;
+        pm.displayType = 0/*PM.Slide*/;
         pm.showDocumentCode =false;
-        pm.editMode = false;
         pm.viewWorldMode = false;
 
     }
 
     function displayEditElement(item){
-        NavMan.elementItemToModify = item
+        root.elementItemToModify = item
     }
 
     Shortcut {

@@ -26,11 +26,13 @@ import QtQuick.Window 2.12
 import QtQuick.Dialogs 1.3
 import fr.ateam.swag 1.0
 import QtQuick.Controls.Material 2.14
+import MaterialIcons 1.0
 import Swag 1.0
 
 Frame{
     id:root
 
+    CloseButton{}
 
     FileDialog{
         id: fileDialog
@@ -93,12 +95,6 @@ Frame{
                         text:qsTr("Open last document")
                         checked : NavMan.settings.openLastPrezAtStartup
                         onToggled: NavMan.settings.openLastPrezAtStartup = checked
-                    }
-
-                    Switch{
-                        text:qsTr("Sign in using the last successfull credentials")
-                        checked : NavMan.settings.signinAtStartup
-                        onToggled: NavMan.settings.signinAtStartup = checked
                     }
 
                     Switch{

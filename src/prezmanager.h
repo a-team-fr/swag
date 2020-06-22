@@ -30,7 +30,6 @@
 #include <QJsonArray>
 #include <QSettings>
 #include <QDebug>
-#include <QEventLoop>
 #include "pdfexporter.h"
 #include <QQmlContext>
 #include <QTimer>
@@ -84,10 +83,13 @@ class PrezManager : public QObject
     Q_PROPERTY(DisplayType displayType READ displayType WRITE setDisplayType NOTIFY displayTypeChanged)
 
     Q_PROPERTY(bool showDocumentCode MEMBER m_showDocumentCode WRITE setShowDocumentCode NOTIFY showDocumentCodeChanged)
+    Q_PROPERTY(bool showNavigator MEMBER m_showNavigator WRITE setShowNavigator NOTIFY showNavigatorChanged)
     Q_PROPERTY(bool editMode MEMBER m_editMode WRITE setEditMode NOTIFY editModeChanged)
     Q_PROPERTY(bool viewWorldMode MEMBER m_viewWorldMode WRITE setViewWorldMode NOTIFY viewWorldModeChanged)
 
     Q_PROPERTY(QUrl uploadURL MEMBER m_uploadUrl NOTIFY uploadURLChanged)
+
+    Q_PROPERTY(QStringList lastOpenedFiles MEMBER m_lastOpenedFiles NOTIFY lastOpenedFilesChanged)
 
 
 public:
@@ -121,6 +123,7 @@ signals:
     void slideDecksFolderPathChanged();
 
     void showDocumentCodeChanged();
+    void showNavigatorChanged();
     void editModeChanged();
     void viewWorldModeChanged();
 
@@ -129,6 +132,8 @@ signals:
 
     void transfertProgress( const QString& localfilePath, qint64 percProgress, bool upload);
     void transfertCompleted( const QString& localfilePath);
+
+    void lastOpenedFilesChanged();
 
 
 public slots:
@@ -199,6 +204,7 @@ public slots:
      */
     QUrl documentUrl(const QString& docName, const QString& dir = "src/qml/") const;
 
+    void removeLastOpenedFilesEntry( int index);
 
 private:
 
@@ -242,7 +248,6 @@ private:
     mutable QSettings m_settings;
 
     bool m_pendingChanges = false;
-    QEventLoop loop;
 
     PDFExporter* m_pPDFExporter = nullptr;
 
@@ -252,30 +257,12 @@ private:
 
     bool m_isDevelopmentPhase = !QString(SRCDIR).isEmpty();     //
 
-    void setShowDocumentCode(bool mode){
-        if (mode == m_showDocumentCode) return;
-        m_showDocumentCode = mode;
-        emit showDocumentCodeChanged();
-    }
-    void setEditMode(bool mode)
-    {
-        if ( (mode == m_editMode) || m_viewWorldMode)  return;
-
-        m_editMode = mode;
-        if (!m_pendingChanges)
-        {
-            m_pendingChanges = true;
-            emit pendingChangesChanged();
-        }
-        emit editModeChanged();
-    }
-    void setViewWorldMode(bool mode){
-        if (mode == m_viewWorldMode) return;
-        m_viewWorldMode = mode;
-        setEditMode(false);
-        emit viewWorldModeChanged();
-    }
+    void setShowDocumentCode(bool mode);
+    void setShowNavigator(bool show);
+    void setEditMode(bool mode);
+    void setViewWorldMode(bool mode);
     bool m_showDocumentCode = false;
+    bool m_showNavigator =  true;
     bool m_editMode = false;
     bool m_viewWorldMode = false;
 
@@ -283,6 +270,8 @@ private:
     WSClient* m_net = nullptr;
 
     QUrl m_uploadUrl;
+
+    QStringList m_lastOpenedFiles;
 
 };
 

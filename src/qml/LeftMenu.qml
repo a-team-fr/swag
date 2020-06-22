@@ -19,126 +19,200 @@
 **  along with SwagSoftware.  If not, see <https://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
-import QtQuick 2.9
+import QtQuick 2.15
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
 import QtQuick.Controls.Material 2.2
 //import SortFilterProxyModel 0.2
 import MaterialIcons 1.0
+import FontAwesome 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
 
 Drawer {
     id: root
+    visible: true
+    modal :false
 
-    ScrollView {
-        anchors.fill: parent
-        id:scroll
-        ListView {
-            id: listView
-            anchors.fill: parent
-            anchors.margins: 5
-            model: pm.lstSlides
-            clip: true
-            currentIndex : pm.slideSelected
-            spacing: 5
-            delegate: ItemDelegate {
-                width: listView.width
-                height: content.height
-                highlighted: index === listView.currentIndex
-                hoverEnabled: true
-                Item {
-                    id: content
-                    width: parent.width
-                    property int bottomPanel:30
-                    height: (width / NavMan.windowWidth * NavMan.windowHeight) + bottomPanel
+    closePolicy: Popup.NoAutoClose
 
-                    ShaderEffectSource {
-                        sourceItem: Loader {
-                            visible:false
-                            source: pm.urlSlide(index)
-                            transform:Scale{
-                                xScale:width / NavMan.windowWidth
-                                yScale:height / NavMan.windowHeight
-                            }
-                        }
-                        width: parent.width
-                        height: parent.height - parent.bottomPanel
-                        live: true
-                        hideSource: true
-                    }
+    signal newDocument();
+    signal openDocument();
 
-                    Label {
-                        anchors.bottom: parent.bottom
-                        width: parent.width
-                        height: visible ? parent.bottomPanel : 0
-                        visible: !content.parent.hovered
-                        text: modelData["title"]
-                        elide: Text.ElideRight
-                    }
+    component LeftMenuButton : FAButton{
+        id:button
+        width:parent.width
+        height : width
+        property alias toolTip : toolTip
 
-                    Row {
-                        anchors.bottom: parent.bottom
-                        width: parent.width
-                        height: visible ? parent.bottomPanel : 0
-                        spacing: 1
-                        visible: content.parent.hovered
+        Rectangle{
+            visible: button.checked
+            width:2; height : button.height
+            color : NavMan.settings.materialAccent//Material.Accent
+        }
 
-                        FAButton {
-                            icon: MaterialIcons.keyboard_arrow_up
-                            onClicked: pm.changeSlideOrder(index, index - 1)
-                            enabled: index > 0
-                            width: 30
-                            height: width
-                            anchors.verticalCenter: parent.verticalCenter
-                            hoverEnabled: true
-                            ToolTip.visible: hovered
-                            ToolTip.text: qsTr("Move slide up")
-                        }
-                        FAButton {
-                            icon: MaterialIcons.content_copy
-                            width: 30
-                            height: width
-                            enabled: true
-                            onClicked: {pm.cloneSlide(index);NavMan.saveCurrentSlideAndReload(true);}
-                            anchors.verticalCenter: parent.verticalCenter
-                            hoverEnabled: true
-                            ToolTip.visible: hovered
-                            ToolTip.text: qsTr("clone")
-                        }
-                        FAButton {
-                            icon: MaterialIcons.edit
-                            width: 30
-                            height: width
-                            enabled: true
-                            onClicked: {
-                                pm.editSlide(index)
-                                root.close()
-                            }
-                            anchors.verticalCenter: parent.verticalCenter
-                            hoverEnabled: true
-                            ToolTip.visible: hovered
-                            ToolTip.text: qsTr("edit slide")
-                        }
-                        FAButton {
-                            icon: MaterialIcons.keyboard_arrow_down
-                            width: 30
-                            height: width
-                            enabled: index < (listView.count - 1)
-                            onClicked: pm.changeSlideOrder(index, index + 1)
-                            anchors.verticalCenter: parent.verticalCenter
-                            hoverEnabled: true
-                            ToolTip.visible: hovered
-                            ToolTip.text: qsTr("Move slide down")
-                        }
-                    }
-                }
-
-                onClicked: {
-                    pm.selectSlide(index)
-                    root.close()
+        ToolTip {
+            id: toolTip
+            visible : parent.hovered && text.length
+            x: button.width + height /2 ; y: (button.height - height) / 2
+            background: Rectangle{
+                color:"grey"
+                //TODO : use a canvas for tooltip arrow
+                Rectangle{
+                    color : parent.color
+                    x:-width/2; y:width/2 ; rotation : 45
+                    width : parent.height / 2 ; height : width
                 }
             }
+
         }
+
+        iconColor : Material.foreground//checked ? Material.accentColor : Material.foreground
+        backgroundColor: "transparent"
     }
+
+
+    Flickable{
+        width: parent.width - 10
+        height : parent.height - 10
+        x:5;y:5
+        contentHeight: content.childrenRect.height
+        onHeightChanged: spacer.height = Math.max( 0, height - contentHeight)
+        clip : true
+        Column{
+            id:content
+            width:parent.width
+            spacing : 5
+
+
+
+            LeftMenuButton{
+                icon: MaterialIcons.home
+                toolTip.text:qsTr("Home")
+                onClicked: { pm.unload(); pm.displayType = PM.Welcome}
+                enabled : !pm.net.following
+                //visible:pm.loaded
+            }
+
+            LeftMenuButton{
+                icon: MaterialIcons.create_new_folder
+                toolTip.text:qsTr("new document")
+                onClicked: root.newDocument();
+                visible : !pm.loaded
+            }
+
+            LeftMenuButton{
+                icon: MaterialIcons.folder_open
+                toolTip.text:qsTr("open")
+                onClicked: root.openDocument()
+                visible : !pm.loaded
+            }
+
+            ToolSeparator{ orientation: Qt.Horizontal;}
+
+            Column{
+                id:groupMode
+                width: parent.width
+                height:width * 3
+                //spacing : 0
+                visible : pm.loaded
+                LeftMenuButton{
+                    icon:MaterialIcons.edit
+                    toolTip.text: qsTr("Edit mode")
+                    onClicked: { pm.editMode = true ; pm.net.modifyChannel("0", false) }
+                    checked: pm.editMode
+                }
+                LeftMenuButton{
+                    icon: MaterialIcons.playlist_play
+                    toolTip.text: qsTr("Preview")
+                    onClicked: { pm.editMode = false ; pm.net.modifyChannel("0", false) }
+                    checked: !pm.editMode && !pm.net.presenting
+                }
+                LeftMenuButton{
+                    icon:MaterialIcons.play_arrow
+                    toolTip.text: qsTr("Live presenting")
+                    onClicked: { pm.editMode = false ;pm.net.modifyChannel(pm.net.me, true)}
+                    checked : pm.net.presenting
+                    enabled: pm.net.connected
+                }
+            }
+            ToolSeparator{ orientation: Qt.Horizontal ; visible : pm.loaded}
+
+
+
+            LeftMenuButton{
+                icon: FontAwesome.mapSigns//checked ? MaterialIcons.close : FontAwesome.mapSigns
+                useFontAwesome:true//checked ? false : true
+                checked : pm.showNavigator
+                toolTip.text: qsTr("Navigator")
+                onClicked: pm.showNavigator = !pm.showNavigator
+                visible: pm.loaded
+            }
+            LeftMenuButton{
+                icon: MaterialIcons.settings//checked ? MaterialIcons.close : MaterialIcons.settings
+                checked : pm.displayType === PM.PrezSettings
+                toolTip.text:qsTr("Deck settings")
+                onClicked: pm.displayType = ( pm.displayType === PM.PrezSettings ?  PM.Slide :PM.PrezSettings)
+                enabled: !pm.net.following
+                visible: pm.loaded
+            }
+
+
+            ToolSeparator{ orientation: Qt.Horizontal; visible: pm.loaded}
+
+            LeftMenuButton{
+                icon: MaterialIcons.file_upload
+                toolTip.text:qsTr("Upload")
+                onClicked: pm.unload()
+                enabled:pm.loaded
+                visible: pm.loaded
+            }
+
+
+
+
+
+            Item{ ///act as a spacer
+                id:spacer
+                width:1
+            }
+
+            ToolSeparator{ orientation: Qt.Horizontal}
+
+            LeftMenuButton{
+                icon: MaterialIcons.question_answer//checked ? MaterialIcons.close : MaterialIcons.question_answer
+                checked: pm.displayType === PM.NetworkingTest
+                toolTip.text:qsTr("chat")
+                onClicked: pm.displayType = ( pm.displayType === PM.NetworkingTest ?  (pm.loaded ? PM.Slide : PM.Welcome) :PM.NetworkingTest)
+                enabled:pm.net
+            }
+
+            LeftMenuButton{
+                icon: MaterialIcons.settings_applications//checked ? MaterialIcons.close : MaterialIcons.settings_applications
+                checked: pm.displayType === PM.GlobalSettings
+                toolTip.text:qsTr("Swag settings")
+                onClicked: pm.displayType = ( checked ?  (pm.loaded ? PM.Slide : PM.Welcome) :PM.GlobalSettings)
+            }
+
+            LeftMenuButton{
+                onClicked: pm.wp.loggedIn ? pm.wp.logOut() : pm.displayType = PM.WPConnect
+                toolTip.text:pm.wp.loggedIn ? qsTr("Sign out") : qsTr("Sign in / register")
+                icon: pm.wp.loggedIn ? FontAwesome.signOutAlt : FontAwesome.signInAlt
+                useFontAwesome: true
+
+            }
+            LeftMenuButton{
+                icon: MaterialIcons.account_circle//checked ? MaterialIcons.close : MaterialIcons.account_circle
+                checked: pm.displayType === PM.WPProfile
+                toolTip.text:qsTr("show profile (%1)").arg(pm.wp.username)
+                onClicked: pm.displayType = ( checked ?  (pm.loaded ? PM.Slide : PM.Welcome) :PM.WPProfile)
+                enabled : pm.wp.loggedIn
+            }
+
+
+
+        }
+
+    }
+
 }

@@ -34,6 +34,8 @@ Frame {
 //        {text: "coucou", time : new Date(), userName:"test2", userColor:"red", userId:2}
 //    ]
 
+    CloseButton{}
+
     ColumnLayout{
         id:content
         anchors.fill: parent
@@ -183,4 +185,5 @@ Frame {
             }
         }
     }
+
 }

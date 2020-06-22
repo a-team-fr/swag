@@ -85,7 +85,7 @@ Frame {
                        "groupTitle": qsTr("Basic properties"),
                        "component": baseElementProperties
                    })
-            if (root.target.editorComponent)
+            if (root.target && root.target.editorComponent)
                 append({
                            "groupTitle": root.target.elementType,
                            "component": root.target.editorComponent

@@ -26,6 +26,10 @@ import fr.ateam.swag 1.0
 
 Element{
     id:root
+
+    height : 50
+    width : 100
+
     property alias source: image.source
     property alias fillMode : image.fillMode
 

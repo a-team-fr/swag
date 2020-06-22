@@ -27,6 +27,7 @@ import fr.ateam.swag 1.0
 import Swag 1.0
 import MaterialIcons 1.0
 import QtQuick.Dialogs 1.3
+import QtGraphicalEffects 1.12
 
 ApplicationWindow {
     id: mainApp
@@ -117,28 +118,82 @@ ApplicationWindow {
         width:parent.width - x //- elementToolBox.width
         height:parent.height
 
-        CodeRenderer{
-            id:renderer
-
+        Pane{
             SplitView.fillWidth: true
             height:parent.height
-
-
-
-            showEditor:pm.showDocumentCode
-            style : NavMan.settings.defaultSyntaxHighlightingStyle
-            code : pm.readSlideQMLCode( pm.slideSelected)
-            rendererSource : pm.displayUrl
-            renderCode : false
-
-            onWidthChanged:NavMan.slideWidth = width
-            onHeightChanged:NavMan.slideHeight = height
-
-            onRenderedItemChanged:{
-                if (pm.prezProperties.displayMode!=="Loader") return;
-                    NavMan.currentDocument = renderedItem
+            padding : (pm.editMode && NavMan.currentSlide) ? 30 : 0
+            background:Rectangle{
+                color:(pm.editMode && NavMan.currentSlide) ? "#888888" : "transparent"
             }
+            Rectangle{
+                id:page
+                anchors.fill:parent
+                border.width:1
+                border.color:"black"
+                color:"transparent"
 
+                CodeRenderer{
+                    id:renderer
+
+                    anchors.fill:parent
+                    SplitView.fillWidth: true
+                    height:parent.height
+
+
+                    showEditor:pm.showDocumentCode
+                    style : NavMan.settings.defaultSyntaxHighlightingStyle
+                    code : pm.readSlideQMLCode( pm.slideSelected)
+                    rendererSource : pm.displayUrl
+                    renderCode : false
+
+                    onWidthChanged:NavMan.slideWidth = width
+                    onHeightChanged:NavMan.slideHeight = height
+
+                    onRenderedItemChanged:{
+                        if (pm.prezProperties.displayMode!=="Loader") return;
+                        NavMan.currentDocument = renderedItem
+                    }
+
+                }
+
+            }
+            DropShadow{
+                anchors.fill: parent
+                horizontalOffset: 3
+                verticalOffset: 3
+                radius: 8.0
+                samples: 17
+                color: "#80000000"
+                source: page
+            }
+            Row{
+                height:25
+                width:parent.width
+                anchors.top:parent.bottom
+                visible : pm.editMode && NavMan.currentSlide
+                FAButton{
+                    height:parent.height
+                    width:height
+                    icon : MaterialIcons.add
+                    onClicked :pm.createSlide()
+                    rounded : true
+                    decorate:false
+                }
+                FAButton {
+                    height:parent.height
+                    width:height
+                    icon: MaterialIcons.settings
+                    onClicked: pm.editSlide(pm.slideSelected)
+                    decorate:false
+                }
+//                FAButton{
+//                    icon:MaterialIcons.remove
+//                    iconColor:"red"
+//                    text:qsTr("Delete slide")
+//                    onClicked: pm.removeSlide();
+//                }
+
+            }
         }
 
         Loader{

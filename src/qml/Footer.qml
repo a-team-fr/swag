@@ -26,7 +26,7 @@ import MaterialIcons 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
 
-RowLayout{
+Row{
     width:parent.width
     height : 40
     id:footer
@@ -48,14 +48,18 @@ RowLayout{
         visible :  !pm.net.following
         opacity : pm.slideSelected > 0 ? 1 : 0
         decorate:false
+        height:parent.height
     }
     FAButton{
         icon:MaterialIcons.keyboard_arrow_left
         onClicked: NavMan.actionPrevious(false)
         visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode && !pm.net.following
         decorate:false
+        height:parent.height
     }
     Label{
+        height:parent.height
+        verticalAlignment : Text.AlignVCenter
         text: (pm.slideSelected+1) + " / " + pm.lstSlides.length
         MouseArea{
             anchors.fill:parent
@@ -81,27 +85,30 @@ RowLayout{
     }
 
     FAButton{
+        height:parent.height
         icon:MaterialIcons.keyboard_arrow_right
         onClicked:NavMan.actionNext(false)
         visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode && !pm.net.following
         decorate:false
     }
     FAButton{
+        height:parent.height
         icon:MaterialIcons.chevron_right
         onClicked:NavMan.actionNext(true)
         visible :  !pm.net.following
         decorate:false
     }
-    Label{
-        Layout.fillWidth: true
-        text: pm.loaded ? pm.prezProperties.title + qsTr(" ( GPLv3 licensed )") : ""
-        visible:!pm.editMode
-    }
-    TextField{
-        Layout.fillWidth: true
-        text:pm.loaded ? pm.prezProperties.title : ""
-        onTextEdited: pm.savePrezSettings("title", pm.prezProperties.title)
-        visible:pm.editMode
-    }
+
+//    Label{
+//        Layout.fillWidth: true
+//        text: pm.loaded ? pm.prezProperties.title + qsTr(" ( GPLv3 licensed )") : ""
+//        visible:!pm.editMode
+//    }
+//    TextField{
+//        Layout.fillWidth: true
+//        text:pm.loaded ? pm.prezProperties.title : ""
+//        onTextEdited: pm.savePrezSettings("title", pm.prezProperties.title)
+//        visible:pm.editMode
+//    }
 
 }

@@ -64,7 +64,8 @@ Popup {
                 id: content
                 z : dragActive ? 1 : 0
                 width: listView.width
-                height: listView.thumbHeight + (dragActive ? 0 : listView.offsetDropArea)
+                property int offsetAddSlideArea : index === (listView.count - 1) ? 50 : 0
+                height: listView.thumbHeight + (dragActive ? 0 : listView.offsetDropArea) + offsetAddSlideArea
                 property alias hovered : contentMA.containsMouse
 
                 Drag.active: contentMA.drag.active
@@ -97,19 +98,22 @@ Popup {
                 Column{
                     anchors.fill:parent
 
-                    ShaderEffectSource {
-                        sourceItem: Loader {
-                            visible:false
-                            source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
-                            transform:Scale{
-                                xScale:width / NavMan.windowWidth
-                                yScale:height / NavMan.windowHeight
-                            }
-                        }
+                    Rectangle{
                         width: parent.width
                         height: listView.thumbHeight - listView.bottomPanel
-                        live: true
-                        hideSource: true
+                        ShaderEffectSource {
+                            anchors.fill:parent
+                            sourceItem: Loader {
+                                visible:false
+                                source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
+                                transform:Scale{
+                                    xScale:width / NavMan.windowWidth
+                                    yScale:height / NavMan.windowHeight
+                                }
+                            }
+                            live: true
+                            hideSource: true
+                        }
                     }
 
                     Label {
@@ -200,6 +204,16 @@ Popup {
                             color:"transparent"
 
                         }
+                    }
+
+                    FAButton{
+                        anchors.horizontalCenter : parent.horizontalCenter
+                        height:content.offsetAddSlideArea
+                        visible : height > 0
+                        width:height
+                        icon : MaterialIcons.add
+                        onClicked :pm.createSlide()
+                        rounded : true
                     }
                 }
             }

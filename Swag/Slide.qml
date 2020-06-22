@@ -25,6 +25,7 @@ import QtQml.Models 2.13
 import fr.ateam.swag 1.0
 import QtQuick.Layouts 1.12
 
+
 Control{
     id:slide
     background: Qt.createQmlObject(pm.defaultBackground, parent)
@@ -126,7 +127,13 @@ Control{
     {
         var component = Qt.createComponent(url);
         var obj = component.createObject(slide);
-        NavMan.elementItemToPosition = obj
+        //default size and center
+        obj.width = Math.max(obj.width, 300)
+        obj.height = Math.max(obj.height, 50)
+        obj.x = (slide.width-obj.width) / 2;
+        obj.y = (slide.height-obj.height) / 2;
+
+        NavMan.elementItemToModify = obj
     }
 
     //default area to deactivate current selection
@@ -206,5 +213,6 @@ Control{
 
 
 }
+
 
 

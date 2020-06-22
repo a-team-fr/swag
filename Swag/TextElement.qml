@@ -27,6 +27,8 @@ import fr.ateam.swag 1.0
 Element{
     id:root
 
+    height : 20
+    width : 100
     property alias text:content.text
     property alias color:content.color
     property alias elide:content.elide

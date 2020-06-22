@@ -113,7 +113,7 @@ Frame{
           FAButton{
               icon:MaterialIcons.remove
               iconColor:"red"
-              text:qsTr("Remove slide")
+              text:qsTr("Delete slide")
               onClicked: {
                   pm.removeSlide();
                   pm.displayType = PM.Slide;

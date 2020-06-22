@@ -3,7 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Controls.Material 2.14
 import QtGraphicalEffects 1.12
 import Swag 1.0
-
+import fr.ateam.swag 1.0
 import MaterialIcons 1.0
 
 Item{

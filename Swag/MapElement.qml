@@ -28,6 +28,8 @@ import QtPositioning 5.12
 
 Element{
     id:root
+    height : 480
+    width : 640
     property double centerLatitude: 47.096800
     property double centerLongitude: 1.636867
     property alias usePositionSource: positionSource.active
@@ -56,10 +58,9 @@ Element{
     }
 
     Plugin {
-              id: mapPlugin
-              name: "osm"
-          }
-
+        id: mapPlugin
+        name: "esri"
+    }
 
     contentItem:Map{
         id:content
@@ -75,23 +76,19 @@ Element{
         Column{
             width:parent.width
             spacing :3
-            GroupBox{
+            FormItem{
                 title:qsTr("centerLatitude")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.centerLatitude : ""
-                    onEditingFinished: target.centerLatitude = Number(text)
-                }
+                text:target.centerLatitude
+                onEditingFinished: target.centerLatitude = Number(text)
+
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("centerLongitude")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.centerLongitude : ""
-                    onEditingFinished: target.centerLongitude = Number(text)
-                }
+                text:target.centerLongitude
+                onEditingFinished: target.centerLongitude = Number(text)
+
             }
             SwitchDelegate{
                 text:qsTr("usePositionSource")
@@ -119,29 +116,26 @@ Element{
                     onValueChanged:target.tilt = value
                 }
             }
-            GroupBox{
-                title:qsTr("pluginName")
-                width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["osm", "esri", "mapboxgl"]
-                    currentIndex: target ? currentIndex = indexOfValue(target.pluginName) : 0
-                    onActivated: {
-                        console.log(currentValue)
-                        target.pluginName = currentValue
-                    }
-                }
-            }
-            GroupBox{
+//            FormItem{
+//                title:qsTr("pluginName")
+//                width:parent.width
+//                    comboBox.model: ["osm", "esri", "mapboxgl"]
+//                    comboBox.currentIndex: comboBox.indexOfValue(target.pluginName)
+//                    onActivated: {
+//                        console.log(comboBox.currentValue)
+//                        target.pluginName = comboBox.currentValue
+//                        target.activeMapTypeIndex = 0
+//                    }
+
+//            }
+            FormItem{
                 width:parent.width
                 title:qsTr("activeMapType")
-                ComboBox{
-                    width:parent.width
-                    model: content.supportedMapTypes
-                    textRole:"name"
-                    currentIndex: target ? target.activeMapTypeIndex : 0
-                    onCurrentIndexChanged: target.activeMapTypeIndex = currentIndex
-                }
+                comboBox.model: content.supportedMapTypes
+                comboBox.textRole:"name"
+                comboBox.currentIndex: target.activeMapTypeIndex
+                onCurrentTextChanged: target.activeMapTypeIndex = comboBox.currentIndex
+
             }
 
         }

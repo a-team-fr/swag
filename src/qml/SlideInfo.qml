@@ -114,6 +114,7 @@ Frame{
               icon:MaterialIcons.remove
               iconColor:"red"
               text:qsTr("Delete slide")
+              enabled : pm.lstSlides.length > 1
               onClicked: {
                   pm.removeSlide();
                   pm.displayType = PM.Slide;

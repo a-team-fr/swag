@@ -165,83 +165,94 @@ Element {
         Column {
             width: parent.width
             spacing : 3
-            SwitchDelegate{
-                text:qsTr("clickable")
-                checked:target.clickable
-                onToggled: target.clickable = checked
+            FormItem{
+                title:qsTr("clickable")
                 width: parent.width
+                extraContent : Component{
+                    Switch{
+                        checked:target.clickable
+                        onToggled: target.clickable = checked
+                    }
+                }
+
             }
 
-            GroupBox{
+            ToolSeparator{ orientation: Qt.Horizontal; width: parent.width; anchors.horizontalCenter : parent.horizontalCenter}
+
+
+            FormItem{
                 title:qsTr("frontLayout")
                 width: parent.width
-                ComboBox{
-                    width: parent.width
-                    model: ["Overlapped", "ImageLeft", "TextLeft"]
-                    currentIndex: target.frontLayout
-                    onActivated: target.frontLayout = currentIndex
-                }
+                comboBox.model: ["Overlapped", "ImageLeft", "TextLeft"]
+                comboBox.currentIndex: target.frontLayout
+                onActivated: target.frontLayout = comboBox.currentIndex
+
             }
-            GroupBox{
+
+            FormItem{
                 title:qsTr("frontText")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.frontText : ""
-                    onTextEdited: target.frontText = text
-                }
+                text:target.frontText
+                onTextEdited: target.frontText = text
+
             }
-            GroupBox{
+
+            FormItem{
                 title:qsTr("frontImage")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.frontImage : ""
-                    onTextEdited: target.frontImage = text
-                }
+                text:target.frontImage
+                readOnly:true
+                showFilePicker: true
+                onFilePicked: target.frontImage = selectedFileUrl
+
             }
 
-            CheckDelegate{
-                text:qsTr("frontTextFill")
+            FormItem{
+                title:qsTr("frontTextFill")
                 width: parent.width
-                checked: target.frontTextFill
-                onToggled: target.frontTextFill = checked
+                extraContent : Component{
+                    CheckBox{
+                        checked:target.frontTextFill
+                        onToggled: target.frontTextFill = checked
+                    }
+                }
+
             }
 
-            GroupBox{
+            ToolSeparator{ orientation: Qt.Horizontal; width: parent.width; anchors.horizontalCenter : parent.horizontalCenter}
+
+            FormItem{
                 title:qsTr("backLayout")
                 width: parent.width
-                ComboBox{
-                    width: parent.width
-                    model: ["Overlapped", "ImageLeft", "TextLeft"]
-                    currentIndex: target.backLayout
-                    onActivated: target.backLayout = currentIndex
-                }
+                comboBox.model: ["Overlapped", "ImageLeft", "TextLeft"]
+                comboBox.currentIndex: target.backLayout
+                onActivated: target.backLayout = comboBox.currentIndex
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("backText")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.backText : ""
-                    onTextEdited: target.backText = text
-                }
+                text:target.backText
+                onTextEdited: target.backText = text
+
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("backImage")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.backImage : ""
-                    onTextEdited: target.backImage = text
-                }
+                text:target.backImage
+                readOnly:true
+                showFilePicker: true
+                onFilePicked: target.backImage = selectedFileUrl
             }
 
-            CheckDelegate{
-                text:qsTr("backTextFill")
+            FormItem{
+                title:qsTr("backTextFill")
                 width: parent.width
-                checked: target.backTextFill
-                onToggled: target.backTextFill = checked
+                extraContent : Component{
+                    CheckBox{
+                        checked:target.backTextFill
+                        onToggled: target.backTextFill = checked
+                    }
+                }
             }
 
 

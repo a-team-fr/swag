@@ -150,43 +150,42 @@ Element {
         Column {
             width:parent.width
             spacing :2
-            CheckDelegate{
-                text:qsTr("useCamera")
+            FormItem{
+                title:qsTr("useCamera")
                 width:parent.width
-                checked: target.useCamera
-                onToggled: target.useCamera = checked
+                extraContent : Component{
+                    CheckBox{
+                        checked: target.useCamera
+                        onToggled: target.useCamera = checked
+                    }
+                }
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("Video source")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.videoSource : ""
-                    onTextEdited: target.videoSource = text
-                    onEditingFinished: target.videoSource = text
-                }
+                text:target.videoSource
+                onTextEdited: target.videoSource = text
+                onEditingFinished: target.videoSource = text
+                showFilePicker: true
+                onFilePicked: target.videoSource = selectedFileUrl
+
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("fillMode")
                 width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["Stretch", "PreserveAspectFit", "PreserveAspectCrop"]
-                    currentIndex: currentIndex = target.fillMode
-                    onActivated: target.fillMode = currentIndex
-                }
+                comboBox.model: ["Stretch", "PreserveAspectFit", "PreserveAspectCrop"]
+                comboBox.currentIndex: target.fillMode
+                onActivated: target.fillMode = comboBox.currentIndex
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("flushMode")
                 width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["EmptyFrame", "FirstFrame", "LastFrame"]
-                    currentIndex: currentIndex = target.flushMode
-                    onActivated: target.flushMode = currentIndex
-                }
+                comboBox.model: ["EmptyFrame", "FirstFrame", "LastFrame"]
+                comboBox.currentIndex: target.flushMode
+                onActivated: target.flushMode = comboBox.currentIndex
+
             }
 
 

@@ -25,85 +25,118 @@ import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
 import MaterialIcons 1.0
+import QtGraphicalEffects 1.0
 
-Frame {
+Pane {
     id: root
-    anchors.fill: parent
-    anchors.margins: 5
+    Frame{
+        width : Math.min(parent.width, 800)
+        height : Math.min(parent.height, 600)
+        anchors.centerIn: parent
+        Row{
+            anchors.fill : parent
+            anchors.margins : 10
 
-
-        FAButton{
-            width:parent.width/3
-            height:parent.height
-            icon : MaterialIcons.account_circle
-            decorate: false
-            Image{
-                anchors.centerIn: parent
-                width:parent.width / 2
-                height:parent.height / 2
-                visible : pm.wp.loggedIn && pm.wp.avatar
-                fillMode: Image.PreserveAspectFit
-                source : visible ? pm.wp.avatar : ""
-            }
-
-        }
-
-        GroupBox{
-            title:"Profile information"
-            width:parent.width*2/3
-            anchors.right : parent.right
-            Column{
-                width:parent.width
+            ColumnLayout{
+                width : parent.width / 2
+                height : parent.height
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("username")
                     text:pm.wp.userData["username"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("email")
                     text:pm.wp.userData["email"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("registered")
                     text:pm.wp.userData["registered"]
                 }
 
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("displayname")
                     text:pm.wp.userData["displayname"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("firstname")
                     text:pm.wp.userData["firstname"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("lastname")
                     text:pm.wp.userData["lastname"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("nicename")
                     text:pm.wp.userData["nicename"]
                 }
                 FormItem{
-                    width:parent.width
+                    Layout.fillWidth : true
                     title: qsTr("nickname")
                     text:pm.wp.userData["nickname"]
                 }
-                FormItem{
-                    width: parent.width
-                    title: qsTr("description")
-                    text:pm.wp.userData["description"]
-                }
+
+
 
             }
-        }
+            ColumnLayout{
+                width : parent.width / 2
+                height : parent.height
+                Item{
+                    Layout.fillHeight : true
+                    Layout.fillWidth : true
+                    Layout.preferredHeight : 80
 
+
+                    FAButton{
+                        anchors.centerIn : parent
+                        height: parent.height
+                        width : height
+                        icon : MaterialIcons.account_circle
+                        decorate:false
+                        Image{
+                            id:profileImg
+                            anchors.fill : parent
+                            fillMode: Image.PreserveAspectFit
+                            source : (pm.wp.loggedIn && pm.wp.avatar) ? pm.wp.avatar : ""
+                            visible: false
+                        }
+                        Rectangle{
+                            id:mask
+                            anchors.fill: parent
+                            radius:profileImg.width/2
+                            color:"white"
+                        }
+                        OpacityMask{
+                            visible : pm.wp.loggedIn && pm.wp.avatar
+                            source : profileImg
+                            maskSource: mask
+                            anchors.fill:profileImg
+                        }
+
+                    }
+                }
+
+
+
+                GroupBox{
+                    Layout.fillHeight : true
+                    Layout.fillWidth : true
+                    title: qsTr("description")
+                    TextArea{
+                        anchors.fill:parent
+                        text:pm.wp.userData["description"]
+                    }
+                }
+            }
+        }
+    }
 
 
 

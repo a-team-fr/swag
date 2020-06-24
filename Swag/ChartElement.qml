@@ -145,62 +145,46 @@ Element {
     editorComponent: Component {
         Column {
             width:parent.width
-            GroupBox{
+            FormItem{
                 title:qsTr("title")
                 width:parent.width
-                TextField{
-                    anchors.fill:parent
-                    text:target ? target.title : ""
-                    onEditingFinished: target.title = text
-                }
+                text:target.title
+                onEditingFinished: target.title = text
+
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("theme")
                 width:parent.width
-                ComboBox{
-                    anchors.fill:parent
-                    textRole:"t";valueRole:"v"
-                    model: [{v:ChartView.ChartThemeLight, t:"ChartThemeLight"},
-                        {v:ChartView.ChartThemeBlueCerulean, t:"ChartThemeBlueCerulean"},
-                        {v:ChartView.ChartThemeDark, t:"ChartThemeDark"},
-                        {v:ChartView.ChartThemeBrownSand, t:"ChartThemeBrownSand"},
-                        {v:ChartView.ChartThemeBlueNcs, t:"ChartThemeBlueNcs"},
-                        {v:ChartView.ChartThemeHighContrast, t:"ChartThemeHighContrast"},
-                        {v:ChartView.ChartThemeBlueIcy, t:"ChartThemeBlueIcy"},
-                        {v:ChartView.ChartThemeQt, t:"ChartThemeQt"}
-                    ]
-                    //currentIndex: currentIndex = indexOfValue(target.theme)
-                    Component.onCompleted: currentIndex = Qt.binding(function(){ return indexOfValue( target.theme)});
-                    onActivated: target.theme = currentValue
-                }
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [{v:ChartView.ChartThemeLight, t:"ChartThemeLight"},
+                    {v:ChartView.ChartThemeBlueCerulean, t:"ChartThemeBlueCerulean"},
+                    {v:ChartView.ChartThemeDark, t:"ChartThemeDark"},
+                    {v:ChartView.ChartThemeBrownSand, t:"ChartThemeBrownSand"},
+                    {v:ChartView.ChartThemeBlueNcs, t:"ChartThemeBlueNcs"},
+                    {v:ChartView.ChartThemeHighContrast, t:"ChartThemeHighContrast"},
+                    {v:ChartView.ChartThemeBlueIcy, t:"ChartThemeBlueIcy"},
+                    {v:ChartView.ChartThemeQt, t:"ChartThemeQt"}
+                ]
+                //currentIndex: currentIndex = indexOfValue(target.theme)
+                Component.onCompleted: comboBox.currentIndex = Qt.binding(function(){ return comboBox.indexOfValue( target.theme)});
+                onActivated: target.theme = comboBox.currentValue
+
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("type")
                 width:parent.width
-                ComboBox{
-                    anchors.fill:parent
-                    textRole:"t";valueRole:"v"
-                    model: [
-//                        {v:ChartView.SeriesTypeArea, t:"Area"},
-                        {v:ChartView.SeriesTypePie, t:"Pie"},
-                        {v:ChartView.SeriesTypeLine, t:"Line"},
-//                        {v:ChartView.SeriesTypeBar, t:"Bar"},
-//                        {v:ChartView.SeriesTypeHorizontalBar, t:"HorizontalBar"},
-//                        {v:ChartView.SeriesTypeHorizontalStackedBar, t:"HorizontalStackedBar"},
-//                        {v:ChartView.SeriesTypeHorizontalPercentBar, t:"HorizontalPercentBar"},
-//                        {v:ChartView.SeriesTypeStackedBar, t:"StackedBar"},
-//                        {v:ChartView.SeriesTypePercentBar, t:"PercentBar"},
-                        {v:ChartView.SeriesTypeSpline, t:"Spline"},
-                        {v:ChartView.SeriesTypeScatter, t:"Scatter"},
-//                        {v:ChartView.SeriesTypeBoxPlot, t:"Box"},
-//                        {v:ChartView.SeriesTypeCandlestick, t:"Candlestick"}
-                    ]
-                    //currentIndex: currentIndex = indexOfValue(target.type)
-                    Component.onCompleted: currentIndex = Qt.binding(function(){ return indexOfValue( target.type)});
-                    onActivated: target.type = currentValue
-                }
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [
+                    {v:ChartView.SeriesTypePie, t:"Pie"},
+                    {v:ChartView.SeriesTypeLine, t:"Line"},
+                    {v:ChartView.SeriesTypeSpline, t:"Spline"},
+                    {v:ChartView.SeriesTypeScatter, t:"Scatter"}
+                ]
+                Component.onCompleted: comboBox.currentIndex = Qt.binding(function(){ return comboBox.indexOfValue( target.type)});
+                onActivated: target.type = comboBox.currentValue
+
             }
 
 

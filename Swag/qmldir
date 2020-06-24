@@ -27,3 +27,5 @@ TocElement 1.0 TocElement.qml
 PDFElement 1.0 PDFElement.qml
 TextFieldDelegate 1.0 TextFieldDelegate.qml
 FormItem 1.0 FormItem.qml
+IconPicker 1.0 IconPicker.qml
+ColorPicker 1.0 ColorPicker.qml

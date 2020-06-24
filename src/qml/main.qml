@@ -76,9 +76,9 @@ ApplicationWindow {
             if (fileAction == "Open")
                 pm.load( fileUrl )
             else if (fileAction == "New")
-            pm.create( fileUrl )
+                pm.create( fileUrl )
         }
-    }    
+    }
 
     header:Header{
         id:toolBar
@@ -110,126 +110,223 @@ ApplicationWindow {
 
     }
 
-
-
-
-    SplitView{
+    Item{
         x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
         width:parent.width - x //- elementToolBox.width
         height:parent.height
+        Loader{
+            anchors.fill:parent
+            enabled: (pm.editMode && NavMan.currentSlide)
+            visible :enabled
+            sourceComponent: editModeView
 
-        Pane{
+        }
+        //
+        CodeRenderer{
+            id:renderer
+            visible : !(pm.editMode && NavMan.currentSlide)
+            anchors.fill:parent
             SplitView.fillWidth: true
             height:parent.height
-            padding : (pm.editMode && NavMan.currentSlide) ? 30 : 0
-            background:Rectangle{
-                color:(pm.editMode && NavMan.currentSlide) ? "#888888" : "transparent"
+
+
+            showEditor:pm.showDocumentCode
+            style : NavMan.settings.defaultSyntaxHighlightingStyle
+            code : pm.readSlideQMLCode( pm.slideSelected)
+            rendererSource : pm.displayUrl
+            renderCode : false
+
+            onWidthChanged:NavMan.slideWidth = width
+            onHeightChanged:NavMan.slideHeight = height
+
+            onRenderedItemChanged:{
+                if (pm.prezProperties.displayMode!=="Loader") return;
+                NavMan.currentDocument = renderedItem
             }
+
+            FAButton{
+                icon:MaterialIcons.save
+                width:30;height:width
+                visible:renderer.showEditor
+                onClicked: {
+                    pm.writeDocument(pm.urlSlide(), renderer.code)
+                    pm.reload()
+                }
+            }
+
+        }
+    }
+
+
+
+    Component{
+        id:editModeView
+        SplitView{
+            //        x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
+            //        width:parent.width - x //- elementToolBox.width
+            //        height:parent.height
+
             Rectangle{
-                id:page
-                anchors.fill:parent
-                border.width:1
-                border.color:"black"
-                color:"transparent"
+                id:world
+                SplitView.fillWidth: true
+                height:parent.height
+                color: "#888888"
 
-                CodeRenderer{
-                    id:renderer
-
+                PinchArea{
+                    id:pincharea
                     anchors.fill:parent
-                    SplitView.fillWidth: true
-                    height:parent.height
+                    pinch{
+                        target: page
+                        minimumScale: 0.01
+                        maximumScale: 5
+                        dragAxis: Pinch.XAndYAxis
+                        minimumX: 0
+                        maximumX: page.width
+                        minimumY: 0
+                        maximumY: page.height
+                        minimumRotation: 0
+                        maximumRotation: 0
+
+                    }
+                }
+
+                Flickable{
+                    anchors.fill:parent
+                    contentHeight : page.height
+                    contentWidth : page.width
+                    clip:true
 
 
-                    showEditor:pm.showDocumentCode
-                    style : NavMan.settings.defaultSyntaxHighlightingStyle
-                    code : pm.readSlideQMLCode( pm.slideSelected)
-                    rendererSource : pm.displayUrl
-                    renderCode : false
+                    Rectangle{
+                        id:page
+                        //visible : false
+                        width :1920//world.isSlideEditing ? 1920 : parent.width
+                        height:1080//world.isSlideEditing ? 1080 : parent.height
+                        border.width:1
+                        border.color:"black"
+                        color:"white"
+                        //scale : (pm.editMode && NavMan.currentSlide) ? pageScaleFactor.value : 1
 
-                    onWidthChanged:NavMan.slideWidth = width
-                    onHeightChanged:NavMan.slideHeight = height
+                        layer.enabled:true
+                        layer.effect : DropShadow{
+                            horizontalOffset: 8
+                            verticalOffset: 8
+                            radius: 8.0
+                            samples: 17
+                        }
 
-                    onRenderedItemChanged:{
-                        if (pm.prezProperties.displayMode!=="Loader") return;
-                        NavMan.currentDocument = renderedItem
+
+                        CodeRenderer{
+                            id:renderer
+                            anchors.fill:parent
+
+                            showEditor:pm.showDocumentCode
+                            style : NavMan.settings.defaultSyntaxHighlightingStyle
+                            code : pm.readSlideQMLCode( pm.slideSelected)
+                            rendererSource : pm.displayUrl
+                            renderCode : false
+
+                            onWidthChanged:NavMan.slideWidth = width
+                            onHeightChanged:NavMan.slideHeight = height
+
+                            onRenderedItemChanged:{
+                                if (pm.prezProperties.displayMode!=="Loader") return;
+                                NavMan.currentDocument = renderedItem
+                            }
+
+                            FAButton{
+                                icon:MaterialIcons.save
+                                width:30;height:width
+                                visible:renderer.showEditor
+                                onClicked: {
+                                    pm.writeDocument(pm.urlSlide(), renderer.code)
+                                    pm.reload()
+                                }
+                            }
+
+                        }
+
+
+                    }
+//                    DropShadow{
+//                        anchors.fill: page
+//                        horizontalOffset: 3
+//                        verticalOffset: 3
+//                        radius: 8.0
+//                        samples: 17
+//                        color: "#80000000"
+//                        source: page
+//                    }
+
+                    Row{
+                        height:25
+                        width:parent.width
+                        anchors.top:parent.bottom
+                        FAButton{
+                            height:parent.height
+                            width:height
+                            icon : MaterialIcons.add
+                            onClicked :pm.createSlide()
+                            rounded : true
+                            decorate:false
+                        }
+                        FAButton {
+                            height:parent.height
+                            width:height
+                            icon: MaterialIcons.settings
+                            onClicked: pm.editSlide(pm.slideSelected)
+                            decorate:false
+                        }
+                        //                FAButton{
+                        //                    icon:MaterialIcons.remove
+                        //                    iconColor:"red"
+                        //                    text:qsTr("Delete slide")
+                        //                    onClicked: pm.removeSlide();
+                        //                }
+
                     }
 
                 }
 
-            }
-            DropShadow{
-                anchors.fill: parent
-                horizontalOffset: 3
-                verticalOffset: 3
-                radius: 8.0
-                samples: 17
-                color: "#80000000"
-                source: page
-            }
-            Row{
-                height:25
-                width:parent.width
-                anchors.top:parent.bottom
-                visible : pm.editMode && NavMan.currentSlide
-                FAButton{
-                    height:parent.height
-                    width:height
-                    icon : MaterialIcons.add
-                    onClicked :pm.createSlide()
-                    rounded : true
-                    decorate:false
+
+                Slider{
+                    id:pageScaleFactor
+                    height:50
+                    width:200
+                    value : page.scale
+                    from : 0.1
+                    to : 5
+                    onValueChanged: page.scale = value
+                    anchors.bottom : parent.bottom
+                    anchors.right : parent.right
                 }
-                FAButton {
-                    height:parent.height
-                    width:height
-                    icon: MaterialIcons.settings
-                    onClicked: pm.editSlide(pm.slideSelected)
-                    decorate:false
-                }
-//                FAButton{
-//                    icon:MaterialIcons.remove
-//                    iconColor:"red"
-//                    text:qsTr("Delete slide")
-//                    onClicked: pm.removeSlide();
-//                }
-
             }
+
+
+
+            Loader{
+                SplitView.preferredWidth: parent.width / 4
+                SplitView.minimumWidth: 100
+                visible:active
+                sourceComponent: NavMan.elementItemToModify ? propertyPane : elementToolBox//ElementEditor{ target :  NavMan.elementItemToModify }
+                Component{
+                    id:propertyPane
+                    ElementEditor{
+                        target :  NavMan.elementItemToModify
+                        z:100
+                    }
+                }
+                Component{
+                    id:elementToolBox
+                    ToolBox{
+                        //    visible:pm.editMode && NavMan.currentSlide
+                        //    anchors.right: parent.right
+                    }
+                }
+            }
+
         }
 
-        Loader{
-            SplitView.preferredWidth: parent.width / 4
-            SplitView.minimumWidth: 100
-            visible:active
-            active:pm.editMode && NavMan.currentSlide
-            sourceComponent: NavMan.elementItemToModify ? propertyPane : elementToolBox//ElementEditor{ target :  NavMan.elementItemToModify }
-        }
-
-    }
-    Component{
-        id:propertyPane
-        ElementEditor{
-            target :  NavMan.elementItemToModify
-        }
-    }
-
-    Component{
-        id:elementToolBox
-        ToolBox{
-        //    visible:pm.editMode && NavMan.currentSlide
-        //    anchors.right: parent.right
-        }
-    }
-
-
-
-    FAButton{
-        icon:MaterialIcons.save
-        width:30;height:width
-        visible:renderer.showEditor
-        onClicked: {
-            pm.writeDocument(pm.urlSlide(), renderer.code)
-            pm.reload()
-        }
     }
 
     FileTransfertView{
@@ -238,6 +335,7 @@ ApplicationWindow {
     }
 
     footer:Footer{
+
         width:mainApp.width
         height:40
         //visible:pm.loaded && pm.isSlideDisplayed

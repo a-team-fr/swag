@@ -28,6 +28,8 @@ import Swag 1.0
 Control{
     id:root
 
+    //property var target : NavMan.elementItemToModify
+
     function updateRel(ptTopLeft, ptBottomRight){
         xRel = ptTopLeft.x / refWidth
         yRel = ptTopLeft.y / refHeight

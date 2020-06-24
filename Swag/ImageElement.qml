@@ -27,8 +27,8 @@ import fr.ateam.swag 1.0
 Element{
     id:root
 
-    height : 50
-    width : 100
+    height : 150
+    width : 300
 
     property alias source: image.source
     property alias fillMode : image.fillMode
@@ -51,24 +51,23 @@ Element{
         Column{
             width:parent.width
             spacing : 3
-            GroupBox{
+            FormItem{
                 title:qsTr("source")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.source : ""
-                    onTextEdited: target.source = text
-                }
+                text:target.source
+                onTextEdited: target.source = text
+                showFilePicker: true
+                onFilePicked: target.source = selectedFileUrl
+
             }
-            GroupBox{
+
+            FormItem{
                 title:qsTr("fillMode")
                 width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["Stretch", "PreserveAspectFit", "PreserveAspectCrop","Tile","TileVertically","TileHorizontally","Pad"]
-                    currentIndex: currentIndex = target.fillMode
-                    onActivated: target.fillMode = currentIndex
-                }
+                    comboBox.model: ["Stretch", "PreserveAspectFit", "PreserveAspectCrop","Tile","TileVertically","TileHorizontally","Pad"]
+                    comboBox.currentIndex: target.fillMode
+                    onActivated: target.fillMode = comboBox.currentIndex
+
             }
 
         }

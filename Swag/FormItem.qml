@@ -23,39 +23,71 @@ import QtQuick 2.12
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.14
 import QtQuick.Controls.Material 2.14
+import QtQuick.Dialogs 1.3
 import fr.ateam.swag 1.0
 import Swag 1.0
+import MaterialIcons 1.0
 
 Control{
     id:root
+    //Label
     property alias title : label.text
-    property alias text : input.text
     property alias horizontalAlignment : label.horizontalAlignment
+    property alias labelColor : label.color
     property bool autoFitLabel : false
     property int labelMinimumWidth : -1
     property int labelMaximumWidth : -1
-    property alias labelColor : label.color
 
-    property bool showButton : false
-    property bool showTextField : !showComboBox
-    property bool showComboBox : cb.count > 0
-
-    property alias comboBox : cb
-
+    //TextField
+    property alias textField : input
+    property alias text : input.text
+    property bool showTextField : !showComboBox && !showColorSelector && !showIconSelector && !root.extraContent
     property alias echoMode: input.echoMode
     property alias readOnly: input.readOnly
     property alias placeholderText: input.placeholderText
     property alias placeholderTextColor: input.placeholderTextColor
-
-    //TextField signal
     signal editingFinished()
     signal accepted()
     signal textEdited()
-    //Button signal
-    signal confirmed()
-    //combobox: signal
+
+    //combobox
+    property bool showComboBox : cb.count > 0
+    property alias comboBox : cb
     signal activated()
     signal currentTextChanged()
+
+    //Button
+    signal confirmed()
+    property bool showButton : false
+
+    //color selector
+    property bool showColorSelector : false
+    property color selectedColor :"transparent"
+    signal colorPicked()
+
+    //icon selector
+    property bool showIconSelector : false
+    property string selectedIcon :""
+    signal iconPicked()
+
+    //common all picker
+    property var pickerParent : root.parent
+
+    //Extra content
+    property var extraContent : null
+    property bool extraContent_fillWidth : false
+    property int extraContent_horizontalAlignment : Qt.AlignRight
+
+    //filePicker
+    property bool showFilePicker : false
+    property var selectedFileUrl : null
+    property bool selectExisting : true
+    property var nameFilters:[ qsTr("All (*.*)")]
+    property string defaultSuffix : ""
+    property string defaultFolder : pm.currentSlideDeckPath
+    signal filePicked()
+
+
 
 
     padding: 3
@@ -66,16 +98,18 @@ Control{
     leftInset:0
     rightInset: 0
 
-    implicitHeight : contentItem.height + padding * 2
-    implicitWidth : 50
+    implicitHeight : contentItem.childrenRect.height
+    implicitWidth : contentItem.childrenRect.width
 
 
     contentItem:RowLayout{
-        height : childrenRect.height
+        width : parent.width
+        //implicitWidth: childrenRect.width
+        //implicitHeight : childrenRect.height
+        //height : childrenRect.height
         spacing : 15
         Label{
             id:label
-            //Layout.fillWidth: true
             color : Material.accent
             Layout.minimumWidth : root.labelMinimumWidth
             Layout.maximumWidth : root.labelMaximumWidth
@@ -86,7 +120,7 @@ Control{
             visible:text.length
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            Layout.alignment: Qt.AlignCenter | Qt.AlignVCenter
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
         }
 
         TextField{
@@ -113,6 +147,116 @@ Control{
             visible : root.showButton
             onClicked: root.confirmed()
         }
+
+        FAButton{
+            visible : root.showFilePicker
+            icon : MaterialIcons.folder_open
+            onClicked:filePicker.open()
+
+            FileDialog{
+                id:filePicker
+                visible: false
+                folder : root.defaultFolder
+                defaultSuffix : root.defaultSuffix
+                nameFilters : root.nameFilters
+                selectExisting : root.selectExisting
+                onAccepted:{
+                    root.selectedFileUrl = fileUrl
+                    root.filePicked()
+                }
+            }
+        }
+
+
+
+        Loader{
+            Layout.alignment : Qt.AlignRight
+            active: root.showColorSelector
+            visible : active
+            height:parent.height
+            width:height
+            sourceComponent : Rectangle{
+                border.width : 2
+                border.color:"lightgrey"
+                color:"white"
+                Rectangle{
+                    anchors.fill: parent;
+                    anchors.margins:2;
+                    color : root.selectedColor
+                }
+                MouseArea{
+                    anchors.fill:parent
+                    onClicked:colorPicker.open()
+                }
+                ColorPicker{
+                    id:colorPicker
+                    currentColor : root.selectedColor
+                    visible:false
+                    parent : root.pickerParent
+                    onSelected:{
+                        root.selectedColor = currentColor
+                        root.colorPicked()
+                    }
+                }
+
+            }
+
+        }
+
+        Loader{
+            Layout.alignment : Qt.AlignRight
+            active: root.showIconSelector
+            visible : active
+            height:parent.height
+            width:height
+
+            sourceComponent: FAButton{
+                anchors.fill:parent
+                icon : root.selectedIcon
+                onClicked:iconPicker.open()
+
+                IconPicker{
+                    id:iconPicker
+                    parent : root.pickerParent
+                    onSelected:{
+                        root.selectedIcon = currentIcon
+                        root.iconPicked()
+                    }
+                }
+            }
+
+        }
+
+//        Rectangle{
+//            id:spacer
+//            color:"red"
+//            visible: root.extraContent
+//            Layout.minimumWidth : 0
+//            Layout.fillWidth : true
+//            Layout.fillHeight : true
+//        }
+
+        Loader{
+            active: root.extraContent
+            sourceComponent : root.extraContent
+            Layout.fillWidth : root.extraContent_fillWidth
+            Layout.fillHeight : true
+            Layout.alignment : root.extraContent_horizontalAlignment
+            //anchors.fill: extraContent
+        }
+//        Rectangle{
+//            color:"red"
+//            visible: root.extraContent
+//            Layout.alignment : Qt.AlignRight
+//            //Layout.fillWidth : true
+//            Layout.fillHeight : true
+//            Loader{
+//                id:extraContent
+//                active: root.extraContent
+//                sourceComponent : root.extraContent
+//                //anchors.fill: extraContent
+//            }
+//        }
 
     }
 

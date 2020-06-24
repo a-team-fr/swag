@@ -200,52 +200,68 @@ Frame{
 
                     }
 
-                    FormItem{
-                        title:qsTr("Theme name")
-                        width:parent.width
-                        comboBox.model:[{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
-                        comboBox.textRole: "l";comboBox.valueRole: "v"
-                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialTheme)
-                        onActivated: NavMan.settings.materialTheme = comboBox.currentValue
+//                    FormItem{
+//                        title:qsTr("Theme name")
+//                        width:parent.width
+//                        comboBox.model:[{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
+//                        comboBox.textRole: "l";comboBox.valueRole: "v"
+//                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialTheme)
+//                        onActivated: NavMan.settings.materialTheme = comboBox.currentValue
 
+//                    }
+
+                    FormItem{
+                        width: parent.width
+                        title:qsTr("Theme name ")
+                        extraContent:Component{Row{
+                            spacing : 5
+                            FAButton{
+                                icon: MaterialIcons.landscape
+                                checked : NavMan.settings.materialTheme === Material.Dark
+                                onClicked:NavMan.settings.materialTheme = Material.Dark
+                            }
+                            FAButton{
+                                icon: MaterialIcons.panorama
+                                checked : NavMan.settings.materialTheme === Material.Light
+                                onClicked:NavMan.settings.materialTheme = Material.Light
+                            }
+                        }}
                     }
-                    FormItem{
-                        title:qsTr("Theme accent")
-                        width:parent.width
-                        comboBox.model:lstMaterialColor
-                        comboBox.textRole: "l";comboBox.valueRole: "v"
-                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialAccent)
-                        onActivated: NavMan.settings.materialAccent = comboBox.currentValue
-
-                    }
 
                     FormItem{
-                        title:qsTr("Theme background color")
-                        width:parent.width
-                        comboBox.model:lstMaterialColor
-                        comboBox.textRole: "l";comboBox.valueRole: "v"
-                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialBackground)
-                        onActivated: NavMan.settings.materialBackground = comboBox.currentValue
-
-                    }
-                    FormItem{
-                        title:qsTr("Theme foreground color")
-                        width:parent.width
-                        comboBox.model:lstMaterialColor
-                        comboBox.textRole: "l";comboBox.valueRole: "v"
-                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialForeground)
-                        onActivated: NavMan.settings.materialForeground = comboBox.currentValue
-
-                    }
-                    FormItem{
+                        width: parent.width
                         title:qsTr("Theme primary color")
-                        width:parent.width
-                        comboBox.model:lstMaterialColor
-                        comboBox.textRole: "l";comboBox.valueRole: "v"
-                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialPrimary)
-                        onActivated: NavMan.settings.materialPrimary = comboBox.currentValue
-
+                        selectedColor: NavMan.settings.materialPrimary
+                        showColorSelector: true
+                        onColorPicked: NavMan.settings.materialPrimary = selectedColor
+                        pickerParent : root
                     }
+                    FormItem{
+                        width: parent.width
+                        title:qsTr("Theme accent")
+                        selectedColor: NavMan.settings.materialAccent
+                        showColorSelector: true
+                        onColorPicked: NavMan.settings.materialAccent = selectedColor
+                        pickerParent : root
+                    }
+                    FormItem{
+                        width: parent.width
+                        title:qsTr("Theme background color")
+                        selectedColor: NavMan.settings.materialBackground
+                        showColorSelector: true
+                        onColorPicked: NavMan.settings.materialBackground = selectedColor
+                        pickerParent : root
+                    }
+                    FormItem{
+                        width: parent.width
+                        title:qsTr("Theme foreground color")
+                        selectedColor: NavMan.settings.materialForeground
+                        showColorSelector: true
+                        onColorPicked: NavMan.settings.materialForeground = selectedColor
+                        pickerParent : root
+                    }
+
+
 
                     FormItem{
                         title:qsTr("Theme elevation")
@@ -256,128 +272,7 @@ Frame{
                     }
                 }
 
-
             }
-
-            ListModel{
-                id:lstMaterialColor
-                ListElement{ v:"#ffffff"; l:"White"}
-                ListElement{ v:"#303030"; l:"background(dark)"}
-                ListElement{ v:"#CFCFCF"; l:"background(light)"}
-                ListElement{ v:"#000000"; l:"Black"}
-
-
-                ListElement{ v:"#EF9A9A"; l:"Red (dark)"}
-                ListElement{ v:"#F48FB1"; l:"Pink (dark)"}
-                ListElement{ v:"#CE93D8"; l:"Purple (dark)"}
-                ListElement{ v:"#B39DDB"; l:"DeepPurple (dark)"}
-                ListElement{ v:"#9FA8DA"; l:"Indigo (dark)"}
-                ListElement{ v:"#90CAF9"; l:"Blue (dark)"}
-                ListElement{ v:"#81D4FA"; l:"LightBlue (dark)"}
-                ListElement{ v:"#80DEEA"; l:"Cyan (dark)"}
-                ListElement{ v:"#80CBC4"; l:"Teal (dark)"}
-                ListElement{ v:"#A5D6A7"; l:"Green (dark)"}
-                ListElement{ v:"#C5E1A5"; l:"LightGreen (dark)"}
-                ListElement{ v:"#E6EE9C"; l:"Lime (dark)"}
-                ListElement{ v:"#FFF59D"; l:"Yellow (dark)"}
-                ListElement{ v:"#FFE082"; l:"Amber (dark)"}
-                ListElement{ v:"#FFCC80"; l:"Orange (dark)"}
-                ListElement{ v:"#FFAB91"; l:"DeepOrange (dark)"}
-                ListElement{ v:"#BCAAA4"; l:"Brown (dark)"}
-                ListElement{ v:"#EEEEEE"; l:"Grey (dark)"}
-                ListElement{ v:"#B0BEC5"; l:"BlueGrey (dark)"}
-
-                ListElement{ v:"#F44336"; l:"Red (light)"}
-                ListElement{ v:"#E91E63"; l:"Pink (light)"}
-                ListElement{ v:"#9C27B0"; l:"Purple (light)"}
-                ListElement{ v:"#673AB7"; l:"DeepPurple (light)"}
-                ListElement{ v:"#3F51B5"; l:"Indigo (light)"}
-                ListElement{ v:"#2196F3"; l:"Blue (light)"}
-                ListElement{ v:"#03A9F4"; l:"LightBlue (light)"}
-                ListElement{ v:"#00BCD4"; l:"Cyan (light)"}
-                ListElement{ v:"#009688"; l:"Teal (light)"}
-                ListElement{ v:"#4CAF50"; l:"Green (light)"}
-                ListElement{ v:"#8BC34A"; l:"LightGreen (light)"}
-                ListElement{ v:"#CDDC39"; l:"Lime (light)"}
-                ListElement{ v:"#FFEB3B"; l:"Yellow (light)"}
-                ListElement{ v:"#FFC107"; l:"Amber (light)"}
-                ListElement{ v:"#FF9800"; l:"Orange (light)"}
-                ListElement{ v:"#FF5722"; l:"DeepOrange (light)"}
-                ListElement{ v:"#795548"; l:"Brown (light)"}
-                ListElement{ v:"#9E9E9E"; l:"Grey (light)"}
-                ListElement{ v:"#607D8B"; l:"BlueGrey (light)"}
-            }
-//            GroupBox{
-//                title:qsTr("Theme")
-//                width:parent.width
-//                Flow{
-//                    spacing : 10
-//                    width:parent.width
-//                    GroupBox{
-//                        title:qsTr("Name")
-//                        ComboBox{
-//                            width:parent.width
-//                            model: [{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
-//                            textRole: "l";valueRole: "v"
-//                            onActivated: NavMan.settings.materialTheme = currentValue
-//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialTheme)
-//                        }
-//                    }
-
-//                    GroupBox{
-//                        title:qsTr("Accent")
-//                        ComboBox{
-//                            width:parent.width
-//                            model: lstMaterialColor
-//                            textRole: "l";valueRole: "v"
-//                            onActivated: NavMan.settings.materialAccent = currentValue
-//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialAccent)
-//                        }
-//                    }
-//                    GroupBox{
-//                        title:qsTr("Background")
-//                        ComboBox{
-//                            width:parent.width
-//                            model: lstMaterialColor
-//                            textRole: "l";valueRole: "v"
-//                            onActivated: NavMan.settings.materialBackground = currentValue
-//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialBackground)
-//                        }
-//                    }
-//                    GroupBox{
-//                        title:qsTr("Elevation")
-//                        TextField{
-//                            width:parent.width
-//                            text:NavMan.settings.materialElevation
-//                            onEditingFinished: NavMan.settings.materialElevation = text
-//                        }
-//                    }
-//                    GroupBox{
-//                        title:qsTr("Foreground")
-//                        ComboBox{
-//                            width:parent.width
-//                            model: lstMaterialColor
-//                            textRole: "l";valueRole: "v"
-//                            onActivated: NavMan.settings.materialForeground = currentValue
-//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialForeground)
-//                        }
-//                    }
-//                    GroupBox{
-//                        title:qsTr("Primary")
-//                        ComboBox{
-//                            width:parent.width
-//                            model: lstMaterialColor
-//                            textRole: "l";valueRole: "v"
-//                            onActivated: NavMan.settings.materialPrimary = currentValue
-//                            Component.onCompleted: currentIndex = indexOfValue(NavMan.settings.materialPrimary)
-//                        }
-//                    }
-//                }
-//            }
-
-
-
-
 
 
         }

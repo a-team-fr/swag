@@ -11,7 +11,7 @@
 **  (at your option) any later version.
 **
 **  SwagSoftware is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
+**  but WITHOUT ANY WARRANTY, without even the implied warranty of
 **  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 **  GNU General Public License for more details.
 **
@@ -19,21 +19,33 @@
 **  along with SwagSoftware.  If not, see <https://www.gnu.org/licenses/>.
 **
 ****************************************************************************/
+//pragma Singleton
+
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.0
-import QtQuick.Dialogs 1.2
+//import QtQuick.Dialogs 1.2
 import MaterialIcons 1.0
 import fr.ateam.swag 1.0
-import Swag 1.0
 
-Popup{
+Dialog{
     id:root
-    implicitHeight : 300
-    implicitWidth : 400
+    implicitHeight : 500
+    implicitWidth : 500
 
+    title:qsTr("Icon picker")
+    anchors.centerIn : parent
+    standardButtons: Dialog.Ok | Dialog.Reset
     property string currentIcon : ""
-    property bool closeAtSelection : true
+    property bool closeAtSelection : false
+
+    signal selected()
+    modal:true
+    onReset: {
+        root.currentIcon = ""
+        root.selected();
+        close()
+    }
 
     ScrollView{
         id : scroll
@@ -45,20 +57,21 @@ Popup{
             width:scroll.width
             spacing : 5
             Repeater{
-                model: ListMaterialIcons{}
+                model: NavMan.lstMaterialIcons
                 delegate: FAButton{
-                    icon : value
+                    icon : modelData.value
                     ToolTip.visible: hovered
-                    ToolTip.text : name
+                    ToolTip.text : modelData.name
                     onClicked: {
-                        root.currentIcon = name
+                        root.currentIcon = modelData.value
                         if (root.closeAtSelection)
                             root.close()
+                        root.selected();
                     }
                 }
             }
         }
 
-
     }
+
 }

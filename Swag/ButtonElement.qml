@@ -24,6 +24,7 @@ import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
 
+
 Element{
     id:root
     property string onClicked: ""
@@ -67,7 +68,6 @@ Element{
         }
     }
 
-
     editorComponent:Component{
         Column{
             width:parent.width
@@ -83,38 +83,46 @@ Element{
                     onEditingFinish: target.onClicked = code
                 }
             }
-            GroupBox{
+
+            FormItem{
                 title:qsTr("text")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target.text
-                    onEditingFinished: target.text = text
-                }
+                text:target.text
+                onEditingFinished: target.text = text
+
             }
-            TextFieldDelegate{
+            FormItem{
                 title: qsTr("Icon")
                 width: parent.width
-                text: target.icon
-                onEditingFinished: target.icon = text
+                selectedIcon: target.icon
+                showIconSelector: true
+                onIconPicked: target.icon = selectedIcon
+                pickerParent : root.parent
             }
-            TextFieldDelegate{
+
+            FormItem{
                 title: qsTr("IconColor")
                 width: parent.width
-                text: target.iconColor
-                onEditingFinished: target.iconColor = text
+                selectedColor: target.iconColor
+                showColorSelector: true
+                onColorPicked: target.iconColor = selectedColor
+                pickerParent : root.parent
             }
-            TextFieldDelegate{
+            FormItem{
                 title: qsTr("Color")
                 width: parent.width
-                text: target.color
-                onEditingFinished: target.color = text
+                selectedColor: target.color
+                showColorSelector: true
+                onColorPicked: target.color = selectedColor
+                pickerParent : root.parent
             }
+
             SwitchDelegate{
                 text:qsTr("decorate")
                 width:parent.width
                 checked: target.decorate
                 onToggled: target.decorate = checked
+
             }
 
             SwitchDelegate{

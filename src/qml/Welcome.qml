@@ -304,13 +304,13 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                     delegate: ItemDelegate{
                         width : lstLastOpened.width
                         text:modelData.replace(pm.slideDecksFolderPath+'/',"") + ".swag"
-                        onClicked:{pm.load(modelData+".swag");console.log(modelData)}
+                        onClicked:pm.load(modelData+".swag")
 
                         FAButton{
                             anchors.right:parent.right
                             height:parent.height
                             width:height
-                            iconColor: "yellow"
+                            iconColor: NavMan.settings.materialAccent
                             decorate: false
                             onClicked : pm.removeLastOpenedFilesEntry(index)
                             icon: MaterialIcons.remove_circle_outline

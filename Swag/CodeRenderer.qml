@@ -36,6 +36,7 @@ SplitView{
     property alias showEditorPanel :editor.showEditorPanel
 
     property alias renderedItem : renderer.item
+    property bool clipRenderer : false
 
     orientation: Qt.Horizontal
 
@@ -48,7 +49,7 @@ SplitView{
 
     Loader{
         id:renderer
-        clip:true
+        clip:coderenderer.clipRenderer
         SplitView.preferredWidth: parent.width / 2
         SplitView.fillHeight: true
 

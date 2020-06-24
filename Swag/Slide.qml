@@ -129,7 +129,7 @@ Control{
         var obj = component.createObject(slide);
         //default size and center
         obj.width = Math.max(obj.width, 300)
-        obj.height = Math.max(obj.height, 50)
+        obj.height = Math.max(obj.height, 100)
         obj.x = (slide.width-obj.width) / 2;
         obj.y = (slide.height-obj.height) / 2;
 

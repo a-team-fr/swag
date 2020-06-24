@@ -76,6 +76,7 @@ Control{
     implicitWidth : label.contentWidth + 50
 
     signal clicked()
+    signal doubleClicked()
 
     contentItem:RowLayout{
         id:content
@@ -124,5 +125,6 @@ Control{
             if (root.toggleButton)
                 root.checked = !root.checked
         }
+        onDoubleClicked: root.doubleClicked()
     }
 }

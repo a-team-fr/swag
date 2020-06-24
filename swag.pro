@@ -119,6 +119,7 @@ TRANSLATIONS = translations/swag_fr_FR.ts
 
 
 DISTFILES += \
+    Swag/ColorPicker.qml \
     Swag/FormItem.qml \
     Swag/TextFieldDelegate.qml \
     src/qml/CloseButton.qml \

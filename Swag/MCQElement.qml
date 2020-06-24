@@ -157,24 +157,23 @@ Element {
     editorComponent: Component {
         Column {
             width:parent.width
-            GroupBox{
+            FormItem{
                 title:qsTr("question")
                 width:parent.width
-                TextField{
-                    anchors.fill:parent
-                    text:target ? target.question : ""
-                    onEditingFinished: target.question = text
-                }
+                text:target.question
+                onEditingFinished: target.question = text
+
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("answerHeight")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.answerHeight : ""
-                    onEditingFinished: target.answerHeight = Number(text)
-                }
+                text:target.answerHeight
+                onEditingFinished: target.answerHeight = Number(text)
+
             }
+
+            ToolSeparator{ orientation: Qt.Horizontal; width: parent.width; anchors.horizontalCenter : parent.horizontalCenter}
+
 
             GroupBox{
                 title:qsTr("DataElement")

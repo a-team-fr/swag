@@ -783,9 +783,12 @@ void PrezManager::cloneSlide(int idxSlide)
 void PrezManager::removeSlide(int idxSlide)
 {
     if (!m_loaded) return;
+
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
 
     QJsonArray slides = lstSlides();
+    if (slides.count() == 1) return;
+
     QString documentPath = slides.takeAt(idxSlide).toObject().value("source").toString();
 
     QFile::remove( m_currentSlideDeckPath + "/"  + documentPath);

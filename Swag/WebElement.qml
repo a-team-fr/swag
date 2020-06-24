@@ -28,6 +28,8 @@ Element{
     id:root
     property string url: "https://swagsoftware.net"
 
+    height : 480
+    width : 640
 
     elementType : "WebElement"
 
@@ -44,14 +46,12 @@ Element{
     editorComponent:Component{
         Column{
             width:parent.width
-            GroupBox{
+            visible:target
+            FormItem{
                 title:qsTr("url")
                 width:parent.width
-                TextField{
-                    width:parent.width
-                    text:target ? target.url : ""
-                    onTextEdited: target.url = text
-                }
+                text: target.url
+                onTextEdited: target.url = text
             }
 
         }

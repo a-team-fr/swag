@@ -194,9 +194,9 @@ Element {
                                 Layout.alignment: Qt.AlignTop
                                 Layout.minimumWidth: 150
                                 model:[
-                                    {name:"ComboBox", value : DataElement.FieldType.ComboBox},
-                                    {name:"TextField", value : DataElement.FieldType.TextField},
-                                    {name:"CheckBox", value : DataElement.FieldType.CheckBox}
+                                    {name:"ComboBox", value : 0/*DataElement.FieldType.ComboBox*/},
+                                    {name:"TextField", value : 1/*DataElement.FieldType.TextField*/},
+                                    {name:"CheckBox", value : 2/*DataElement.FieldType.CheckBox*/}
                                 ]
                                 valueRole: "value"
                                 textRole: "name"

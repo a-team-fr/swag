@@ -23,12 +23,13 @@ import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
-
+import MaterialIcons 1.0
+import FontAwesome 1.0
 Element{
     id:root
 
-    height : 20
-    width : 100
+    //height : 20
+    //width : 100
     property alias text:content.text
     property alias color:content.color
     property alias elide:content.elide
@@ -107,10 +108,8 @@ Element{
         }
     }
 
-
     editorComponent:Component{
         Column{
-
             width:parent.width
             spacing :2
             GroupBox{
@@ -126,200 +125,238 @@ Element{
                     focus:true
                 }
             }
-            TextFieldDelegate{
+
+            FormItem{
                 title: qsTr("minimumPointSize")
                 width: parent.width
                 text: target.minimumPointSize
                 onEditingFinished: target.minimumPointSize = Number(text)
-                content.validator: IntValidator{}
+                textField.validator: IntValidator{}
             }
-            TextFieldDelegate{
+            FormItem{
                 title: qsTr("fontPointSize")
                 width: parent.width
                 text: target.fontPointSize
                 onEditingFinished: target.fontPointSize = Number(text)
-                content.validator: IntValidator{}
+                textField.validator: IntValidator{}
             }
-            TextFieldDelegate{
+            FormItem{
                 title: qsTr("color")
                 width: parent.width
-                text: target.color
-                onEditingFinished: target.color = text
+                selectedColor: target.color
+                showColorSelector: true
+                onColorPicked: target.color = selectedColor
+                pickerParent : root.parent
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("elide")
                 width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["Left", "Middle", "Right","None"]
-                    currentIndex: currentIndex = target.elide
-                    onActivated: target.elide = currentIndex
-                }
+                comboBox.model: ["Left", "Middle", "Right","None"]
+                comboBox.currentIndex: target.elide
+                onActivated: target.elide = comboBox.currentIndex
+
             }
-            GroupBox{
+            FormItem{
                 title:qsTr("wrapMode")
                 width:parent.width
-                ComboBox{
-                    width:parent.width
-                    model: ["No wrap", "WordWrap", "--reserved--", "WrapAnywhere", "Wrap"]
-                    currentIndex: currentIndex = target.wrapMode
-                    onActivated: target.wrapMode = currentIndex
-                }
+
+                comboBox.model: ["No wrap", "WordWrap", "--reserved--", "WrapAnywhere", "Wrap"]
+                comboBox.currentIndex: target.wrapMode
+                onActivated: target.wrapMode = comboBox.currentIndex
+
             }
-            GroupBox{
+            RowLayout{
                 width:parent.width
-                title:qsTr("horizontalAlignment")
-                ComboBox{
-                    width:parent.width
-                    textRole:"t";valueRole:"v"
-                    model: [{v:1, t:"Left"}, {v:2, t:"Right"}, {v:4, t:"Center"},{v:8, t:"Justify"}]
-                    //currentIndex: currentIndex = indexOfValue(target.horizontalAlignment)
-                    Component.onCompleted: currentIndex = indexOfValue(target.horizontalAlignment)
-                    onActivated: target.horizontalAlignment = currentValue
+                FAButton{
+                    ToolTip.text:qsTr("Left horizontal alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_align_left
+                    checked: target.horizontalAlignment === Text.AlignLeft
+                    toggleButton: true
+                    onClicked: target.horizontalAlignment = Text.AlignLeft
+                }
+                FAButton{
+                    ToolTip.text:qsTr("Center horizontal alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_align_center
+                    checked: target.horizontalAlignment === Text.AlignHCenter
+                    toggleButton: true
+                    onClicked: target.horizontalAlignment = Text.AlignHCenter
+                }
+                FAButton{
+                    ToolTip.text:qsTr("Right horizontal alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_align_right
+                    checked: target.horizontalAlignment === Text.AlignRight
+                    toggleButton: true
+                    onClicked: target.horizontalAlignment = Text.AlignRight
+                }
+                FAButton{
+                    ToolTip.text:qsTr("Justify horizontal alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_align_justify
+                    checked: target.horizontalAlignment === Text.AlignJustify
+                    toggleButton: true
+                    onClicked: target.horizontalAlignment = Text.AlignJustify
                 }
             }
-            GroupBox{
+            RowLayout{
                 width:parent.width
-                title:qsTr("verticalAlignment")
-                ComboBox{
-                    width:parent.width
-                    textRole:"t";valueRole:"v"
-                    model: [{v:32, t:"Top"}, {v:64, t:"Bottom"}, {v:128, t:"Center"}]
-                    //currentIndex: currentIndex = indexOfValue(target.verticalAlignment)
-                    Component.onCompleted: currentIndex = indexOfValue(target.verticalAlignment)
-                    onActivated: target.verticalAlignment = currentValue
+                FAButton{
+                    ToolTip.text:qsTr("Top vertical alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.vertical_align_top
+                    checked: target.verticalAlignment === Text.AlignTop
+                    //toggleButton: true
+                    onClicked: target.verticalAlignment = Text.AlignTop
+                }
+                FAButton{
+                    ToolTip.text:qsTr("Center vertical alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.vertical_align_center
+                    checked: target.verticalAlignment === Text.AlignVCenter
+                    //toggleButton: true
+                    onClicked: target.verticalAlignment = Text.AlignVCenter
+                }
+                FAButton{
+                    ToolTip.text:qsTr("Bottom vertical alignment")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.vertical_align_bottom
+                    checked: target.verticalAlignment === Text.AlignBottom
+                    //toggleButton: true
+                    onClicked: target.verticalAlignment = Text.AlignBottom
                 }
             }
-            GroupBox{
+            FormItem{
                 width:parent.width
                 title:qsTr("fontSizeMode")
-                ComboBox{
-                    width:parent.width
-                    model: ["FixedSize", "HorizontalFit", "VerticalFit","Fit"]
-                    currentIndex: target.fontSizeMode
-                    onActivated: target.fontSizeMode = currentIndex
-                }
+                comboBox.model: ["FixedSize", "HorizontalFit", "VerticalFit","Fit"]
+                comboBox.currentIndex: target.fontSizeMode
+                onActivated: target.fontSizeMode = comboBox.currentIndex
             }
-            GroupBox{
+
+            FormItem{
                 width:parent.width
                 title:qsTr("textFormat")
-                ComboBox{
-                    width:parent.width
-                    model: ["PlainText", "RichText", "AutoText","MarkdownText", "StyledText"]
-                    currentIndex: target.textFormat
-                    onActivated: target.textFormat = currentIndex
-                }
+                comboBox.model: ["PlainText", "RichText", "AutoText","MarkdownText", "StyledText"]
+                comboBox.currentIndex: target.textFormat
+                onActivated: target.textFormat = comboBox.currentIndex
             }
 
-            GroupBox{
+
+            FormItem{
                 width:parent.width
                 title:qsTr("font")
-                Column{
-                    anchors.fill:parent
-                    ComboBox{
-                        width:parent.width
-                        model: Qt.fontFamilies()
-                        //currentIndex: indexOfValue(target.fontFamily)
-                        Component.onCompleted: currentIndex = indexOfValue(target.fontFamily)
-                        onActivated: target.fontFamily = currentValue
-                    }
-                    SwitchDelegate{
-                        text:qsTr("bold")
-                        width:parent.width
-                        checked: target.bold
-                        onToggled: target.bold = checked
-                    }
-                    SwitchDelegate{
-                        text:qsTr("italic")
-                        width:parent.width
-                        checked: target.italic
-                        onToggled: target.italic = checked
-                    }
-                    SwitchDelegate{
-                        text:qsTr("underline")
-                        width:parent.width
-                        checked: target.underline
-                        onToggled: target.underline = checked
-                    }
-                    SwitchDelegate{
-                        text:qsTr("strikeout")
-                        width:parent.width
-                        checked: target.strikeout
-                        onToggled: target.strikeout = checked
-                    }
-                    TextFieldDelegate{
-                        title: qsTr("weight")
-                        width: parent.width
-                        text: target.fontWeight
-                        onEditingFinished: target.fontWeight = Number(text)
-                        content.validator: IntValidator{}
-                    }
+                comboBox.model: Qt.fontFamilies()
+                //currentIndex: indexOfValue(target.fontFamily)
+                Component.onCompleted: comboBox.currentIndex = comboBox.indexOfValue(target.fontFamily)
+                onActivated: target.fontFamily = comboBox.currentValue
+            }
 
-                    GroupBox{
-                        width:parent.width
-                        title:qsTr("style")
-                        Column{
-                            anchors.fill : parent
-                            ComboBox{
-                                width:parent.width
-                                textRole:"t";valueRole:"v"
-                                model: [{v:Text.Normal, t:"Normal"}, {v:Text.Outline, t:"Outline"}, {v:Text.Raised, t:"Raised"}, {v:Text.Sunken, t:"Sunken"}]
-                                //currentIndex: indexOfValue(target.style)
-                                Component.onCompleted: currentIndex = indexOfValue(target.style)
-                                onActivated: target.style = currentValue
-                            }
-                            TextFieldDelegate{
-                                title: qsTr("style color")
-                                width: parent.width
-                                text: target.styleColor
-                                onEditingFinished: target.styleColor = text
-                            }
-                        }
-                    }
-                    GroupBox{
-                        width:parent.width
-                        title:qsTr("capitalization")
-                        ComboBox{
-                            width:parent.width
-                            textRole:"t";valueRole:"v"
-                            model: [{v:Font.MixedCase, t:"MixedCase"}, {v:Font.AllUppercase, t:"AllUppercase"}, {v:Font.AllLowercase, t:"AllLowercase"}, {v:Font.SmallCaps, t:"SmallCaps"}, {v:Font.Capitalize, t:"Capitalize"}]
-                            //currentIndex: indexOfValue(target.capitalization)
-                            Component.onCompleted: currentIndex = indexOfValue(target.capitalization)
-                            onActivated: target.capitalization = currentValue
-                        }
-                    }
+            RowLayout{
+                width:parent.width
+                FAButton{
+                    ToolTip.text:qsTr("bold")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_bold
+                    checked: target.bold
+                    toggleButton: true
+                    onClicked: target.bold = checked
                 }
+                FAButton{
+                    ToolTip.text:qsTr("italic")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_italic
+                    checked: target.italic
+                    toggleButton: true
+                    onClicked: target.italic = checked
+                }
+                FAButton{
+                    ToolTip.text:qsTr("underline")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_underlined
+                    checked: target.underline
+                    toggleButton: true
+                    onClicked: target.underline = checked
+                }
+                FAButton{
+                    ToolTip.text:qsTr("strikeout")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.format_strikethrough
+                    checked: target.strikeout
+                    toggleButton: true
+                    onClicked: target.strikeout = checked
+                }
+            }
 
+
+            FormItem{
+                title: qsTr("weight")
+                width: parent.width
+                text: target.fontWeight
+                onEditingFinished: target.fontWeight = Number(text)
+                textField.validator: IntValidator{}
+            }
+
+            FormItem{
+                width:parent.width
+                title:qsTr("style")
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [{v:Text.Normal, t:"Normal"}, {v:Text.Outline, t:"Outline"}, {v:Text.Raised, t:"Raised"}, {v:Text.Sunken, t:"Sunken"}]
+                Component.onCompleted: comboBox.currentIndex = comboBox.indexOfValue(target.style)
+                onActivated: target.style = comboBox.currentValue
+
+            }
+            FormItem{
+                title: qsTr("styleColor")
+                width: parent.width
+                selectedColor: target.styleColor
+                showColorSelector: true
+                onColorPicked: target.styleColor = selectedColor
+                pickerParent : root.parent
+            }
+
+
+            FormItem{
+                width:parent.width
+                title:qsTr("capitalization")
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [{v:Font.MixedCase, t:"MixedCase"}, {v:Font.AllUppercase, t:"AllUppercase"}, {v:Font.AllLowercase, t:"AllLowercase"}, {v:Font.SmallCaps, t:"SmallCaps"}, {v:Font.Capitalize, t:"Capitalize"}]
+                //currentIndex: indexOfValue(target.capitalization)
+                Component.onCompleted: comboBox.currentIndex = comboBox.indexOfValue(target.capitalization)
+                onActivated: target.capitalization = comboBox.currentValue
 
             }
 
-            GroupBox{
-                width:parent.width
-                title:qsTr("Background")
 
-                Column{
-                    anchors.fill:parent
-                TextFieldDelegate{
-                    title: qsTr("color")
-                    width: parent.width
-                    text: target.bckgColor
-                    onEditingFinished: target.bckgColor = text
-                }
-                TextFieldDelegate{
-                    title: qsTr("border color")
-                    width: parent.width
-                    text: target.bckgBorderColor
-                    onEditingFinished: target.bckgBorderColor = text
-                }
-                TextFieldDelegate{
-                    title: qsTr("border width")
-                    width: parent.width
-                    text: target.bckgBorderWidth
-                    onEditingFinished: target.bckgBorderWidth = Number(text)
-                    content.validator: IntValidator{}
-                }
-                }
+
+            //background
+            ToolSeparator{ orientation: Qt.Horizontal; width: parent.width; anchors.horizontalCenter : parent.horizontalCenter}
+
+
+            FormItem{
+                title: qsTr("color")
+                width: parent.width
+                selectedColor: target.bckgColor
+                showColorSelector: true
+                onColorPicked: target.bckgColor = selectedColor
+                pickerParent : root.parent
+            }
+            FormItem{
+                title: qsTr("border color")
+                width: parent.width
+                selectedColor: target.bckgBorderColor
+                showColorSelector: true
+                onColorPicked: target.bckgBorderColor = selectedColor
+                pickerParent : root.parent
+            }
+            FormItem{
+                title: qsTr("border width")
+                width: parent.width
+                text: target.bckgBorderWidth
+                onEditingFinished: target.bckgBorderWidth = Number(text)
+                textField.validator: IntValidator{}
             }
 
         }
@@ -327,4 +364,7 @@ Element{
 
 
 }
+
+
+
 

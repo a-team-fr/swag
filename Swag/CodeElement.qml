@@ -23,6 +23,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
 import fr.ateam.swag 1.0
+import MaterialIcons 1.0
 
 Element{
     id:root
@@ -59,25 +60,36 @@ Element{
 
     editorComponent:Component{
         Column{
+            visible : target
             width:parent.width
             spacing:2
-            SwitchDelegate{
-                text:qsTr("showEditor")
-                checked: target ? target.showEditor : false
-                onToggled: target.showEditor = checked
+
+            RowLayout{
                 width:parent.width
-            }
-            SwitchDelegate{
-                text:qsTr("showRenderer")
-                checked: target ? target.showRenderer : false
-                onToggled: target.showRenderer = checked
-                width:parent.width
-            }
-            SwitchDelegate{
-                text:qsTr("showEditorPanel")
-                checked: target ? target.showEditorPanel : false
-                onToggled: target.showEditorPanel = checked
-                width:parent.width
+                FAButton{
+                    ToolTip.text:qsTr("showEditor")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.code
+                    checked: target.showEditor
+                    //toggleButton: true
+                    onClicked: target.showEditor = !target.showEditor
+                }
+                FAButton{
+                    ToolTip.text:qsTr("showRenderer")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.slideshow
+                    checked: target.showRenderer
+                    //toggleButton: true
+                    onClicked: target.showRenderer = !target.showRenderer
+                }
+                FAButton{
+                    ToolTip.text:qsTr("showEditorPanel")
+                    ToolTip.visible : hovered
+                    icon : MaterialIcons.tab
+                    checked: target.showEditorPanel
+                    //toggleButton: true
+                    onClicked: target.showEditorPanel = !target.showEditorPanel
+                }
             }
             GroupBox{
                 title:qsTr("Code")
@@ -87,9 +99,11 @@ Element{
                     code:target? target.code : ""
                     onEditingFinish: target.code = code
                     width:parent.width
-                    height:300
+                    height:200
+                    focus : true
                 }
             }
+
 
         }
 

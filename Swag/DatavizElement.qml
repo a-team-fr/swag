@@ -115,42 +115,38 @@ Element {
             width:parent.width
 
 
-            GroupBox{
+            FormItem{
                 title:qsTr("theme")
                 width:parent.width
-                ComboBox{
-                    anchors.fill:parent
-                    textRole:"t";valueRole:"v"
-                    model: [{v:Theme3D.ThemeQt, t:"ThemeQt"},
-                        {v:Theme3D.ThemePrimaryColors, t:"ThemePrimaryColors"},
-                        {v:Theme3D.ThemeDigia, t:"ThemeDigia"},
-                        {v:Theme3D.ThemeStoneMoss, t:"ThemeStoneMoss"},
-                        {v:Theme3D.ThemeArmyBlue, t:"ThemeArmyBlue"},
-                        {v:Theme3D.ThemeRetro, t:"ThemeRetro"},
-                        {v:Theme3D.ThemeEbony, t:"ThemeEbony"},
-                        {v:Theme3D.ThemeIsabelle, t:"ThemeIsabelle"}
-                    ]
-                    //currentIndex: currentIndex = indexOfValue(target.theme)
-                    Component.onCompleted: currentIndex = Qt.binding(function(){ return indexOfValue( target.theme)});
-                    onActivated: target.theme = currentValue
-                }
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [{v:Theme3D.ThemeQt, t:"ThemeQt"},
+                    {v:Theme3D.ThemePrimaryColors, t:"ThemePrimaryColors"},
+                    {v:Theme3D.ThemeDigia, t:"ThemeDigia"},
+                    {v:Theme3D.ThemeStoneMoss, t:"ThemeStoneMoss"},
+                    {v:Theme3D.ThemeArmyBlue, t:"ThemeArmyBlue"},
+                    {v:Theme3D.ThemeRetro, t:"ThemeRetro"},
+                    {v:Theme3D.ThemeEbony, t:"ThemeEbony"},
+                    {v:Theme3D.ThemeIsabelle, t:"ThemeIsabelle"}
+                ]
+                //currentIndex: currentIndex = indexOfValue(target.theme)
+                Component.onCompleted: comboBox.currentIndex = Qt.binding(function(){ return comboBox.indexOfValue( target.theme)});
+                onActivated: target.theme = comboBox.currentValue
+
             }
 
-            GroupBox{
+            FormItem{
                 title:qsTr("type")
                 width:parent.width
-                ComboBox{
-                    anchors.fill:parent
-                    textRole:"t";valueRole:"v"
-                    model: [
-                        {v:Abstract3DSeries.SeriesTypeBar, t:"SeriesTypeBar"},
-                        {v:Abstract3DSeries.SeriesTypeScatter, t:"SeriesTypeScatter"},
-                        {v:Abstract3DSeries.SeriesTypeSurface, t:"SeriesTypeSurface"},
-                    ]
-                    //currentIndex: currentIndex = indexOfValue(target.type)
-                    Component.onCompleted: currentIndex = Qt.binding(function(){ return indexOfValue( target.type)});
-                    onActivated: target.type = currentValue
-                }
+                comboBox.textRole:"t";comboBox.valueRole:"v"
+                comboBox.model: [
+                    {v:Abstract3DSeries.SeriesTypeBar, t:"SeriesTypeBar"},
+                    {v:Abstract3DSeries.SeriesTypeScatter, t:"SeriesTypeScatter"},
+                    {v:Abstract3DSeries.SeriesTypeSurface, t:"SeriesTypeSurface"},
+                ]
+                //currentIndex: currentIndex = indexOfValue(target.type)
+                Component.onCompleted: comboBox.currentIndex = Qt.binding(function(){ return comboBox.indexOfValue( target.type)});
+                onActivated: target.type = comboBox.currentValue
+
             }
 
 

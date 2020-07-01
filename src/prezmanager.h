@@ -135,6 +135,8 @@ signals:
 
     void lastOpenedFilesChanged();
 
+    void slidePageRatioChanged();
+
 
 public slots:
     void reload(bool restartApp = false);
@@ -172,6 +174,8 @@ public slots:
 
     QUrl urlSlide(int idxSlide = -1) const;
     QVariantList urlSlides() const;
+
+    double slidePageRatio(int slideIdx = -1) const;
 
     void selectSlide(int slideIdx);
     QString readSlideQMLCode(int idxSlide = -1) const;
@@ -234,6 +238,7 @@ private:
     QString title() const;
     QString defaultBackround() const;
     QString defaultTextColor() const;
+
 
     bool loadDirectory(QDir prezFolder);
     bool m_loaded = false;

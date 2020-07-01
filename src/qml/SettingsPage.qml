@@ -45,9 +45,10 @@ Frame{
     }
 
     Flickable {
-        contentHeight: content.childrenRect.height + 50
         anchors.fill : parent
         anchors.margins: 10
+        contentHeight: content.childrenRect.height + 50
+        contentWidth: width
         clip:true
 
         Column{
@@ -200,15 +201,6 @@ Frame{
 
                     }
 
-//                    FormItem{
-//                        title:qsTr("Theme name")
-//                        width:parent.width
-//                        comboBox.model:[{v:Material.Light, l:"Light"}, {v:Material.Dark, l:"Dark"}]
-//                        comboBox.textRole: "l";comboBox.valueRole: "v"
-//                        Component.onCompleted : comboBox.currentIndex = comboBox.indexOfValue(NavMan.settings.materialTheme)
-//                        onActivated: NavMan.settings.materialTheme = comboBox.currentValue
-
-//                    }
 
                     FormItem{
                         width: parent.width
@@ -216,12 +208,12 @@ Frame{
                         extraContent:Component{Row{
                             spacing : 5
                             FAButton{
-                                icon: MaterialIcons.landscape
+                                icon: MaterialIcons.brightness_4
                                 checked : NavMan.settings.materialTheme === Material.Dark
                                 onClicked:NavMan.settings.materialTheme = Material.Dark
                             }
                             FAButton{
-                                icon: MaterialIcons.panorama
+                                icon: MaterialIcons.brightness_5
                                 checked : NavMan.settings.materialTheme === Material.Light
                                 onClicked:NavMan.settings.materialTheme = Material.Light
                             }

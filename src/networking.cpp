@@ -35,7 +35,7 @@ QNetworkAccessManager* SingletonQNam::m_nam = nullptr;
 UploadJob::UploadJob(const QString &localfilePath, const QString &remoteDocName, QObject* parent):QObject(parent), m_localFile(localfilePath)
 {
 
-    QFileInfo inf (localfilePath);
+    //QFileInfo inf (localfilePath);
     //qDebug() << inf.size();
     //qDebug() << inf.exists();
 

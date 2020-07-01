@@ -180,6 +180,9 @@ void PrezManager::saveSlideSettings(QString key, QVariant value)
     emit slideChanged();
     emit slidesReordered();
 
+    if (key == "pageRatio" )
+        emit slidePageRatioChanged();
+
     m_pendingChanges = true;
     emit pendingChangesChanged();
 }
@@ -555,6 +558,25 @@ QString PrezManager::defaultTextColor() const
 
 }
 
+double PrezManager::slidePageRatio(int slideIdx) const
+{
+    if (slideIdx < 0)
+        slideIdx = m_selectedSlide;
+
+    QJsonArray slides = lstSlides();
+    if (slideIdx >= 0 && slideIdx < slides.count())
+    {
+        QJsonObject slide = slides[slideIdx].toObject();
+        double pageRatio = slide["pageRatio"].toDouble();
+        if (pageRatio > 0)
+            return pageRatio;
+    }
+
+    //default page ratio
+    return 4/3;
+
+}
+
 void PrezManager::selectSlide(int slideIdx)
 {
     if ( (slideIdx < 0) || (slideIdx == m_selectedSlide) || (slideIdx >= lstSlides().count() )) return;
@@ -743,8 +765,8 @@ void PrezManager::createSlide()
     slide.insert("x", QJsonValue::fromVariant(0));
     slide.insert("y", QJsonValue::fromVariant(0));
     slide.insert("rotation", QJsonValue::fromVariant(0));
-    slide.insert("width", QJsonValue::fromVariant(640));
-    slide.insert("height", QJsonValue::fromVariant(480));
+    slide.insert("width", QJsonValue::fromVariant(1280));
+    slide.insert("height", QJsonValue::fromVariant(720));
 
     slides.append(slide);
     m_prezProperties.insert("slides", slides);

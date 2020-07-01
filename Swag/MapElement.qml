@@ -35,7 +35,7 @@ Element{
     property alias usePositionSource: positionSource.active
     property alias zoomLevel:content.zoomLevel
     property alias tilt:content.tilt
-    property alias pluginName:mapPlugin.name
+    property alias pluginName:content.plugin.name //mapPlugin.name
     property int activeMapTypeIndex:0
 
     elementType : "MapElement"
@@ -46,7 +46,7 @@ Element{
         dumpedProperties.push( {"name":"usePositionSource","default":false})
         dumpedProperties.push( {"name":"zoomLevel","default":0})
         dumpedProperties.push( {"name":"tilt","default":0})
-        dumpedProperties.push( {"name":"pluginName","default":""})
+        dumpedProperties.push( {"name":"pluginName","default":"esri"})
         dumpedProperties.push( {"name":"activeMapTypeIndex","default":0})
     }
 
@@ -57,14 +57,13 @@ Element{
         preferredPositioningMethods: PositionSource.AllPositioningMethods
     }
 
-    Plugin {
-        id: mapPlugin
-        name: "esri"
-    }
+
 
     contentItem:Map{
         id:content
-        plugin:mapPlugin
+        plugin:Plugin {
+            name: "esri"
+        }
         center : QtPositioning.coordinate(root.centerLatitude, root.centerLongitude)
         onCenterChanged: {
             root.centerLatitude = center.latitude

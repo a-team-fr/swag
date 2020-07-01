@@ -65,50 +65,65 @@ Frame {
                                 //save & reload right away to get a proper id
                                 NavMan.actionReloadSlide(true);
                             }
+                            showButton:true
+                            onConfirmed: {
+                                target.idAsAString = text
+                                //save & reload right away to get a proper id
+                                NavMan.actionReloadSlide(true);
+                            }
                         }
-                        FormItem{
-                            title: qsTr("x")
+                        RowLayout{
                             width: parent.width
-                            text: target.x.toFixed(0)
-                            onEditingFinished: target.x = Number(text)
-                            textField.validator: IntValidator{}
-                        }
-                        FormItem{
-                            title: qsTr("y")
-                            width: parent.width
-                            text: target.y.toFixed(0)
-                            onEditingFinished: target.y = Number(text)
-                            textField.validator: IntValidator{}
-                        }
-                        FormItem{
-                            title: qsTr("z")
-                            width: parent.width
-                            text: target.z.toFixed(0)
-                            onEditingFinished: target.z = Number(text)
-                            textField.validator: IntValidator{}
-                        }
-                        FormItem{
-                            title: qsTr("width")
-                            width: parent.width
-                            text: target.width.toFixed(0)
-                            onEditingFinished: target.width = Number(text)
-                            textField.validator: IntValidator{}
-                        }
-                        FormItem{
-                            title: qsTr("height")
-                            width: parent.width
-                            text: target.height.toFixed(0)
-                            onEditingFinished: target.height = Number(text)
-                            textField.validator: IntValidator{}
+                            FormItem{
+                                title: qsTr("x")
+                                Layout.fillWidth: true
+                                text: target.x.toFixed(0)
+                                onEditingFinished: target.setX( Number(text) )
+                                textField.validator: IntValidator{}
+                            }
+                            FormItem{
+                                title: qsTr("y")
+                                Layout.fillWidth: true
+                                text: target.y.toFixed(0)
+                                onEditingFinished: target.setX( Number(text) )
+                                textField.validator: IntValidator{}
+                            }
+                            FormItem{
+                                title: qsTr("z")
+                                Layout.fillWidth: true
+                                text: target.z.toFixed(0)
+                                onEditingFinished: target.z = Number(text)
+                                textField.validator: IntValidator{}
+                            }
                         }
 
-
-                        FormItem{
-                            title: qsTr("rotation")
+                        RowLayout{
                             width: parent.width
-                            text: target ? target.rotation.toFixed(1) : 0
-                            onEditingFinished: target.rotation = Number(text)
-                            textField.validator: DoubleValidator{}
+
+
+                            FormItem{
+                                title: qsTr("width")
+                                Layout.fillWidth: true
+                                text: target.width.toFixed(0)
+                                onEditingFinished: target.setWidth( Number(text) )
+                                textField.validator: IntValidator{}
+                            }
+                            FormItem{
+                                title: qsTr("height")
+                                Layout.fillWidth: true
+                                text: target.height.toFixed(0)
+                                onEditingFinished: target.setHeight( Number(text) )
+                                textField.validator: IntValidator{}
+                            }
+
+
+                            FormItem{
+                                title: qsTr("rotation")
+                                Layout.fillWidth: true
+                                text: target ? target.rotation.toFixed(1) : 0
+                                onEditingFinished: target.rotation = Number(text)
+                                textField.validator: DoubleValidator{}
+                            }
                         }
 
                         //DEACTIVATED FOR NOW
@@ -132,7 +147,7 @@ Frame {
                 width: parent.width
                 active : root.target
                 property var target : root.target
-                sourceComponent: root.target.editorComponent
+                sourceComponent: root.target ? root.target.editorComponent : null
             }
         }
     }

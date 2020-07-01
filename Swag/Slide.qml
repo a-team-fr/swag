@@ -31,12 +31,15 @@ Control{
     background: Qt.createQmlObject(pm.defaultBackground, parent)
     property string elementType : "Slide"
 
-    property var dumpedProperties:[]/*
-        {"name":"x","default":0},
-        {"name":"y","default":0},
-        {"name":"width","default":0},
-        {"name":"height","default":0},
-        {"name":"rotation","default":0}]*/
+    //Component.onCompleted : console.log("slide dimensions :"+width + "x" + height)
+
+    property var dumpedProperties:[]
+//    property var dumpedProperties:[
+//        {"name":"x","default":0},
+//        {"name":"y","default":0},
+//        {"name":"width","default":1920},
+//        {"name":"height","default":1080},
+//        {"name":"rotation","default":0}]
 
     Item{
         id:slideBorder
@@ -200,11 +203,12 @@ Control{
             else{
                 //Update elementItem
                 var elementId = NavMan.elementItemToPosition;
-                NavMan.elementItemToPosition.updateRel(ptTopLeft, mouse)
+                //NavMan.elementItemToPosition.updateRel(ptTopLeft, mouse)
+                NavMan.elementItemToPosition.updateGeometry(ptTopLeft, mouse)
                 //reset positionner
                 NavMan.elementItemToPosition = null
                 ptTopLeft = Qt.point(-1,-1);
-                NavMan.actionReloadSlide(false); //force save as we could be there right after an element creation
+                NavMan.actionReloadSlide(true); //force save as we could be there right after an element creation
                 //select the edit panel
                 NavMan.displayEditElement( elementId)
             }

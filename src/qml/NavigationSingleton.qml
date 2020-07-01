@@ -33,8 +33,8 @@ Item {
 
     property int windowWidth : 640
     property int windowHeight : 480
-    property int slideWidth : 640
-    property int slideHeight : 480
+    property int slideWidth : 1920
+    property int slideHeight : 1080
 
     property bool welcomeAnimation : true
 

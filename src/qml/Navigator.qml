@@ -32,40 +32,48 @@ Popup {
     id: root
     closePolicy: Popup.NoAutoClose
 
+    Connections{
+        target:pm
+        function onSlidePageRatioChanged(){
+            scroll.forceRedrawNumber = scroll.forceRedrawNumber+1;
+        }
+    }
+
     ScrollView {
         id:scroll
         anchors.fill: parent
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
         ScrollBar.vertical.policy: ScrollBar.AlwaysOff
-        //contentWidth:width
-        contentHeight : listView.childrenRect.height //listView.count * (listView.thumbHeight + listView.spacing)
+        contentHeight : listView.childrenRect.height
         clip : true
 
         property int forceRedrawNumber : 0
         function getSlideUrl( slideIdx, forceRedrawNumber){
             return pm.urlSlide( slideIdx );
         }
+        function getPageRatio(slideIdx, forceRedrawNumber){
+            return pm.slidePageRatio(slideIdx)
+        }
 
         ListView{
             id: listView
-            width : root.width
-            height : root.height
-            property int thumbHeight :  (width / NavMan.windowWidth * NavMan.windowHeight) + bottomPanel
+            anchors.fill: parent
+
             property int bottomPanel:30
             property bool dragInProgress : false
             property int offsetDropArea : dragInProgress ? 50 : 0
             property int spacing: 5
 
             clip: true
-            anchors.fill: parent
             model: pm.lstSlides.length
 
             delegate: Item {
                 id: content
                 z : dragActive ? 1 : 0
                 width: listView.width
+                property int thumbHeight :  width / scroll.getPageRatio(index, scroll.forceRedrawNumber) + listView.bottomPanel
                 property int offsetAddSlideArea : index === (listView.count - 1) ? 50 : 0
-                height: listView.thumbHeight + (dragActive ? 0 : listView.offsetDropArea) + offsetAddSlideArea
+                height: thumbHeight + (dragActive ? 0 : listView.offsetDropArea) + offsetAddSlideArea
                 property alias hovered : contentMA.containsMouse
 
                 Drag.active: contentMA.drag.active
@@ -78,6 +86,7 @@ Popup {
                     listView.dragInProgress = dragActive
                     parent : dragActive ? scroll : listView
                 }
+
 
                 MouseArea{
                     id:contentMA
@@ -100,20 +109,23 @@ Popup {
 
                     Rectangle{
                         width: parent.width
-                        height: listView.thumbHeight - listView.bottomPanel
+                        height: content.thumbHeight - listView.bottomPanel
                         ShaderEffectSource {
                             anchors.fill:parent
                             sourceItem: Loader {
                                 visible:false
                                 source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
-                                transform:Scale{
-                                    xScale:width / NavMan.windowWidth
-                                    yScale:height / NavMan.windowHeight
-                                }
                             }
                             live: true
                             hideSource: true
                         }
+//                        Loader {
+//                            enabled:false
+//                            anchors.fill:parent
+//                            source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
+//                            clip : true
+//                        }
+
                     }
 
                     Label {
@@ -186,15 +198,12 @@ Popup {
                         height:dragActive ? 0 : listView.offsetDropArea
                         width:height
                         keys: ["text/plain"]
-                        onDropped: if (drop.hasText) {
-                            //if (drop.proposedAction == Qt.MoveAction || drop.proposedAction == Qt.CopyAction) {
-
-                                console.log("Move " + drop.text + " to " + index);
+                        onDropped: {
+                            if (drop.hasText) {
                                 pm.changeSlideOrder(drop.text, index)
                                 scroll.forceRedrawNumber = scroll.forceRedrawNumber+1;
-                                       drop.accept(drop.proposedAction)
-
-                            //}
+                                drop.accept(drop.proposedAction)
+                            }
                         }
 
                         Rectangle{

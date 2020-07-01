@@ -27,8 +27,9 @@ import fr.ateam.swag 1.0
 import Swag 1.0
 
 Row{
-    width:parent.width
-    height : 40
+
+    //width:parent.width
+    //height : 40
     id:footer
 
     visible:pm.loaded

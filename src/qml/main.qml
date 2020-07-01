@@ -111,171 +111,217 @@ ApplicationWindow {
     }
 
     Item{
+
         x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
         width:parent.width - x //- elementToolBox.width
         height:parent.height
+        property double pageRatio : pm.slidePageRatio( pm.slideSelected)
+        property int usableWidth : pm.editMode ? width * 0.75  - margins : width - margins
+        property int margins : 40
+        property int usableHeight : height - margins
+        property int virtualPageWidth : Math.max( 30, Math.min( usableWidth, height * pageRatio) )
+        property int virtualPageHeight : Math.max( 30, virtualPageWidth / pageRatio )
+
+        onVirtualPageWidthChanged: NavMan.slideWidth = virtualPageWidth
+        onVirtualPageHeightChanged: NavMan.slideHeight = virtualPageHeight
+
+
+        //Normal view
         Loader{
-            anchors.fill:parent
-            enabled: (pm.editMode && NavMan.currentSlide)
-            visible :enabled
-            sourceComponent: editModeView
+            //enabled: (pm.editMode && NavMan.currentSlide)
+            width: NavMan.slideWidth
+            height : NavMan.slideHeight
+            anchors.centerIn : parent
+            visible : (!pm.editMode && pm.isSlideDisplayed)
+            active : visible
+            source : pm.displayUrl
+            enabled : true
+            property int margin : 0
+
+            onItemChanged: {
+                if (visible)
+                    NavMan.currentDocument = item
+            }
 
         }
-        //
         CodeRenderer{
             id:renderer
-            visible : !(pm.editMode && NavMan.currentSlide)
             anchors.fill:parent
-            SplitView.fillWidth: true
-            height:parent.height
-
-
-            showEditor:pm.showDocumentCode
+            visible : (pm.editMode && pm.isSlideDisplayed)
+            showEditor: pm.showDocumentCode
             style : NavMan.settings.defaultSyntaxHighlightingStyle
             code : pm.readSlideQMLCode( pm.slideSelected)
-            rendererSource : pm.displayUrl
+            rendererComponent : editModeView
             renderCode : false
+            showSaveButton: true
+            onSaveButtonClicked: {
+                pm.writeDocument(pm.urlSlide(), renderer.code)
+                renderer.rendererComponent = null
 
-            onWidthChanged:NavMan.slideWidth = width
-            onHeightChanged:NavMan.slideHeight = height
-
-            onRenderedItemChanged:{
-                if (pm.prezProperties.displayMode!=="Loader") return;
-                NavMan.currentDocument = renderedItem
+                pm.reload()
+                renderer.rendererComponent = editModeView
             }
-
-            FAButton{
-                icon:MaterialIcons.save
-                width:30;height:width
-                visible:renderer.showEditor
-                onClicked: {
-                    pm.writeDocument(pm.urlSlide(), renderer.code)
-                    pm.reload()
-                }
-            }
-
         }
-    }
+
+        Loader{
+            anchors.fill : parent
+            //enabled: (pm.editMode && NavMan.currentSlide)
+            visible :!pm.isSlideDisplayed
+            active : visible
+            source: pm.displayUrl
+        }
 
 
+        Component{
+            id:editModeView
+            SplitView{
+                Rectangle{
+                    id:world
+                    SplitView.fillWidth: true
+                    height:parent.height
+                    color: "#888888"
+                    //property bool slideEditing : pm.editMode//(pm.editMode && pm.isSlideDisplayed)
+                    //onSlideEditingChanged: fitToPage()
+                    Component.onCompleted: fitToPage()
+                    function fitToPage()
+                    {
+                        //incorrect geometry
+                        if (world.height === 0 || page.height === 0 || world.width === 0 ||  page.width === 0 )
+                            return false;
 
-    Component{
-        id:editModeView
-        SplitView{
-            //        x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
-            //        width:parent.width - x //- elementToolBox.width
-            //        height:parent.height
+                        var margin = 20;
+                        // compute scale to adjust page and a margin
+                        page.scale = Math.min( world.height / (page.height + margin), world.width / (page.width + margin));
+                        // compute flickable content origin to center page
+                        flickable.contentX =-margin
+                        flickable.contentY =-margin
 
-            Rectangle{
-                id:world
-                SplitView.fillWidth: true
-                height:parent.height
-                color: "#888888"
-
-                PinchArea{
-                    id:pincharea
-                    anchors.fill:parent
-                    pinch{
-                        target: page
-                        minimumScale: 0.01
-                        maximumScale: 5
-                        dragAxis: Pinch.XAndYAxis
-                        minimumX: 0
-                        maximumX: page.width
-                        minimumY: 0
-                        maximumY: page.height
-                        minimumRotation: 0
-                        maximumRotation: 0
-
+                        return true;
                     }
-                }
 
-                Flickable{
-                    anchors.fill:parent
-                    contentHeight : page.height
-                    contentWidth : page.width
-                    clip:true
-
-
-                    Rectangle{
-                        id:page
-                        //visible : false
-                        width :1920//world.isSlideEditing ? 1920 : parent.width
-                        height:1080//world.isSlideEditing ? 1080 : parent.height
-                        border.width:1
-                        border.color:"black"
-                        color:"white"
-                        //scale : (pm.editMode && NavMan.currentSlide) ? pageScaleFactor.value : 1
-
-                        layer.enabled:true
-                        layer.effect : DropShadow{
-                            horizontalOffset: 8
-                            verticalOffset: 8
-                            radius: 8.0
-                            samples: 17
+                    PinchArea{
+                        id:pincharea
+                        anchors.fill:parent
+                        pinch{
+                            target: page
+                            minimumScale: 0.01 ; maximumScale: 5
+                            dragAxis: Pinch.XAndYAxis
                         }
 
+                    }
 
-                        CodeRenderer{
-                            id:renderer
-                            anchors.fill:parent
+                    Flickable{
+                        id:flickable
+                        width:world.width
+                        height:world.height
+                        contentHeight : page.height
+                        contentWidth : page.width + 1 // for some reason +1 is required to get horizontal flicking
+                        clip:true
+                        topMargin: page.height * page.scale
+                        bottomMargin: page.height * page.scale
+                        rightMargin: page.width * page.scale
+                        leftMargin: page.width * page.scale
+                        Rectangle{
+                            id:page
+                            width : world.width
+                            height: width / pm.slidePageRatio( pm.slideSelected )//NavMan.slideHeight
 
-                            showEditor:pm.showDocumentCode
-                            style : NavMan.settings.defaultSyntaxHighlightingStyle
-                            code : pm.readSlideQMLCode( pm.slideSelected)
-                            rendererSource : pm.displayUrl
-                            renderCode : false
+                            border.width:1
+                            border.color:"black"
+                            color:"white"
 
-                            onWidthChanged:NavMan.slideWidth = width
-                            onHeightChanged:NavMan.slideHeight = height
-
-                            onRenderedItemChanged:{
-                                if (pm.prezProperties.displayMode!=="Loader") return;
-                                NavMan.currentDocument = renderedItem
+                            layer.enabled:true
+                            layer.effect : DropShadow{
+                                horizontalOffset: 8
+                                verticalOffset: 8
+                                radius: 8.0
+                                samples: 17
                             }
 
-                            FAButton{
-                                icon:MaterialIcons.save
-                                width:30;height:width
-                                visible:renderer.showEditor
-                                onClicked: {
-                                    pm.writeDocument(pm.urlSlide(), renderer.code)
-                                    pm.reload()
+                            Loader{
+                                anchors.fill:parent
+                                source : pm.displayUrl
+                                onSourceChanged: {
+                                    if (pm.prezProperties.displayMode!=="Loader") return;
+                                    NavMan.currentDocument = item
                                 }
                             }
 
+
                         }
+
+                    }
+
+                    MouseArea
+                    {
+                        anchors.fill : parent
+                        //Have the wheel to zoom (i.o pan) within the flickable
+                        acceptedButtons : Qt.MiddleButton
+                        scrollGestureEnabled : false
+                        onWheel:{
+                            page.scale += ( wheel.angleDelta.y / 360 * 0.1 * 1) //TODO : add settings for scroll sensitivity and invert factor
+                            page.scale = Math.max ( Math.min ( page.scale, pincharea.pinch.maximumScale), pincharea.pinch.minimumScale)
+                        }
+                        //trigger fit to page on wheel button click
+                        onClicked : world.fitToPage()
+
 
 
                     }
-//                    DropShadow{
-//                        anchors.fill: page
-//                        horizontalOffset: 3
-//                        verticalOffset: 3
-//                        radius: 8.0
-//                        samples: 17
-//                        color: "#80000000"
-//                        source: page
-//                    }
 
-                    Row{
-                        height:25
+
+                    RowLayout{
+                        height:50
                         width:parent.width
-                        anchors.top:parent.bottom
-                        FAButton{
+                        anchors.bottom : parent.bottom
+                        Row{
                             height:parent.height
-                            width:height
-                            icon : MaterialIcons.add
-                            onClicked :pm.createSlide()
-                            rounded : true
-                            decorate:false
+                            Layout.alignment : Qt.AlignLeft
+                            FAButton{
+                                height:parent.height
+                                width:height
+                                icon : MaterialIcons.add
+                                iconColor: NavMan.settings.materialAccent
+                                onClicked :pm.createSlide()
+                                rounded : true
+                                decorate:false
+                            }
+                            FAButton {
+                                height:parent.height
+                                width:height
+                                icon: MaterialIcons.settings
+                                iconColor: NavMan.settings.materialAccent
+                                onClicked: pm.editSlide(pm.slideSelected)
+                                decorate:false
+                            }
+                            FAButton {
+                                height:parent.height
+                                width:height
+                                ToolTip.text: qsTr("Show code")
+                                onClicked: pm.showDocumentCode = !pm.showDocumentCode
+                                icon: MaterialIcons.code
+                                iconColor: checked ? Qt.darker(NavMan.settings.materialAccent) : NavMan.settings.materialAccent
+                                checked: pm.showDocumentCode
+                                decorate:false
+                            }
                         }
-                        FAButton {
+                        Row{
                             height:parent.height
-                            width:height
-                            icon: MaterialIcons.settings
-                            onClicked: pm.editSlide(pm.slideSelected)
-                            decorate:false
+                            Layout.alignment : Qt.AlignRight
+                            Slider{
+                                value : page.scale
+                                from : 0.002//pincharea.pinch.minimumScale
+                                to : 5//pincharea.pinch.maximumScale
+                                onMoved:page.scale = value
+                            }
+                            FAButton {
+                                height:parent.height
+                                width:height
+                                icon: MaterialIcons.settings_overscan
+                                iconColor: NavMan.settings.materialAccent
+                                onClicked: world.fitToPage()
+                                decorate:false
+                            }
                         }
                         //                FAButton{
                         //                    icon:MaterialIcons.remove
@@ -286,48 +332,37 @@ ApplicationWindow {
 
                     }
 
+
                 }
 
 
-                Slider{
-                    id:pageScaleFactor
-                    height:50
-                    width:200
-                    value : page.scale
-                    from : 0.1
-                    to : 5
-                    onValueChanged: page.scale = value
-                    anchors.bottom : parent.bottom
-                    anchors.right : parent.right
-                }
-            }
 
-
-
-            Loader{
-                SplitView.preferredWidth: parent.width / 4
-                SplitView.minimumWidth: 100
-                visible:active
-                sourceComponent: NavMan.elementItemToModify ? propertyPane : elementToolBox//ElementEditor{ target :  NavMan.elementItemToModify }
-                Component{
-                    id:propertyPane
-                    ElementEditor{
-                        target :  NavMan.elementItemToModify
-                        z:100
+                Loader{
+                    SplitView.preferredWidth: parent.width / 4
+                    SplitView.minimumWidth: 100
+                    sourceComponent: NavMan.elementItemToModify ? propertyPane : elementToolBox//ElementEditor{ target :  NavMan.elementItemToModify }
+                    Component{
+                        id:propertyPane
+                        ElementEditor{
+                            target :  NavMan.elementItemToModify
+                            z:100
+                        }
+                    }
+                    Component{
+                        id:elementToolBox
+                        ToolBox{
+                            //    visible:pm.editMode && NavMan.currentSlide
+                            //    anchors.right: parent.right
+                        }
                     }
                 }
-                Component{
-                    id:elementToolBox
-                    ToolBox{
-                        //    visible:pm.editMode && NavMan.currentSlide
-                        //    anchors.right: parent.right
-                    }
-                }
+
             }
 
         }
 
     }
+
 
     FileTransfertView{
         anchors.right:parent.right
@@ -335,10 +370,9 @@ ApplicationWindow {
     }
 
     footer:Footer{
-
         width:mainApp.width
         height:40
-        //visible:pm.loaded && pm.isSlideDisplayed
+        visible:pm.loaded && pm.isSlideDisplayed
     }
 
 

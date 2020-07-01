@@ -21,6 +21,7 @@
 ****************************************************************************/
 import QtQuick 2.0
 import QtQuick.Controls 2.5
+import MaterialIcons 1.0
 
 Rectangle {
     id: content
@@ -33,6 +34,8 @@ Rectangle {
     property alias contentHeight: editor.contentHeight
 
     property string hljsRootDir: "file:" + pm.installPath + "/deps"
+
+    property bool showSaveButton : false
 
     property var hightlighter: pm.installPath.length && Qt.createQmlObject(
                                    'import QtQuick 2.0;
@@ -48,6 +51,7 @@ return tmp
 ', parent)
 
     signal editingFinish()
+    signal saveButtonClicked()
 
     implicitHeight: 200
     implicitWidth: 300
@@ -71,12 +75,25 @@ return tmp
             width:parent.width/2
         }
     }
+    FAButton{
+        y:editorPanel.height
+        anchors.right : parent.right
+        icon:MaterialIcons.save
+        width:30;height:width
+        visible:content.showSaveButton
+        z:1
+        onClicked: {
+            content.code = editor.getText(0, editor.length)
+            content.saveButtonClicked()
+        }
+    }
 
     ScrollView {
         anchors.fill: parent
         anchors.topMargin: editorPanel.height
         contentWidth:width
         contentHeight:editor.contentHeight + 50
+        ScrollBar.vertical.x : 0
         clip : true
 
         Row {

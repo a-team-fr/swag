@@ -28,7 +28,6 @@ import Swag 1.0
 
 Frame{
     id:root
-
     CloseButton{}
 
     Flickable {
@@ -76,13 +75,13 @@ Frame{
                     width:parent.width
                     FormItem{
                         title:qsTr("Background image")
-                        Layout.fillWidth: true
+                        width:parent.width / 2
                         comboBox.model: ["desert-279862_1920.jpg", "desert-790640_1920.jpg", "road-1303617_1920.jpg"]
                         onActivated: pm.savePrezSettings("defaultBackground", "import QtQuick 2.14;Image{ source:'qrc:/res/"+comboBox.currentText+"';}")
                     }
                     FormItem{
                         title:qsTr("Background flat color")
-                        Layout.fillWidth: true
+                        width:parent.width / 2
                         showColorSelector: true
                         onColorPicked: pm.savePrezSettings("defaultBackground", "import QtQuick 2.14;Rectangle{ color:'"+selectedColor+"';}");
                         pickerParent : root

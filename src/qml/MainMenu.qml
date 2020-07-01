@@ -101,14 +101,7 @@ MenuBar {
             checked: pm.viewWorldMode
             shortcut:"Ctrl+D"
         }
-        MenuItem {
-            text: qsTr("Show code")
-            onTriggered: pm.showDocumentCode = !pm.showDocumentCode
-            checkable: true
-            checked: pm.showDocumentCode
-            enabled:pm.loaded
-            shortcut:"Ctrl+T"
-        }
+
     }
     Menu {
         title: qsTr("View")

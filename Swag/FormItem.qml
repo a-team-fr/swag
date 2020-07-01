@@ -59,6 +59,7 @@ Control{
     //Button
     signal confirmed()
     property bool showButton : false
+    property alias confirmButtonIcon : confirmButton.icon
 
     //color selector
     property bool showColorSelector : false
@@ -99,7 +100,7 @@ Control{
     rightInset: 0
 
     implicitHeight : contentItem.childrenRect.height
-    implicitWidth : contentItem.childrenRect.width
+    //implicitWidth : contentItem.childrenRect.width
 
 
     contentItem:RowLayout{
@@ -141,9 +142,9 @@ Control{
             onCurrentTextChanged : root.currentTextChanged()
         }
 
-        Button{
-            text:"..."
+        FAButton{
             id:confirmButton
+            icon : MaterialIcons.done
             visible : root.showButton
             onClicked: root.confirmed()
         }
@@ -227,15 +228,6 @@ Control{
 
         }
 
-//        Rectangle{
-//            id:spacer
-//            color:"red"
-//            visible: root.extraContent
-//            Layout.minimumWidth : 0
-//            Layout.fillWidth : true
-//            Layout.fillHeight : true
-//        }
-
         Loader{
             active: root.extraContent
             sourceComponent : root.extraContent
@@ -244,19 +236,6 @@ Control{
             Layout.alignment : root.extraContent_horizontalAlignment
             //anchors.fill: extraContent
         }
-//        Rectangle{
-//            color:"red"
-//            visible: root.extraContent
-//            Layout.alignment : Qt.AlignRight
-//            //Layout.fillWidth : true
-//            Layout.fillHeight : true
-//            Loader{
-//                id:extraContent
-//                active: root.extraContent
-//                sourceComponent : root.extraContent
-//                //anchors.fill: extraContent
-//            }
-//        }
 
     }
 

@@ -30,6 +30,10 @@ import MaterialIcons 1.0
 Frame{
     id:root
 
+    readonly property real pageRatio : pm.slidePageRatio( pm.slideSelected)
+    //onPageRatioChanged: console.log("pageRatioChanged:" + pageRatio)
+    readonly property bool isLandscape : pageRatio > 1
+
     CloseButton{}
 
     Flickable {
@@ -41,85 +45,114 @@ Frame{
             id:content
             width: parent.width
             spacing : 5
-          GroupBox{
-              title:qsTr("Title")
-              Layout.fillWidth: true
-              TextField{
-                  id:title
-                  width:parent.width
-                  text:pm.lstSlides[pm.slideSelected].title
-                  onEditingFinished: pm.saveSlideSettings("title", text)
-              }
-          }
-          RowLayout{
-              Layout.fillWidth: true
-              GroupBox{
-                  title:qsTr("x")
-                  TextField{
-                      id:propX
-                      width:parent.width
-                      text:pm.lstSlides[pm.slideSelected].x
-                      onEditingFinished: pm.saveSlideSettings("x", Number(text))
-                  }
-              }
-              GroupBox{
-                  title:qsTr("y")
-                  TextField{
-                      id:propY
-                      width:parent.width
-                      text:pm.lstSlides[pm.slideSelected].y
-                      onEditingFinished: pm.saveSlideSettings("y", Number(text))
-                  }
-              }
-              GroupBox{
-                  title:qsTr("rotation")
-                  TextField{
-                      id:propRotation
-                      width:parent.width
-                      text:pm.lstSlides[pm.slideSelected].rotation
-                      onEditingFinished: pm.saveSlideSettings("rotation", Number(text))
-                  }
-              }
-              GroupBox{
-                  title:qsTr("width")
-                  TextField{
-                      id:propWidth
-                      width:parent.width
-                      text:pm.lstSlides[pm.slideSelected].width
-                      onEditingFinished: pm.saveSlideSettings("width", Number(text))
-                  }
-              }
-              GroupBox{
-                  title:qsTr("height")
-                  TextField{
-                      id:propHeight
-                      width:parent.width
-                      text:pm.lstSlides[pm.slideSelected].height
-                      onEditingFinished: pm.saveSlideSettings("height", Number(text))
-                  }
-              }
-          }
+            FormItem{
+                title:qsTr("Title")
+                Layout.fillWidth: true
 
+                text:pm.lstSlides[pm.slideSelected].title
+                onEditingFinished: pm.saveSlideSettings("title", text)
 
-    //      GroupBox{
-    //          title:qsTr("Layout")
-    //          ComboBox{
-    //              id:propLayout
-    //              model: ["Free", "Column"]
-    //              currentIndex: currentIndex = find(pm.lstSlides[pm.slideSelected].layout)
-    //              onActivated: pm.saveSlideSettings("layout", currentText)
-    //          }
-    //      }
-          FAButton{
-              icon:MaterialIcons.remove
-              iconColor:"red"
-              text:qsTr("Delete slide")
-              enabled : pm.lstSlides.length > 1
-              onClicked: {
-                  pm.removeSlide();
-                  pm.displayType = PM.Slide;
-              }
-          }
+            }
+            RowLayout{
+                Layout.fillWidth: true
+                FormItem{
+                    title:qsTr("x")
+
+                    text:pm.lstSlides[pm.slideSelected].x
+                    onEditingFinished: pm.saveSlideSettings("x", Number(text))
+
+                }
+                FormItem{
+                    title:qsTr("y")
+
+                    text:pm.lstSlides[pm.slideSelected].y
+                    onEditingFinished: pm.saveSlideSettings("y", Number(text))
+
+                }
+                FormItem{
+                    title:qsTr("rotation")
+
+                    text:pm.lstSlides[pm.slideSelected].rotation
+                    onEditingFinished: pm.saveSlideSettings("rotation", Number(text))
+
+                }
+            }
+            RowLayout{
+                Layout.fillWidth: true
+                FormItem{
+                    title:qsTr("Page ratio")
+
+                    extraContent:Component{Row{
+                        spacing : 5
+                        FAButton{
+                            icon: MaterialIcons.crop_16_9
+                            checked : root.pageRatio === 16/9 || root.pageRatio === 9/16
+                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 16/9 : 9/16 )
+                        }
+                        FAButton{
+                            icon: MaterialIcons.crop_3_2
+                            checked : root.pageRatio === 3/2 || root.pageRatio === 2/3
+                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 3/2 : 2/3)
+                        }
+                        FAButton{
+                            icon: MaterialIcons.crop_5_4
+                            checked : root.pageRatio === 5/4 || root.pageRatio === 4/5
+                            onClicked:pm.saveSlideSettings( "pageRatio",  root.isLandscape ? 5/4 : 4/5 )
+                        }
+                        FAButton{
+                            icon: MaterialIcons.crop_7_5
+                            checked : root.pageRatio === 7/5 || root.pageRatio === 5/7
+                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 7/5 : 5/7)
+                        }
+                        FAButton{
+                            icon: MaterialIcons.crop_din
+                            checked : root.pageRatio === 1
+                            onClicked:pm.saveSlideSettings( "pageRatio", 1.)
+                        }
+                    }}
+
+                }
+
+            }
+            RowLayout{
+                Layout.fillWidth: true
+                FormItem{
+                    title:qsTr("Page layout")
+
+                    extraContent:Component{Row{
+                        spacing : 5
+                        FAButton{
+                            icon: MaterialIcons.landscape
+                            checked : root.isLandscape
+                            onClicked: pm.saveSlideSettings( "pageRatio",  1 / root.pageRatio)
+                        }
+                        FAButton{
+                            icon: MaterialIcons.portrait
+                            checked : !root.isLandscape
+                            onClicked: pm.saveSlideSettings( "pageRatio", 1 / root.pageRatio)
+                        }
+                    }}
+
+                }
+
+            }
+
+            FAButton{
+                icon:MaterialIcons.save
+                text:qsTr("Save slide settings")
+                onClicked: pm.displayType = pm.loaded ?  PM.Slide :PM.Welcome
+            }
+
+            FAButton{
+                icon:MaterialIcons.remove
+                iconColor:"red"
+                text:qsTr("Delete slide")
+                enabled : pm.lstSlides.length > 1
+                onClicked: {
+                    pm.removeSlide();
+                    pm.displayType = PM.Slide;
+                }
+            }
         }
     }
 }

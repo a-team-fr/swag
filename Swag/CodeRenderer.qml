@@ -32,11 +32,16 @@ SplitView{
     property alias code : editor.code
     property alias langage : editor.langage
     property alias rendererSource : renderer.source
+    property alias rendererComponent : renderer.sourceComponent
     property bool renderCode : true
     property alias showEditorPanel :editor.showEditorPanel
+    property alias editorItem :editor
+    property bool showSaveButton : false
 
     property alias renderedItem : renderer.item
     property bool clipRenderer : false
+
+    signal saveButtonClicked()
 
     orientation: Qt.Horizontal
 
@@ -45,6 +50,8 @@ SplitView{
         visible:false
         SplitView.preferredWidth: parent.width / 2
         SplitView.fillHeight: true
+        showSaveButton: coderenderer.showSaveButton
+        onSaveButtonClicked: coderenderer.saveButtonClicked()
     }
 
     Loader{
@@ -52,6 +59,7 @@ SplitView{
         clip:coderenderer.clipRenderer
         SplitView.preferredWidth: parent.width / 2
         SplitView.fillHeight: true
+        active : parent.visible
 
         sourceComponent: coderenderer.rendererSource ? Qt.createComponent(coderenderer.rendererSource) : undefined
 

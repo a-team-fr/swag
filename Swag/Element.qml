@@ -28,13 +28,26 @@ import Swag 1.0
 Control{
     id:root
 
-    //property var target : NavMan.elementItemToModify
+    property int slideWidth : parent ? parent.width : NavMan.slideWidth //from Navigator, the slide should be rendered without using NavMan.slideWidth
+    property int slideHeight : parent ? parent.height : NavMan.slideWidth
 
-    function updateRel(ptTopLeft, ptBottomRight){
-        xRel = ptTopLeft.x / refWidth
-        yRel = ptTopLeft.y / refHeight
-        widthRel = (ptBottomRight.x - ptTopLeft.x) / refWidth
-        heightRel = (ptBottomRight.y - ptTopLeft.y) / refHeight
+    function setX( val){
+        xRel = val / slideWidth
+    }
+    function setY( val){
+        yRel = val / slideHeight
+    }
+    function setWidth( val){
+        widthRel = val / slideWidth
+    }
+    function setHeight( val){
+        heightRel = val / slideHeight
+    }
+    function updateGeometry(ptTopLeft, ptBottomRight){
+        setX ( ptTopLeft.x)
+        setY ( ptTopLeft.y)
+        setWidth(ptBottomRight.x - ptTopLeft.x)
+        setHeight(ptBottomRight.y - ptTopLeft.y)
     }
 
     //Element properties
@@ -47,20 +60,25 @@ Control{
         {"name":"yRel","default":0},
         {"name":"widthRel","default":0},
         {"name":"heightRel","default":0}]
+//    property var dumpedProperties:[ {"name":"navigationFocus","default":false},
+//        {"name":"idAsAString","default":""},
+//        {"name":"x","default":0},
+//        {"name":"y","default":0},
+//        {"name":"width","default":0},
+//        {"name":"height","default":0}]
 
     property bool navigationFocus : false
+
+
     property double xRel : 0
     property double yRel : 0
     property double widthRel : 0
     property double heightRel : 0
 
-    readonly property int refWidth : NavMan.slideWidth// (NavMan.currentSlide && NavMan.currentSlide.parent) ? NavMan.currentSlide.parent.width : 0
-    readonly property int refHeight :NavMan.slideHeight//(NavMan.currentSlide && NavMan.currentSlide.parent) ? NavMan.currentSlide.parent.height : 0
-
-    x : refWidth * xRel
-    y : refHeight * yRel
-    width:Math.max(refWidth * widthRel,10)
-    height:Math.max(refHeight * heightRel,10)
+    x : slideWidth * xRel
+    y : slideHeight * yRel
+    width: slideWidth * widthRel
+    height: slideHeight * heightRel
 
     hoverEnabled: pm.editMode && !NavMan.elementItemToPosition
 
@@ -74,25 +92,121 @@ Control{
     }
 
 
-    background:Rectangle{
+    background:Item{
         visible:(isMe || root.hovered) && pm.editMode || NavMan.elementItemToPosition
         enabled:visible
-        border.color:"orange"
-        border.width: isMe ? 3 : 1
-        radius:3
-        color:"transparent"
         z:50
-
-        MouseArea{
-            enabled: !NavMan.elementItemToPosition
+        //bounding rect (gives editing focus on click)
+        Rectangle{
             anchors.fill: parent
-            preventStealing: true
-            propagateComposedEvents: true
-            onClicked: {
-                if (!root.isMe)
-                    NavMan.displayEditElement( root)
+            border.color:NavMan.settings.materialAccent
+            border.width: isMe ? 3 : 1
+            radius:10
+            color:"transparent"
+            MouseArea{
+                enabled: !NavMan.elementItemToPosition
+                anchors.fill: parent
+                preventStealing: true
+                propagateComposedEvents: true
+                onClicked: {
+                    if (!root.isMe)
+                        NavMan.displayEditElement( root)
+                }
+            }
+            //dimension of the element at the bottom of the bounding rect
+            Label{
+                text:root.width.toFixed(0) + " x " + root.height.toFixed(0)
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top : parent.bottom
+                color : NavMan.settings.materialAccent
+                font.pixelSize : 10
             }
         }
+
+
+        //topLeft grip
+        Rectangle{
+            id:topLeft
+            width :20; height : width;
+            radius : 0; color: NavMan.settings.materialAccent
+            MouseArea{
+                anchors.fill:parent
+                drag.target : root
+                drag.axis: Drag.XAndYAxis
+                drag.minimumX: 0
+                drag.maximumX: root.slideWidth - root.width
+                drag.minimumY: 0
+                drag.maximumY: root.slideHeight - root.height
+                onPressed: parent.color = NavMan.settings.materialPrimary
+                onReleased: {
+                    parent.color = NavMan.settings.materialAccent
+                    root.setX(topLeft.x + root.x)
+                    root.setY(topLeft.y + root.y)
+                }
+                Label{
+                    text:"x:"+root.x.toFixed(0) + ", y:" + root.y.toFixed(0)
+                    anchors.right: parent.left
+                    anchors.bottom : parent.top
+                    color : NavMan.settings.materialPrimary
+                    font.pixelSize : 10
+                    visible : parent.pressed
+                }
+            }
+
+        }
+        Rectangle{
+            id:bottomRight
+            x:root.width - width; y : root.height - height
+            width :20; height : width;
+            radius : 10; color: NavMan.settings.materialAccent
+
+            MouseArea{
+                anchors.fill:parent
+                drag.target : parent
+                drag.axis: Drag.XAndYAxis
+                drag.minimumX: topLeft.x+50 //minimum width
+                drag.maximumX: root.slideWidth - topLeft.x - root.x- 20
+                drag.minimumY: topLeft.y+20
+                drag.maximumY: root.slideHeight - topLeft.y -root.y - 20
+                onPressed: parent.color = NavMan.settings.materialPrimary
+                onReleased: {
+                    parent.color = NavMan.settings.materialAccent
+                    root.setWidth(resizingRect.width)
+                    root.setHeight(resizingRect.height)
+                }
+                Label{
+                    text:"x:"+(bottomRight.x + 20 + root.x).toFixed(0) + ", y:" + (bottomRight.y+ 20 + root.y).toFixed(0)
+                    anchors.left: parent.right
+                    anchors.top : parent.bottom
+                    color : NavMan.settings.materialPrimary
+                    font.pixelSize : 10
+                    visible : parent.pressed
+                }
+                Rectangle{
+                    id:resizingRect
+                    visible : parent.drag.active
+                    x: -bottomRight.x
+                    y: -bottomRight.y
+                    radius : 10
+                    width: bottomRight.x+ 20
+                    height: bottomRight.y + 20
+                    color:"transparent"
+                    border.width:1; border.color : NavMan.settings.materialPrimary
+
+                    //dimension of the element at the bottom of the bounding rect
+                    Label{
+                        text:resizingRect.width.toFixed(0) + " x " + resizingRect.height.toFixed(0)
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top : parent.bottom
+                        color : NavMan.settings.materialPrimary
+                        font.pixelSize : 10
+                    }
+                }
+            }
+
+        }
+
+
     }
 
 

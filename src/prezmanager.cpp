@@ -568,12 +568,16 @@ double PrezManager::slidePageRatio(int slideIdx) const
     {
         QJsonObject slide = slides[slideIdx].toObject();
         double pageRatio = slide["pageRatio"].toDouble();
-        if (pageRatio > 0)
+        if (pageRatio > 0){
+            //qDebug()<<"slidePageRatio:" << pageRatio;
             return pageRatio;
+        }
     }
 
     //default page ratio
-    return 4/3;
+    double defaultPageRatio = m_settings.value("defaultPageRatio", 16/9).toDouble();
+    //qDebug()<<"default page Ratio:" << defaultPageRatio;
+    return defaultPageRatio;
 
 }
 

@@ -60,6 +60,8 @@ Item {
         property string ftpUser : "swagapp@swagsoftware.net"
         property string ftpPassword : "eWbsKg7~Kh^@"
         property int ftpPort : 21
+
+        property real defaultPageRatio : 16/9
     }
 
     property var currentDocument : null //the object is either a slide, or prezSettings or slideSettings...

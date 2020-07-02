@@ -209,11 +209,15 @@ Frame{
                             spacing : 5
                             FAButton{
                                 icon: MaterialIcons.brightness_4
+                                ToolTip.text:qsTr("Dark mode")
+                                ToolTip.visible: hovered
                                 checked : NavMan.settings.materialTheme === Material.Dark
                                 onClicked:NavMan.settings.materialTheme = Material.Dark
                             }
                             FAButton{
                                 icon: MaterialIcons.brightness_5
+                                ToolTip.text:qsTr("Light mode")
+                                ToolTip.visible: hovered
                                 checked : NavMan.settings.materialTheme === Material.Light
                                 onClicked:NavMan.settings.materialTheme = Material.Light
                             }
@@ -260,6 +264,87 @@ Frame{
                         width:parent.width
                         text:NavMan.settings.materialElevation
                         onEditingFinished: NavMan.settings.materialElevation = text
+
+                    }
+
+                    RowLayout{
+                        Layout.fillWidth: true
+                        FormItem{
+                            title:qsTr("Default page ratio")
+                            Component.onCompleted: console.log("ratio reg : "+NavMan.settings.defaultPageRatio)
+                            extraContent:Component{Row{
+                                spacing : 5
+                                FAButton{
+                                    icon: MaterialIcons.crop_16_9
+                                    ToolTip.text:qsTr("16/9 or 9/16")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 16/9 || NavMan.settings.defaultPageRatio === 9/16
+                                    onClicked: NavMan.settings.defaultPageRatio = NavMan.settings.defaultPageRatio > 1 ? 16/9 : 9/16
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.crop_3_2
+                                    ToolTip.text:qsTr("3/2 or 2/3")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 3/2 || NavMan.settings.defaultPageRatio === 2/3
+                                    onClicked: NavMan.settings.defaultPageRatio = NavMan.settings.defaultPageRatio > 1 ? 3/2 : 2/3
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.crop_5_4
+                                    ToolTip.text:qsTr("5/4 or 4/5")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 5/4 || NavMan.settings.defaultPageRatio === 4/5
+                                    onClicked: NavMan.settings.defaultPageRatio = NavMan.settings.defaultPageRatio > 1 ? 5/4 : 4/5
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.crop_5_4
+                                    ToolTip.text:qsTr("4/3 or 3/4")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 4/3 || NavMan.settings.defaultPageRatio === 3/4
+                                    onClicked: NavMan.settings.defaultPageRatio = NavMan.settings.defaultPageRatio > 1 ? 4/3 : 3/4
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.crop_7_5
+                                    ToolTip.text:qsTr("7/5 or 5/7")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 7/5 || NavMan.settings.defaultPageRatio === 5/7
+                                    onClicked: NavMan.settings.defaultPageRatio = NavMan.settings.defaultPageRatio > 1 ? 7/5 : 5/7
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.crop_din
+                                    ToolTip.text:qsTr("square")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio === 1
+                                    onClicked:NavMan.settings.defaultPageRatio = 1
+                                }
+                            }}
+
+                        }
+
+                    }
+                    RowLayout{
+                        Layout.fillWidth: true
+                        FormItem{
+                            title:qsTr("Default page layout")
+
+                            extraContent:Component{Row{
+                                spacing : 5
+                                FAButton{
+                                    icon: MaterialIcons.landscape
+                                    ToolTip.text:qsTr("Landscape")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio > 1
+                                    onClicked: NavMan.settings.defaultPageRatio = 1/NavMan.settings.defaultPageRatio
+                                }
+                                FAButton{
+                                    icon: MaterialIcons.portrait
+                                    ToolTip.text:qsTr("Portrait")
+                                    ToolTip.visible : hovered
+                                    checked : NavMan.settings.defaultPageRatio <= 1
+                                    onClicked: NavMan.settings.defaultPageRatio = 1/NavMan.settings.defaultPageRatio
+                                }
+                            }}
+
+                        }
 
                     }
                 }

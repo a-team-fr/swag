@@ -63,9 +63,10 @@ class PrezManager : public QObject
      */
     Q_PROPERTY(bool loaded MEMBER m_loaded NOTIFY prezLoaded)
     /**
-     * @brief
+     * @brief pendingChanges is true when the swag document has been (potentially) modified since the last saving
      */
     Q_PROPERTY(bool pendingChanges MEMBER m_pendingChanges NOTIFY pendingChangesChanged)
+    Q_PROPERTY(bool slideHasBeenEdited MEMBER m_slideHasBeenEdited NOTIFY slideHasBeenEditedChanged)
     /**
      * @brief full path to the currently opened swag document
      */
@@ -119,6 +120,7 @@ signals:
     void slidesReordered();
     void installPathChanged();
     void pendingChangesChanged();
+    void slideHasBeenEditedChanged();
     void slideExported();
     void slideDecksFolderPathChanged();
 
@@ -148,8 +150,7 @@ public slots:
      */
     QString readDocument(QString documentPath) const;
     QString readDocument(QUrl documentUrl) const;                                           ///overload provided for conveniency
-    void writeDocument(QUrl documentUrl, const QString&) const;
-    void writeSlideDocument(const QString&) const;
+    void writeSlideDocument(const QString&);
 
     /**
      * @brief startPDFExport (WIP)
@@ -277,6 +278,8 @@ private:
     QUrl m_uploadUrl;
 
     QStringList m_lastOpenedFiles;
+
+    bool m_slideHasBeenEdited = false;
 
 };
 

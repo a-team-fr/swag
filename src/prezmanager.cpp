@@ -98,7 +98,6 @@ QString PrezManager::compressSwag(const QString& srcDirectoryPath, bool removeDi
 
 void PrezManager::reload(bool restartApp )
 {
-    m_pEngine->clearCache();
     if ( restartApp && m_isDevelopmentPhase)
         startSwagApp();    //Reload everything QML
     else {
@@ -198,7 +197,15 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
     slides.insert(newPos, slide);
     m_prezProperties.insert("slides", slides);
     emit slidesReordered();
-    qDebug()<<"ok";
+
+    if ( (m_selectedSlide == selectedSlide) || (m_selectedSlide == newPos))
+        emit slideChanged();
+
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
 
 }
 
@@ -290,6 +297,7 @@ void PrezManager::removeLastOpenedFilesEntry(int index)
 
 }
 
+
 QString PrezManager::readSlideQMLCode(int idxSlide) const
 {
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
@@ -313,22 +321,28 @@ QString PrezManager::readDocument(QString documentPath) const
     return file.readAll();
 }
 
-void PrezManager::writeDocument(QUrl documentUrl, const QString& newText) const
-{
-    QFile file( documentUrl.toLocalFile() );
-    //QFile file( documentUrl.path() );;
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-              return;
 
-    file.write(newText.toUtf8());
-}
-void PrezManager::writeSlideDocument(const QString& slideContent) const
+void PrezManager::writeSlideDocument(const QString& slideContent)
 {
     QFile file( urlSlide().toLocalFile() );
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-              return;
-
+    {
+        qDebug() << "Error : can't open slide document";
+        return;
+    }
     file.write(slideContent.toUtf8());
+
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
+
+    if (m_slideHasBeenEdited && !m_editMode)
+    {
+        m_slideHasBeenEdited = false;
+        emit slideHasBeenEditedChanged();
+    }
 }
 
 
@@ -655,7 +669,11 @@ QUrl PrezManager::urlSlide(int idxSlide) const
     if (slideSource.isEmpty()) return QUrl();
 
     QString path(m_currentSlideDeckPath + "/" + slideSource);
-    //qDebug()<< "showing document:" << path;
+    //qDebug()<< "showing document:" << QUrl::fromLocalFile( path);
+    //
+    if (m_editMode)
+        m_pEngine->clearCache();
+
     return QUrl::fromLocalFile( path);
 
 }
@@ -696,11 +714,13 @@ void PrezManager::setEditMode(bool mode)
     if ( (mode == m_editMode) || m_viewWorldMode)  return;
 
     m_editMode = mode;
-    if (!m_pendingChanges)
+
+    if (m_editMode && !m_slideHasBeenEdited)
     {
-        m_pendingChanges = true;
-        emit pendingChangesChanged();
+        m_slideHasBeenEdited = true;
+        emit slideHasBeenEditedChanged();
     }
+
     emit editModeChanged();
 }
 
@@ -783,6 +803,12 @@ void PrezManager::createSlide()
     //go to the newly created slide
     selectSlide(slides.count()-1);
 
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
+
 }
 
 void PrezManager::cloneSlide(int idxSlide)
@@ -803,6 +829,12 @@ void PrezManager::cloneSlide(int idxSlide)
     //Save to disk
     saveToDisk();
     emit slidesReordered();
+
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
 
 }
 
@@ -826,6 +858,12 @@ void PrezManager::removeSlide(int idxSlide)
     m_selectedSlide = std::min(m_selectedSlide,slides.count()-1);
     emit slidesReordered();
     emit documentPositionChanged();
+
+    if (!m_pendingChanges)
+    {
+        m_pendingChanges = true;
+        emit pendingChangesChanged();
+    }
 }
 void PrezManager::editSlide(int idxSlide)
 {

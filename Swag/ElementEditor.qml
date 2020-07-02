@@ -173,7 +173,7 @@ Frame {
             icon:MaterialIcons.save
             ToolTip.text: qsTr("save slide")
             ToolTip.visible : hovered
-            onClicked: NavMan.actionSave()
+            onClicked: NavMan.actionSaveSlide()
         }
 
         FAButton{

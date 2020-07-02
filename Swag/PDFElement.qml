@@ -27,8 +27,6 @@ import Swag 1.0
 
 Element{
     id:root
-    height : 480
-    width : 640
 
     property bool permissive : false
     property string pdfPath: pm.documentUrl("pdfSample.pdf","examples/Gallery/{08074c7f-ec51-448a-b67b-a22a5892cd95}/")

@@ -31,6 +31,15 @@ Control{
     property int slideWidth : parent ? parent.width : NavMan.slideWidth //from Navigator, the slide should be rendered without using NavMan.slideWidth
     property int slideHeight : parent ? parent.height : NavMan.slideWidth
 
+    property bool editable : true //can be modifed in editmode by the user
+
+    function rebindGeometry(){
+        x = Qt.binding( function(){ return xRel*slideWidth; } )
+        y = Qt.binding( function(){ return yRel*slideHeight; } )
+        width = Qt.binding( function(){ return widthRel*slideWidth; } )
+        height = Qt.binding( function(){ return heightRel*slideHeight; } )
+    }
+
     function setX( val){
         xRel = val / slideWidth
     }
@@ -39,6 +48,7 @@ Control{
     }
     function setWidth( val){
         widthRel = val / slideWidth
+        //console.log("new widthRel:"+widthRel)
     }
     function setHeight( val){
         heightRel = val / slideHeight
@@ -78,6 +88,7 @@ Control{
     x : slideWidth * xRel
     y : slideHeight * yRel
     width: slideWidth * widthRel
+    //onWidthChanged: console.log("new width:"+width)
     height: slideHeight * heightRel
 
     hoverEnabled: pm.editMode && !NavMan.elementItemToPosition
@@ -93,7 +104,7 @@ Control{
 
 
     background:Item{
-        visible:(isMe || root.hovered) && pm.editMode || NavMan.elementItemToPosition
+        visible:(isMe || root.hovered) && pm.editMode && root.editable || NavMan.elementItemToPosition
         enabled:visible
         z:50
         //bounding rect (gives editing focus on click)
@@ -142,6 +153,7 @@ Control{
                     parent.color = NavMan.settings.materialAccent
                     root.setX(topLeft.x + root.x)
                     root.setY(topLeft.y + root.y)
+                    rebindGeometry()
                 }
                 Label{
                     text:"x:"+root.x.toFixed(0) + ", y:" + root.y.toFixed(0)
@@ -173,6 +185,7 @@ Control{
                     parent.color = NavMan.settings.materialAccent
                     root.setWidth(resizingRect.width)
                     root.setHeight(resizingRect.height)
+                    rebindGeometry()
                 }
                 Label{
                     text:"x:"+(bottomRight.x + 20 + root.x).toFixed(0) + ", y:" + (bottomRight.y+ 20 + root.y).toFixed(0)

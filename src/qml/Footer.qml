@@ -47,7 +47,8 @@ Row{
         icon:MaterialIcons.chevron_left
         onClicked:NavMan.actionPrevious(true)
         visible :  !pm.net.following
-        opacity : pm.slideSelected > 0 ? 1 : 0
+        enabled : pm.slideSelected > 0
+        opacity : enabled ? 1 : 0
         decorate:false
         height:parent.height
     }
@@ -79,6 +80,7 @@ Row{
             //modal:true
             TocElement{
                 anchors.fill: parent
+                editable : false
             }
         }
 
@@ -98,6 +100,8 @@ Row{
         onClicked:NavMan.actionNext(true)
         visible :  !pm.net.following
         decorate:false
+        opacity : enabled ? 1 : 0
+        enabled : pm.slideSelected !== (pm.lstSlides.length -1)
     }
 
 //    Label{

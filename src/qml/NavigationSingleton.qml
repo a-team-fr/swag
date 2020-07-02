@@ -40,7 +40,7 @@ Item {
 
     property var settings : Settings{
         property bool openLastPrezAtStartup : false
-        property bool loadElement3d: false //Qt.platform.os !== "windows" || Qt.platform.os === "osx" )
+        property bool loadElement3d: false
         property string defaultSyntaxHighlightingStyle : "default"
         property alias windowWidth : root.windowWidth
         property alias windowHeight : root.windowHeight
@@ -83,10 +83,18 @@ Item {
 
     function actionSave()
     {
-        if (currentSlide )
-            currentSlide.saveDocument( );
-
+        actionSaveSlide();
+        console.log("save swag document..")
         pm.saveToDisk()
+    }
+    function actionSaveSlide()
+    {
+        if (currentSlide )
+        {
+            console.log("save current slide...")
+            currentSlide.saveDocument( );
+        }
+        else console.log("Fail to save : no current slide!")
     }
 
 
@@ -102,8 +110,8 @@ Item {
 
     function actionNext(ForcetoSlide)
     {
-        if (pm.pendingChanges)
-            actionSave();
+        if (pm.slideHasBeenEdited)
+            actionSaveSlide()
 
         if (root.navigationManagedBySlide)
             sigNext(ForcetoSlide)
@@ -112,8 +120,8 @@ Item {
 
     function actionPrevious(ForcetoSlide)
     {
-        if (pm.pendingChanges)
-            actionSave();
+        if (pm.slideHasBeenEdited)
+            actionSaveSlide()
 
         if (root.navigationManagedBySlide)
             sigPrevious(ForcetoSlide)

@@ -32,9 +32,8 @@ QtObject{
         //create header
         slideDump ="import QtQuick 2.6\nimport QtQuick.Controls 2.12\nimport Swag 1.0\n";
         dumpObject(target, 0)
-
+        //console.log("slidedump:"+slideDump)
         pm.writeSlideDocument(slideDump)
-        //console.log(slideDump)
     }
 
     function addTabulation(rank)

@@ -28,9 +28,6 @@ Element{
     id:root
     property string url: "https://swagsoftware.net"
 
-    height : 480
-    width : 640
-
     elementType : "WebElement"
 
     Component.onCompleted: {

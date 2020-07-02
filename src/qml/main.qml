@@ -155,7 +155,7 @@ ApplicationWindow {
             renderCode : false
             showSaveButton: true
             onSaveButtonClicked: {
-                pm.writeDocument(pm.urlSlide(), renderer.code)
+                pm.writeSlideDocument(renderer.code)
                 renderer.rendererComponent = null
 
                 pm.reload()
@@ -193,8 +193,8 @@ ApplicationWindow {
                         // compute scale to adjust page and a margin
                         page.scale = Math.min( world.height / (page.height + margin), world.width / (page.width + margin));
                         // compute flickable content origin to center page
-                        flickable.contentX =-margin
-                        flickable.contentY =-margin
+                        flickable.contentX = -0.5*(width - page.width)
+                        flickable.contentY = -0.5*(height - page.height)
 
                         return true;
                     }
@@ -299,7 +299,7 @@ ApplicationWindow {
                                 width:height
                                 ToolTip.text: qsTr("Show code")
                                 onClicked: pm.showDocumentCode = !pm.showDocumentCode
-                                icon: MaterialIcons.code
+                                icon: MaterialIcons.bug_report
                                 iconColor: checked ? Qt.darker(NavMan.settings.materialAccent) : NavMan.settings.materialAccent
                                 checked: pm.showDocumentCode
                                 decorate:false

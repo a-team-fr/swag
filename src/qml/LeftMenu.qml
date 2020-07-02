@@ -118,13 +118,13 @@ Drawer {
                 visible : pm.loaded
                 LeftMenuButton{
                     icon:MaterialIcons.edit
-                    toolTip.text: qsTr("Edit mode")
+                    toolTip.text: qsTr("Edit mode (Ctrl+E)")
                     onClicked: { pm.editMode = true ; pm.net.modifyChannel("0", false) }
                     checked: pm.editMode
                 }
                 LeftMenuButton{
                     icon: MaterialIcons.playlist_play
-                    toolTip.text: qsTr("Preview")
+                    toolTip.text: qsTr("Preview (Ctrl+E)")
                     onClicked: { pm.editMode = false ; pm.net.modifyChannel("0", false) }
                     checked: !pm.editMode && !pm.net.presenting
                 }

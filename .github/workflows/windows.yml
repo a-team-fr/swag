@@ -48,6 +48,7 @@ jobs:
         modules: 'qtcharts qtdatavis3d qtwebengine'
         mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
         cached: 'false'
+        aqtversion: '==0.9.1'
 
     - name: fetch submodule
       run: |

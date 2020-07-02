@@ -327,7 +327,9 @@ One can find an example of using these elements with the \"Gallery\" swag.")
         spacing : 1
         Label{ text:qsTr("Theme selection "); height:parent.height; verticalAlignment : Text.AlignVCenter }
         FAButton{
-            icon: MaterialIcons.landscape
+            icon: MaterialIcons.brightness_4
+            ToolTip.text:qsTr("Dark mode")
+            ToolTip.visible: hovered
             checked : NavMan.settings.materialTheme === Material.Dark
             onClicked:{
                 NavMan.settings.materialTheme = Material.Dark
@@ -340,7 +342,9 @@ One can find an example of using these elements with the \"Gallery\" swag.")
             }
         }
         FAButton{
-            icon: MaterialIcons.panorama
+            icon: MaterialIcons.brightness_5
+            ToolTip.text:qsTr("Light mode")
+            ToolTip.visible: hovered
             checked : NavMan.settings.materialTheme === Material.Light
             onClicked:{
                 NavMan.settings.materialTheme = Material.Light

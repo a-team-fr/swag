@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
         app.installTranslator(&translator);
     } else {
         qDebug() << "Translator couldn't be loaded [Failed]";
-        return 0;
+        //return 0;
     }
     //----------- TRANSLATOR
 

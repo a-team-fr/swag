@@ -26,6 +26,7 @@ copy-item .\Swag .\deploy\windows\bin\Swag -Recurse -Force
 copy-item .\deps .\deploy\windows\deps -Recurse -Force
 copy-item .\src .\deploy\windows\src -Recurse -Force
 copy-item .\examples .\deploy\windows\examples -Recurse -Force
+copy-item .\translations .\deploy\windows\translations -Recurse -Force
 
 #echo "******create new zip"
 #Compress-Archive -path .\deploy\windows -destinationpath .\swag.zip -compressionlevel optimal -Force

@@ -36,6 +36,7 @@ cp -rf ./Swag ./deploy/linux/usr/qml/Swag
 cp -rf ./deps ./deploy/linux/usr/deps
 cp -rf ./src ./deploy/linux/usr/src
 cp -rf ./examples ./deploy/linux/usr/examples
+cp -rf ./translations ./deploy/linux/usr/translations
 
 echo *** fetch libpulse-mainloop-glib.so.0
 sudo apt-get install libpulse-dev

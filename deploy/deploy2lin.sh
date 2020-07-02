@@ -40,10 +40,10 @@ cp -rf ./translations ./deploy/linux/usr/translations
 
 echo *** fetch libpulse-mainloop-glib.so.0
 sudo apt-get install libpulse-dev
-sudo apt-get install libxcb-xinerama0
 sudo apt-get install libxcb-icccm4
 sudo apt-get install libxcb-image0-dev
 sudo apt-get install libxcb-keysyms1
+sudo apt-get install libxcb-randr0-dev libxcb-xtest0-dev libxcb-xinerama0-dev libxcb-shape0-dev libxcb-xkb-dev
 sudo apt-get install libxkbcommon-dev
 sudo apt-get install libxkbcommon-x11-dev
 sudo apt-get install libgstreamer-plugins-base1.0-0

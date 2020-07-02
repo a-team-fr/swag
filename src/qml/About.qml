@@ -30,6 +30,8 @@ import Swag 1.0
 Frame{
     id:root
 
+    CloseButton{}
+
     Flickable {
         contentHeight: content.childrenRect.height + 50
         anchors.fill : parent

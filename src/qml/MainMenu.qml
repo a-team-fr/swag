@@ -52,6 +52,11 @@ MenuBar {
             onTriggered: NavMan.saveCurrentSlide()//pm.saveToDisk()
         }*/
         MenuItem {
+            text: qsTr("PrintPdf")
+            onTriggered:pm.displayType = PM.SlideExport
+            enabled:pm.loaded &&  !pm.net.following
+        }
+        MenuItem {
             text: qsTr("Save")
             onTriggered: NavMan.actionSave()
             enabled:pm.loaded &&  !pm.net.following
@@ -73,18 +78,7 @@ MenuBar {
         }
     }
     Menu {
-        title: qsTr("Edit")
-        MenuItem {
-            text: qsTr("New slide")
-            onTriggered: pm.createSlide()
-            enabled:pm.loaded &&  !pm.net.following
-            shortcut:"Ctrl+Shift+N"
-        }
-        MenuItem {
-            text: qsTr("PrintPdf")
-            onTriggered:pm.displayType = PM.SlideExport
-            enabled:pm.loaded &&  !pm.net.following
-        }
+        title: qsTr("View")
         MenuItem {
             text: qsTr("Edit mode")
             onTriggered:pm.editMode = !pm.editMode
@@ -94,19 +88,7 @@ MenuBar {
             shortcut:"Ctrl+E"
         }
         MenuItem {
-            text: qsTr("Edit deck world")
-            onTriggered: pm.viewWorldMode = !pm.viewWorldMode
-            enabled:pm.loaded && (pm.displayType == PM.Slide_FlatView) &&  !pm.net.following
-            checkable: true
-            checked: pm.viewWorldMode
-            shortcut:"Ctrl+D"
-        }
-
-    }
-    Menu {
-        title: qsTr("View")
-        MenuItem {
-            //role:MenuItem.PreferencesRole
+            role:MenuItem.PreferencesRole
             text: qsTr("Settings")
             onTriggered: pm.displayType = PM.GlobalSettings
         }

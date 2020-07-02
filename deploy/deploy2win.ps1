@@ -3,7 +3,7 @@
 #usage : powershell.exe -noprofile -executionpolicy bypass -file ".\deploy\deploy2win.ps1" (from swag root)
 #produce : ./Swag.AppImage (swag root dir)
 
-param ($qtpath='C:\Qt\5.14.2')
+param ($qtpath='C:\Qt\5.15.0')
 
 
 echo "******set the proper env for windeploy to fetch the right vcredist"

@@ -8,7 +8,7 @@ PATH_TO_QT=$1
 if [ -z "$PATH_TO_QT" ]
 then
   echo "using default Qt Path"
-  PATH_TO_QT=~/QtGPL/5.14.2/
+  PATH_TO_QT=~/QtGPL/5.15.0/
 fi
 
 rm -Rf ./deploy/macos/swag.app

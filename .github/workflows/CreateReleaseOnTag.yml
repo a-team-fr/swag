@@ -5,7 +5,7 @@ on:
     tags:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 env:
-  QT_VERSION: 5.14.2
+  QT_VERSION: 5.15.0
 
 jobs:
   release:
@@ -97,7 +97,7 @@ jobs:
       with:
         version: '${{ env.QT_VERSION }}'
         host: 'windows'
-        arch: 'win64_msvc2017_64'
+        arch: 'win64_msvc2019_64'
         target: 'desktop'
         dir: '${{ github.workspace }}'
         install-deps: 'true'

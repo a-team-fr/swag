@@ -35,7 +35,7 @@ Frame {
     Flickable {
         contentHeight: content.childrenRect.height + 50
         anchors.fill : parent
-        anchors.bottomMargin: footer.height
+        //anchors.bottomMargin: footer.height
         anchors.margins: 1
         clip:true
 
@@ -100,30 +100,64 @@ Frame {
                         RowLayout{
                             width: parent.width
 
-
-                            FormItem{
-                                title: qsTr("width")
+                            ColumnLayout{
                                 Layout.fillWidth: true
-                                text: target.width.toFixed(0)
-                                onEditingFinished: target.setWidth( Number(text) )
-                                textField.validator: IntValidator{}
+                                FormItem{
+                                    title: qsTr("width")
+                                    Layout.fillWidth: true
+                                    text: target.width.toFixed(0)
+                                    onEditingFinished: target.setWidth( Number(text) )
+                                    textField.validator: IntValidator{}
+                                }
+                                FormItem{
+                                    title: qsTr("height")
+                                    Layout.fillWidth: true
+                                    text: target.height.toFixed(0)
+                                    onEditingFinished: target.setHeight( Number(text) )
+                                    textField.validator: IntValidator{}
+                                }
                             }
-                            FormItem{
-                                title: qsTr("height")
-                                Layout.fillWidth: true
-                                text: target.height.toFixed(0)
-                                onEditingFinished: target.setHeight( Number(text) )
-                                textField.validator: IntValidator{}
+
+                            Dial{
+                                from : -180
+                                to:180
+                                value : target ? target.rotation : 0
+                                onMoved:target.rotation = value
+                                Label{
+                                    anchors.centerIn:parent
+                                    text: target ? target.rotation.toFixed(1) : 0
+                                    MouseArea{
+                                        anchors.fill:parent
+                                        onClicked: target.rotation = 0;
+                                    }
+                                }
                             }
 
 
-                            FormItem{
-                                title: qsTr("rotation")
-                                Layout.fillWidth: true
-                                text: target ? target.rotation.toFixed(1) : 0
-                                onEditingFinished: target.rotation = Number(text)
-                                textField.validator: DoubleValidator{}
+
+
+//                            FormItem{
+//                                title: qsTr("rotation")
+//                                Layout.fillWidth: true
+//                                text: target ? target.rotation.toFixed(1) : 0
+//                                onEditingFinished: target.rotation = Number(text)
+//                                textField.validator: DoubleValidator{}
+//                            }
+                        }
+
+                        FormItem{
+                            title: qsTr("opacity")
+                            Layout.fillWidth: true
+                            extraContent: Component{
+                                Slider{
+                                    from : 0; to : 1
+                                    value : target ? target.opacity : 0
+                                    onValueChanged: target.opacity = value
+
+                                }
                             }
+
+
                         }
 
                         //DEACTIVATED FOR NOW
@@ -152,42 +186,42 @@ Frame {
         }
     }
 
-    RowLayout{
-        id:footer
-        width:parent.width
-        height : childrenRect.height
-        anchors.bottom: parent.bottom
-        spacing : 3
+//    RowLayout{
+//        id:footer
+//        width:parent.width
+//        height : childrenRect.height
+//        anchors.bottom: parent.bottom
+//        spacing : 3
 
-        FAButton{
-            //decorate:false
-            icon:MaterialIcons.crop
-            ToolTip.text: qsTr("Resize and reposition")
-            ToolTip.visible : hovered
-            onClicked: NavMan.elementItemToPosition = target
+//        FAButton{
+//            //decorate:false
+//            icon:MaterialIcons.crop
+//            ToolTip.text: qsTr("Resize and reposition")
+//            ToolTip.visible : hovered
+//            onClicked: NavMan.elementItemToPosition = target
 
-        }
+//        }
 
-        FAButton{
-            //decorate:false
-            icon:MaterialIcons.save
-            ToolTip.text: qsTr("save slide")
-            ToolTip.visible : hovered
-            onClicked: NavMan.actionSaveSlide()
-        }
+//        FAButton{
+//            //decorate:false
+//            icon:MaterialIcons.save
+//            ToolTip.text: qsTr("save slide")
+//            ToolTip.visible : hovered
+//            onClicked: NavMan.actionSaveSlide()
+//        }
 
-        FAButton{
-            icon:MaterialIcons.remove
-            color:"red"
-            ToolTip.text: qsTr("Remove element")
-            ToolTip.visible : hovered
-            onClicked: {
-                target.destroy()
-                NavMan.actionReloadSlide(false);
-            }
+//        FAButton{
+//            icon:MaterialIcons.remove
+//            color:"red"
+//            ToolTip.text: qsTr("Remove element")
+//            ToolTip.visible : hovered
+//            onClicked: {
+//                target.destroy()
+//                NavMan.actionReloadSlide(false);
+//            }
 
-        }
-    }
+//        }
+//    }
 
 
 

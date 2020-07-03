@@ -22,6 +22,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.3
+import MaterialIcons 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
 
@@ -66,6 +67,7 @@ Control{
     property string elementType : "Element"
     property var dumpedProperties:[ {"name":"navigationFocus","default":false},
         {"name":"idAsAString","default":""},
+        {"name":"opacity","default":1},
         {"name":"xRel","default":0},
         {"name":"yRel","default":0},
         {"name":"widthRel","default":0},
@@ -163,6 +165,20 @@ Control{
                     font.pixelSize : 10
                     visible : parent.pressed
                 }
+            }
+
+        }
+        FAButton{
+            x:root.width - width;
+            icon:MaterialIcons.icondelete
+            color:"red"
+            decorate:false
+            //backgroundColor: "red"//NavMan.settings.materialAccent
+            ToolTip.text: qsTr("Remove element")
+            ToolTip.visible : hovered
+            onClicked: {
+                root.destroy()
+                NavMan.actionReloadSlide(false);
             }
 
         }

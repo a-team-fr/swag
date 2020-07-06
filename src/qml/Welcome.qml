@@ -115,7 +115,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
             }
             AnimatedImage{
                 id:animation
-                source:"file:///Users/charby/Documents/Git/swag/res/wh.gif"
+                source:pm.installPath + "/res/wh.gif"
                 anchors.centerIn: parent
                 width:Math.min(leftFrame.width, leftFrame.height) ; height: width
                 fillMode :Image.PreserveAspectFit

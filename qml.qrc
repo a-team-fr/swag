@@ -8,5 +8,6 @@
         <file>res/qt.png</file>
         <file>res/SwagLogo.iconset/icon1024.png</file>
         <file>res/logo.png</file>
+        <file>res/wh.gif</file>
     </qresource>
 </RCC>

@@ -21,14 +21,14 @@
     </message>
     <message>
         <source>sWag has been designed using these great software :</source>
-        <translation>swag a été conçu en utilisant ces excellents logiciels</translation>
+        <translation>swag a été conçu en utilisant ces excellents logiciels :</translation>
     </message>
 </context>
 <context>
     <name>ButtonElement</name>
     <message>
         <source>onClicked:</source>
-        <translation type="unfinished"></translation>
+        <translation>action :</translation>
     </message>
     <message>
         <source>text</source>
@@ -107,6 +107,29 @@
     </message>
 </context>
 <context>
+    <name>ColorPicker</name>
+    <message>
+        <source>Color picker</source>
+        <translation>Sélecteur de couleur</translation>
+    </message>
+    <message>
+        <source>List</source>
+        <translation>Liste</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personnalisé</translation>
+    </message>
+    <message>
+        <source>color group :</source>
+        <translation>Groupe de couleur :</translation>
+    </message>
+    <message>
+        <source>Resulting color</source>
+        <translation>Résultat</translation>
+    </message>
+</context>
+<context>
     <name>DataElement</name>
     <message>
         <source>Fields</source>
@@ -122,7 +145,7 @@
     </message>
     <message>
         <source>ComboBoxOption</source>
-        <translation type="unfinished"></translation>
+        <translation>Liste de choix</translation>
     </message>
     <message>
         <source>Give this option a label</source>
@@ -138,7 +161,7 @@
     </message>
     <message>
         <source>Current row :</source>
-        <translation>ligne actuelle</translation>
+        <translation>ligne actuelle :</translation>
     </message>
     <message>
         <source>Create Element</source>
@@ -172,53 +195,65 @@
     <name>ElementEditor</name>
     <message>
         <source>Id</source>
-        <translation type="unfinished"></translation>
+        <translation>Id</translation>
     </message>
     <message>
         <source>z</source>
-        <translation type="unfinished"></translation>
+        <translation>z</translation>
     </message>
     <message>
         <source>rotation</source>
-        <translation>rotaion</translation>
+        <translation>rotation</translation>
     </message>
     <message>
         <source>navigationFocus</source>
-        <translation>focus de navigation</translation>
+        <translation type="vanished">focus de navigation</translation>
     </message>
     <message>
         <source>Basic properties</source>
-        <translation>propriétés basiques</translation>
+        <translation type="vanished">propriétés basiques</translation>
     </message>
     <message>
         <source>Resize and reposition</source>
-        <translation>redimentionner et repositionner</translation>
+        <translation>redimensionner et repositionner</translation>
     </message>
     <message>
         <source>save slide</source>
-        <translation>sauvegarder la diapositive</translation>
+        <translation>sauvegarder</translation>
     </message>
     <message>
         <source>Remove element</source>
-        <translation>supprimer l&apos;élément</translation>
+        <translation>Supprimer l&apos;élément</translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation>x</translation>
+    </message>
+    <message>
+        <source>y</source>
+        <translation>y</translation>
+    </message>
+    <message>
+        <source>width</source>
+        <translation>largeur</translation>
+    </message>
+    <message>
+        <source>height</source>
+        <translation>hauteur</translation>
     </message>
 </context>
 <context>
     <name>Entity3DElement</name>
     <message>
-        <source>Entity3dElement disabled (known issues reported), you can override from the settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>meshPath</source>
-        <translation type="unfinished"></translation>
+        <translation>source</translation>
     </message>
 </context>
 <context>
     <name>FileTransfertView</name>
     <message>
         <source>transfered : %1 kb</source>
-        <translation type="unfinished"></translation>
+        <translation>transféré : %1 kb</translation>
     </message>
 </context>
 <context>
@@ -240,11 +275,11 @@
     <name>FlipableElement</name>
     <message>
         <source>front text</source>
-        <translation>texte avant</translation>
+        <translation>texte recto</translation>
     </message>
     <message>
         <source>back text</source>
-        <translation>texte arrière</translation>
+        <translation>texte verso</translation>
     </message>
     <message>
         <source>clickable</source>
@@ -252,42 +287,49 @@
     </message>
     <message>
         <source>frontLayout</source>
-        <translation>disposition avant</translation>
+        <translation>disposition recto</translation>
     </message>
     <message>
         <source>frontText</source>
-        <translation>texte avant</translation>
+        <translation>texte recto</translation>
     </message>
     <message>
         <source>frontImage</source>
-        <translation>image avant</translation>
+        <translation>image recto</translation>
     </message>
     <message>
         <source>frontTextFill</source>
-        <translation type="unfinished"></translation>
+        <translation>Remplir image recto</translation>
     </message>
     <message>
         <source>backLayout</source>
-        <translation type="unfinished"></translation>
+        <translation>disposition verso</translation>
     </message>
     <message>
         <source>backText</source>
-        <translation type="unfinished"></translation>
+        <translation>texte verso</translation>
     </message>
     <message>
         <source>backImage</source>
-        <translation type="unfinished"></translation>
+        <translation>image verso</translation>
     </message>
     <message>
         <source>backTextFill</source>
-        <translation type="unfinished"></translation>
+        <translation>remplir image verso</translation>
     </message>
 </context>
 <context>
-    <name>Footer</name>
+    <name>FormItem</name>
     <message>
-        <source> ( GPLv3 licensed )</source>
-        <translation type="unfinished"></translation>
+        <source>All (*.*)</source>
+        <translation>Tous (*.*)</translation>
+    </message>
+</context>
+<context>
+    <name>IconPicker</name>
+    <message>
+        <source>Icon picker</source>
+        <translation>Sélecteur d&apos;icône</translation>
     </message>
 </context>
 <context>
@@ -305,7 +347,7 @@
     <name>InputElement</name>
     <message>
         <source>onEditingFinished:</source>
-        <translation type="unfinished"></translation>
+        <translation>action :</translation>
     </message>
     <message>
         <source>text</source>
@@ -313,11 +355,11 @@
     </message>
     <message>
         <source>placeholder</source>
-        <translation type="unfinished"></translation>
+        <translation>texte par défaut</translation>
     </message>
     <message>
         <source>wrapMode</source>
-        <translation type="unfinished"></translation>
+        <translation>mode</translation>
     </message>
 </context>
 <context>
@@ -336,15 +378,15 @@
     </message>
     <message>
         <source>Edit mode</source>
-        <translation>mode d&apos;édition</translation>
+        <translation type="vanished">mode d&apos;édition</translation>
     </message>
     <message>
         <source>Preview</source>
-        <translation>prévisualisation</translation>
+        <translation type="vanished">prévisualisation</translation>
     </message>
     <message>
         <source>Live presenting</source>
-        <translation>présentation en ligne</translation>
+        <translation>présentation live</translation>
     </message>
     <message>
         <source>Navigator</source>
@@ -352,11 +394,11 @@
     </message>
     <message>
         <source>Deck settings</source>
-        <translation>paramètres de la plateforme</translation>
+        <translation>paramètres du document</translation>
     </message>
     <message>
         <source>Upload</source>
-        <translation>télécharcher</translation>
+        <translation>Transférer</translation>
     </message>
     <message>
         <source>chat</source>
@@ -377,6 +419,14 @@
     <message>
         <source>show profile (%1)</source>
         <translation>montrer le profil (%1)</translation>
+    </message>
+    <message>
+        <source>Edit mode (Ctrl+E)</source>
+        <translation>Mode d&apos;édition (Ctrl+E)</translation>
+    </message>
+    <message>
+        <source>Preview (Ctrl+E)</source>
+        <translation>Visualisation (Ctrl+E)</translation>
     </message>
 </context>
 <context>
@@ -426,11 +476,11 @@
     </message>
     <message>
         <source>Edit</source>
-        <translation>modifier</translation>
+        <translation type="vanished">modifier</translation>
     </message>
     <message>
         <source>New slide</source>
-        <translation>nouvelle diapositive</translation>
+        <translation type="vanished">nouvelle diapositive</translation>
     </message>
     <message>
         <source>PrintPdf</source>
@@ -441,12 +491,8 @@
         <translation>mode d&apos;édition</translation>
     </message>
     <message>
-        <source>Edit deck world</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Show code</source>
-        <translation>montrer le code</translation>
+        <translation type="vanished">montrer le code</translation>
     </message>
     <message>
         <source>View</source>
@@ -458,7 +504,7 @@
     </message>
     <message>
         <source>Deck settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres de la plateforme</translation>
     </message>
     <message>
         <source>Slide settings</source>
@@ -481,15 +527,15 @@
     <name>MapElement</name>
     <message>
         <source>centerLatitude</source>
-        <translation>lattitude du centre</translation>
+        <translation>latitude</translation>
     </message>
     <message>
         <source>centerLongitude</source>
-        <translation>longitude du centre</translation>
+        <translation>longitude</translation>
     </message>
     <message>
         <source>usePositionSource</source>
-        <translation type="unfinished"></translation>
+        <translation>utiliser GPS</translation>
     </message>
     <message>
         <source>zoomLevel</source>
@@ -500,19 +546,34 @@
         <translation>incliner</translation>
     </message>
     <message>
-        <source>pluginName</source>
-        <translation type="unfinished"></translation>
+        <source>activeMapType</source>
+        <translation>type de carte</translation>
+    </message>
+</context>
+<context>
+    <name>Navigator</name>
+    <message>
+        <source>Move slide up</source>
+        <translation>Monter</translation>
     </message>
     <message>
-        <source>activeMapType</source>
-        <translation type="unfinished"></translation>
+        <source>clone</source>
+        <translation>Cloner</translation>
+    </message>
+    <message>
+        <source>Slide settings</source>
+        <translation>paramètres de la diapositive</translation>
+    </message>
+    <message>
+        <source>Move slide down</source>
+        <translation>Descendre</translation>
     </message>
 </context>
 <context>
     <name>Networking</name>
     <message>
         <source>Currently in channel : %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Actuellement sur le canal : %1</translation>
     </message>
     <message>
         <source>Currently connected :</source>
@@ -539,15 +600,15 @@
     <name>PDFElement</name>
     <message>
         <source>pdfPath</source>
-        <translation type="unfinished"></translation>
+        <translation>chemin</translation>
     </message>
     <message>
         <source>permissive</source>
-        <translation type="unfinished"></translation>
+        <translation>permissif</translation>
     </message>
     <message>
         <source>Disable protection on cross domain request (use it only if you are 100% sure of the origin of your document)</source>
-        <translation type="unfinished"></translation>
+        <translation>Désactiver la protection CORS (si l&apos;origine du document est une source sûre)</translation>
     </message>
 </context>
 <context>
@@ -562,51 +623,55 @@
     </message>
     <message>
         <source>Display Mode</source>
-        <translation>mode d&apos;affichage</translation>
+        <translation type="vanished">mode d&apos;affichage</translation>
     </message>
     <message>
         <source>Theme</source>
-        <translation>thème</translation>
+        <translation type="vanished">thème</translation>
     </message>
     <message>
         <source>Accent</source>
-        <translation>accent</translation>
+        <translation type="vanished">accent</translation>
     </message>
     <message>
         <source>Background</source>
-        <translation>arrière plan</translation>
+        <translation type="vanished">arrière plan</translation>
     </message>
     <message>
         <source>Elevation</source>
-        <translation>élévation</translation>
+        <translation type="vanished">élévation</translation>
     </message>
     <message>
         <source>Foreground</source>
-        <translation>premier plan</translation>
+        <translation type="vanished">premier plan</translation>
     </message>
     <message>
         <source>Primary</source>
-        <translation>primaire</translation>
+        <translation type="vanished">primaire</translation>
     </message>
     <message>
         <source>custom code</source>
-        <translation>mode de customisation</translation>
+        <translation type="vanished">mode de customisation</translation>
     </message>
     <message>
         <source>flat color</source>
-        <translation>couleur plate</translation>
+        <translation type="vanished">couleur plate</translation>
     </message>
     <message>
         <source>image</source>
-        <translation>image</translation>
-    </message>
-    <message>
-        <source>Default slide deck settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">image</translation>
     </message>
     <message>
         <source>default text color</source>
         <translation>couleur du texte par défaut</translation>
+    </message>
+    <message>
+        <source>Background image</source>
+        <translation>Image de fond</translation>
+    </message>
+    <message>
+        <source>Background flat color</source>
+        <translation>Couleur de fond</translation>
     </message>
 </context>
 <context>
@@ -649,7 +714,7 @@
     </message>
     <message>
         <source>Backend host</source>
-        <translation type="unfinished"></translation>
+        <translation>Serveur hôte</translation>
     </message>
     <message>
         <source>FTP host</source>
@@ -665,19 +730,19 @@
     </message>
     <message>
         <source>FTP port number</source>
-        <translation type="unfinished"></translation>
+        <translation>numéro de port FTP</translation>
     </message>
     <message>
         <source>local WebSocket server port</source>
-        <translation type="unfinished"></translation>
+        <translation>Numéro de port du server WebSocket local</translation>
     </message>
     <message>
         <source>port number - leave empty for automatic selection</source>
-        <translation type="unfinished"></translation>
+        <translation>numéro de port - auto si vide</translation>
     </message>
     <message>
         <source>WebSocket server running (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Le serveur Websocket est en fonctionnement (%1)</translation>
     </message>
     <message>
         <source>activate WebSocket server</source>
@@ -685,7 +750,7 @@
     </message>
     <message>
         <source>WebSocket server url</source>
-        <translation type="unfinished"></translation>
+        <translation>URL du serveur WebSocket</translation>
     </message>
     <message>
         <source>url of the WebSocket server</source>
@@ -693,7 +758,7 @@
     </message>
     <message>
         <source>WebSocket connected with (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Websocket connecté avec %1</translation>
     </message>
     <message>
         <source>activate WebSocket</source>
@@ -701,7 +766,7 @@
     </message>
     <message>
         <source>You need to be connected to a swag backend to use WebSocket</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous devez être connecté à un serveur Swag pour utiliser les WebSocket</translation>
     </message>
     <message>
         <source>Preferences</source>
@@ -709,11 +774,11 @@
     </message>
     <message>
         <source>Default syntax highlighting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Style par défaut de coloration syntaxique</translation>
     </message>
     <message>
         <source>Theme name</source>
-        <translation>nom du thème</translation>
+        <translation type="vanished">nom du thème</translation>
     </message>
     <message>
         <source>Theme accent</source>
@@ -734,6 +799,58 @@
     <message>
         <source>Theme elevation</source>
         <translation>élévation du thème</translation>
+    </message>
+    <message>
+        <source>Theme name </source>
+        <translation>Nom du thème </translation>
+    </message>
+    <message>
+        <source>Dark mode</source>
+        <translation>Mode sombre</translation>
+    </message>
+    <message>
+        <source>Light mode</source>
+        <translation>Mode clair</translation>
+    </message>
+    <message>
+        <source>Default page ratio</source>
+        <translation>Ratio de page par défaut</translation>
+    </message>
+    <message>
+        <source>16/9 or 9/16</source>
+        <translation>16/9 ou 9/16</translation>
+    </message>
+    <message>
+        <source>3/2 or 2/3</source>
+        <translation>3/2 ou 2/3</translation>
+    </message>
+    <message>
+        <source>5/4 or 4/5</source>
+        <translation>5/4 ou 4/5</translation>
+    </message>
+    <message>
+        <source>4/3 or 3/4</source>
+        <translation>4/3 ou 3/4</translation>
+    </message>
+    <message>
+        <source>7/5 or 5/7</source>
+        <translation>7/5 ou 5/7</translation>
+    </message>
+    <message>
+        <source>square</source>
+        <translation>carré</translation>
+    </message>
+    <message>
+        <source>Default page layout</source>
+        <translation>Format par défaut</translation>
+    </message>
+    <message>
+        <source>Landscape</source>
+        <translation>Paysage</translation>
+    </message>
+    <message>
+        <source>Portrait</source>
+        <translation>Portrait</translation>
     </message>
 </context>
 <context>
@@ -756,15 +873,63 @@
     </message>
     <message>
         <source>width</source>
-        <translation>largeur</translation>
+        <translation type="vanished">largeur</translation>
     </message>
     <message>
         <source>height</source>
-        <translation>hauteur</translation>
+        <translation type="vanished">hauteur</translation>
     </message>
     <message>
         <source>Remove slide</source>
-        <translation>supprimer la diapositive</translation>
+        <translation type="vanished">supprimer la diapositive</translation>
+    </message>
+    <message>
+        <source>Page ratio</source>
+        <translation>Ratio de la page</translation>
+    </message>
+    <message>
+        <source>16/9 or 9/16</source>
+        <translation>16/9 ou 9/16</translation>
+    </message>
+    <message>
+        <source>3/2 or 2/3</source>
+        <translation>3/2 ou 2/3</translation>
+    </message>
+    <message>
+        <source>5/4 or 4/5</source>
+        <translation>5/4 ou 4/5</translation>
+    </message>
+    <message>
+        <source>4/3 or 3/4</source>
+        <translation>4/3 ou 3/4</translation>
+    </message>
+    <message>
+        <source>7/5 or 5/7</source>
+        <translation>7/5 ou 5/7</translation>
+    </message>
+    <message>
+        <source>square</source>
+        <translation>carré</translation>
+    </message>
+    <message>
+        <source>Page layout</source>
+        <translation>Format de la page</translation>
+    </message>
+    <message>
+        <source>Landscape</source>
+        <translation>Paysage</translation>
+    </message>
+    <message>
+        <source>Portrait</source>
+        <translation>Portrait</translation>
+    </message>
+    <message>
+        <source>Save slide settings</source>
+        <translation>Enregistrer les paramètres</translation>
+    </message>
+    <message>
+        <source>Delete slide</source>
+        <translation>Supprimer la diapositive</translation>
     </message>
 </context>
 <context>
@@ -790,7 +955,7 @@
     </message>
     <message>
         <source>fontPointSize</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille</translation>
     </message>
     <message>
         <source>color</source>
@@ -806,15 +971,15 @@
     </message>
     <message>
         <source>horizontalAlignment</source>
-        <translation>alignement horizontal</translation>
+        <translation type="vanished">alignement horizontal</translation>
     </message>
     <message>
         <source>verticalAlignment</source>
-        <translation>alignement vertical</translation>
+        <translation type="vanished">alignement vertical</translation>
     </message>
     <message>
         <source>fontSizeMode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode de dimensionnement</translation>
     </message>
     <message>
         <source>textFormat</source>
@@ -822,7 +987,7 @@
     </message>
     <message>
         <source>font</source>
-        <translation type="unfinished"></translation>
+        <translation>police</translation>
     </message>
     <message>
         <source>bold</source>
@@ -850,7 +1015,7 @@
     </message>
     <message>
         <source>style color</source>
-        <translation>type de couleur</translation>
+        <translation type="vanished">type de couleur</translation>
     </message>
     <message>
         <source>capitalization</source>
@@ -858,7 +1023,7 @@
     </message>
     <message>
         <source>Background</source>
-        <translation>arrière plan</translation>
+        <translation type="vanished">arrière plan</translation>
     </message>
     <message>
         <source>border color</source>
@@ -868,12 +1033,44 @@
         <source>border width</source>
         <translation>largeur des bordures</translation>
     </message>
+    <message>
+        <source>Left horizontal alignment</source>
+        <translation>Aligné à gauche</translation>
+    </message>
+    <message>
+        <source>Center horizontal alignment</source>
+        <translation>Aligné au milieu</translation>
+    </message>
+    <message>
+        <source>Right horizontal alignment</source>
+        <translation>Aligné à droite</translation>
+    </message>
+    <message>
+        <source>Justify horizontal alignment</source>
+        <translation>Justifié</translation>
+    </message>
+    <message>
+        <source>Top vertical alignment</source>
+        <translation>Aligné en haut</translation>
+    </message>
+    <message>
+        <source>Center vertical alignment</source>
+        <translation>Aligné au milieu</translation>
+    </message>
+    <message>
+        <source>Bottom vertical alignment</source>
+        <translation>Aligné à droite</translation>
+    </message>
+    <message>
+        <source>styleColor</source>
+        <translation>Couleur du style</translation>
+    </message>
 </context>
 <context>
     <name>TextFieldDelegate</name>
     <message>
         <source>fill in %1</source>
-        <translation type="unfinished"></translation>
+        <translation>remplir à %1</translation>
     </message>
 </context>
 <context>
@@ -932,7 +1129,7 @@
     </message>
     <message>
         <source>Add a Dataviz element</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un élément Dataviz</translation>
     </message>
     <message>
         <source>Add a Video element</source>
@@ -940,14 +1137,14 @@
     </message>
     <message>
         <source>Add a Table of Content element</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter une table des matières</translation>
     </message>
 </context>
 <context>
     <name>UploadPanel</name>
     <message>
         <source>Please choose the files you want to publish</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner les fichiers à publier</translation>
     </message>
     <message>
         <source>Your playground alias</source>
@@ -974,153 +1171,140 @@
     <name>VideoElement</name>
     <message>
         <source>useCamera</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser la caméra</translation>
     </message>
     <message>
         <source>Video source</source>
-        <translation type="unfinished"></translation>
+        <translation>Source de la vidéo</translation>
     </message>
     <message>
         <source>fillMode</source>
-        <translation type="unfinished"></translation>
+        <translation>mode de remplissage</translation>
     </message>
     <message>
         <source>flushMode</source>
-        <translation type="unfinished"></translation>
+        <translation>Mode de flush</translation>
     </message>
 </context>
 <context>
     <name>WPConnect</name>
     <message>
         <source>Sign in</source>
-        <translation type="unfinished"></translation>
+        <translation>Se connecter</translation>
     </message>
     <message>
         <source>Register</source>
-        <translation type="unfinished"></translation>
+        <translation>S&apos;enregistrer</translation>
     </message>
     <message>
         <source>User name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nom d&apos;utilisateur</translation>
     </message>
     <message>
         <source>fill in here your username</source>
-        <translation type="unfinished"></translation>
+        <translation>saisir votre nom d&apos;utilisateur</translation>
     </message>
     <message>
         <source>Email</source>
-        <translation type="unfinished"></translation>
+        <translation>e-mail</translation>
     </message>
     <message>
         <source>fill in here your contact email</source>
-        <translation type="unfinished"></translation>
+        <translation>saisir votre adresse email</translation>
     </message>
     <message>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>mot de passe</translation>
     </message>
     <message>
         <source>fill in here your password</source>
-        <translation type="unfinished"></translation>
+        <translation>saisir votre mot de passe</translation>
     </message>
     <message>
         <source>Confirm password</source>
-        <translation type="unfinished"></translation>
+        <translation>confirmer le mot de passe</translation>
     </message>
     <message>
         <source>confirm password</source>
-        <translation type="unfinished"></translation>
+        <translation>confirmer le mot de passe</translation>
     </message>
     <message>
         <source>password are not identical</source>
-        <translation type="unfinished"></translation>
+        <translation>les mots de passes ne sont pas identiques</translation>
     </message>
     <message>
         <source>Remember me</source>
-        <translation type="unfinished"></translation>
+        <translation>Se souvenir de moi</translation>
     </message>
     <message>
         <source>OpenSSL v.%1 is required (installed version is %2)</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenSSL v.%1 est nécessaire (la version actuelle est %2)</translation>
     </message>
     <message>
         <source>Reset password</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialiser le mot de passe</translation>
     </message>
     <message>
         <source>Send a reset link to the registered email</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer un lien de réinitialisation par email</translation>
     </message>
     <message>
         <source>Log in</source>
-        <translation type="unfinished"></translation>
+        <translation>Connection</translation>
     </message>
     <message>
         <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Connecté en tant que %1</translation>
     </message>
 </context>
 <context>
     <name>WPProfile</name>
     <message>
         <source>username</source>
-        <translation type="unfinished"></translation>
+        <translation>nom d&apos;utilisateur</translation>
     </message>
     <message>
         <source>email</source>
-        <translation type="unfinished"></translation>
+        <translation>email</translation>
     </message>
     <message>
         <source>registered</source>
-        <translation type="unfinished"></translation>
+        <translation>enregistré</translation>
     </message>
     <message>
         <source>displayname</source>
-        <translation type="unfinished"></translation>
+        <translation>nom affiché</translation>
     </message>
     <message>
         <source>firstname</source>
-        <translation type="unfinished"></translation>
+        <translation>prénom</translation>
     </message>
     <message>
         <source>lastname</source>
-        <translation type="unfinished"></translation>
+        <translation>nom de famille</translation>
     </message>
     <message>
         <source>nicename</source>
-        <translation type="unfinished"></translation>
+        <translation>surnom</translation>
     </message>
     <message>
         <source>nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>alias</translation>
     </message>
     <message>
         <source>description</source>
-        <translation type="unfinished"></translation>
+        <translation>description</translation>
     </message>
 </context>
 <context>
     <name>WebElement</name>
     <message>
         <source>url</source>
-        <translation type="unfinished"></translation>
+        <translation>url</translation>
     </message>
 </context>
 <context>
     <name>Welcome</name>
-    <message>
-        <source>&lt;img src=&apos;https://user-images.githubusercontent.com/9682519/78088227-cfc78d80-73c3-11ea-82ae-b3f91b1375dd.png&apos; width=&apos;50%&apos;/&gt;
-
-# Swag is an effort to easily create a presentation with QML
-
-sWag provides a set of dynamic elements :
-* Basic items : rectangle, text or image, buttons
-* Media : Video or Camera, Maps
-* Display : charts, dataviz
-
-But sWag is basically interpreting QML file so you can program whatever you like...</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source># How it works ?
 From the welcome page, one can either create a new swag or open and existing one.
@@ -1161,57 +1345,89 @@ One can find an example of using these elements with the &quot;Gallery&quot; swa
     </message>
     <message>
         <source>Register or login</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrement ou connexion</translation>
     </message>
     <message>
         <source>Create a new Swag</source>
-        <translation type="unfinished"></translation>
+        <translation>Créer un nouveau document Swag</translation>
     </message>
     <message>
         <source>Open gallery example</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir le projet d&apos;example</translation>
     </message>
     <message>
         <source>Follow a live Swag :</source>
-        <translation type="unfinished"></translation>
+        <translation>Suivre un live Swag :</translation>
     </message>
     <message>
         <source>Follow</source>
-        <translation type="unfinished"></translation>
+        <translation>Suivre</translation>
     </message>
     <message>
         <source>Leave</source>
-        <translation type="unfinished"></translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <source>Recently opened swags </source>
+        <translation>Les documents swags récents </translation>
+    </message>
+    <message>
+        <source>
+# Swag is an effort to easily create a presentation with QML
+
+sWag provides a set of dynamic elements :
+* Basic items : rectangle, text or image, buttons
+* Media : Video or Camera, Maps
+* Display : charts, dataviz
+
+But sWag is basically interpreting QML file so you can program whatever you like...</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>There is currently no live presentation</source>
+        <translation>Il n&apos;y a pas de live Swag actuellement</translation>
+    </message>
+    <message>
+        <source>Theme selection </source>
+        <translation>Sélection du thème </translation>
+    </message>
+    <message>
+        <source>Dark mode</source>
+        <translation>Mode sombre</translation>
+    </message>
+    <message>
+        <source>Light mode</source>
+        <translation>Mode clair</translation>
     </message>
 </context>
 <context>
     <name>main</name>
     <message>
         <source>SwagSoftware (%1%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Swag (%1%2)</translation>
     </message>
     <message>
         <source>Swag</source>
-        <translation type="unfinished"></translation>
+        <translation>Swag</translation>
     </message>
     <message>
         <source>Open a swag document</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir un document Swag</translation>
     </message>
     <message>
         <source>Select a new Swag document name</source>
-        <translation type="unfinished"></translation>
+        <translation>Saisir le nom du nouveau document Swag</translation>
+    </message>
+    <message>
+        <source>Show code</source>
+        <translation>Montrer le code</translation>
     </message>
 </context>
 <context>
     <name>slideViewer</name>
     <message>
         <source>Exporting to pdf slide %1 of %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter en format pdf diapositive %1 sur %2</translation>
     </message>
 </context>
 </TS>

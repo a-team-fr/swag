@@ -19,7 +19,7 @@ New-Item -ItemType File -Path ".\deploy\windows\bin\swag.exe" -Force
 copy-item ".\build\swag.exe" ".\deploy\windows\bin\swag.exe" -Force
 
 echo "******call windeploy"
-& "${qtpath}\msvc2017_64\bin\windeployqt" ".\deploy\windows\bin\swag.exe" -release -qmlimport="$qtpath\msvc2017_64\qml" -qmldir=".\"
+& "${qtpath}\msvc2019_64\bin\windeployqt" ".\deploy\windows\bin\swag.exe" -release -qmlimport="$qtpath\msvc2019_64\qml" -qmldir=".\"
 
 echo "******copy swag needed stuff"
 copy-item .\Swag .\deploy\windows\bin\Swag -Recurse -Force

@@ -78,7 +78,6 @@ Item {
 
     property bool navigationManagedBySlide : (pm.displayType === 3 /*PM.Slide_FlatView*/)
 
-    property var elementItemToPosition : null
     property var elementItemToModify : null
 
     function actionSave()
@@ -130,7 +129,6 @@ Item {
 
     function actionCancel()
     {
-        root.elementItemToPosition = null;
         root.elementItemToModify = null;
         pm.displayType = 0/*PM.Slide*/;
         pm.showDocumentCode =false;

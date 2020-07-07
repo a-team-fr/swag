@@ -93,20 +93,15 @@ Control{
     //onWidthChanged: console.log("new width:"+width)
     height: slideHeight * heightRel
 
-    hoverEnabled: pm.editMode && !NavMan.elementItemToPosition
 
     readonly property bool isMe : root === NavMan.elementItemToModify
 
     property var editorComponent : null
-    Binding{
-        target: contentItem
-        property: "visible"
-        value:!NavMan.elementItemToPosition
-    }
+
 
 
     background:Item{
-        visible:(isMe || root.hovered) && pm.editMode && root.editable || NavMan.elementItemToPosition
+        visible:(isMe || root.hovered) && pm.editMode && root.editable
         enabled:visible
         z:50
         //bounding rect (gives editing focus on click)
@@ -117,7 +112,7 @@ Control{
             radius:10
             color:"transparent"
             MouseArea{
-                enabled: !NavMan.elementItemToPosition
+                //enabled: !NavMan.elementItemToPosition
                 anchors.fill: parent
                 preventStealing: true
                 propagateComposedEvents: true

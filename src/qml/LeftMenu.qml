@@ -55,15 +55,40 @@ Drawer {
             id: toolTip
             visible : parent.hovered && text.length
             x: button.width + height /2 ; y: (button.height - height) / 2
-            background: Rectangle{
-                color:"grey"
-                //TODO : use a canvas for tooltip arrow
-                Rectangle{
-                    color : parent.color
-                    x:-width/2; y:width/2 ; rotation : 45
-                    width : parent.height / 2 ; height : width
+            background: Item{
+                Canvas{
+                    width:parent.width + height/2
+                    height:parent.height
+                    x : -height/2
+                    onPaint: {
+                        var ctx = getContext("2d");
+                        ctx.fillStyle = '#bb888888';
+                        ctx.lineWidth = 2 ;
+                        ctx.strokeStyle = 'white';
+                        ctx.beginPath();
+                        ctx.moveTo(height/2, 0)
+                        ctx.lineTo(width, 0)
+                        ctx.lineTo(width, height)
+                        ctx.lineTo(height/2, height)
+                        ctx.lineTo(0, height/2)
+                        ctx.lineTo(height/2, 0)
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.stroke();
+                        //ctx.fillRect(0, 0, width, height);
+                    }
                 }
             }
+
+//                Rectangle{
+//                    color:"grey"
+//                    //TODO : use a canvas for tooltip arrow
+//                    Rectangle{
+//                        color : parent.color
+//                        x:-width/2; y:width/2 ; rotation : 45
+//                        width : parent.height / 2 ; height : width
+//                    }
+//                }
 
         }
 

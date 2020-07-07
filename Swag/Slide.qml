@@ -131,10 +131,10 @@ Control{
         var component = Qt.createComponent(url);
         var obj = component.createObject(slide);
         //default size and center
-        obj.width = Math.max(obj.width, 300)
-        obj.height = Math.max(obj.height, 100)
-        obj.x = (slide.width-obj.width) / 2;
-        obj.y = (slide.height-obj.height) / 2;
+        obj.setWidth( 300)
+        obj.setHeight( 100)
+        obj.setX( (slide.width-obj.width) / 2);
+        obj.setY( (slide.height-obj.height) / 2);
 
         NavMan.elementItemToModify = obj
     }

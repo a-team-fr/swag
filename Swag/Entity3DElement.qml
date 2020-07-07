@@ -61,16 +61,14 @@ Element {
     }
 
 
-    SlideDumper{
-        id:dump
-    }
-
     function dump3DVector(object,rank, prop)
     {
-        dump.slideDump="";
-        dump.addTabulation( rank);
-        dump.slideDump += prop["name"] + ": Qt.vector3d("+object[prop.name].x+", "+object[prop.name].y+", "+object[prop.name].z+");\n";
-        return dump.slideDump;
+        var slideDump="";
+        for (var i=0; i <rank ;i++)
+            slideDump +="\t";
+
+        slideDump += prop["name"] + ": Qt.vector3d("+object[prop.name].x+", "+object[prop.name].y+", "+object[prop.name].z+");\n";
+        return slideDump;
     }
 
     contentItem: NavMan.settings.loadElement3d ? cmp3d : fallback

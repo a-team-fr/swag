@@ -41,6 +41,7 @@ Frame{
         anchors.margins: 10
         clip:true
         contentHeight: content.childrenRect.height
+
         ColumnLayout{
             id:content
             width: parent.width
@@ -50,7 +51,7 @@ Frame{
                 Layout.fillWidth: true
 
                 text:pm.lstSlides[pm.slideSelected].title
-                onEditingFinished: pm.saveSlideSettings("title", text)
+                onTextEdited: pm.saveSlideSettings("title", text)
 
             }
             RowLayout{
@@ -59,21 +60,21 @@ Frame{
                     title:qsTr("x")
 
                     text:pm.lstSlides[pm.slideSelected].x
-                    onEditingFinished: pm.saveSlideSettings("x", Number(text))
+                    onTextEdited: pm.saveSlideSettings("x", Number(text))
 
                 }
                 FormItem{
                     title:qsTr("y")
 
                     text:pm.lstSlides[pm.slideSelected].y
-                    onEditingFinished: pm.saveSlideSettings("y", Number(text))
+                    onTextEdited: pm.saveSlideSettings("y", Number(text))
 
                 }
                 FormItem{
                     title:qsTr("rotation")
 
                     text:pm.lstSlides[pm.slideSelected].rotation
-                    onEditingFinished: pm.saveSlideSettings("rotation", Number(text))
+                    onTextEdited: pm.saveSlideSettings("rotation", Number(text))
 
                 }
             }
@@ -175,5 +176,6 @@ Frame{
                 }
             }
         }
+
     }
 }

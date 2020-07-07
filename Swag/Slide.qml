@@ -52,9 +52,9 @@ Control{
             y:0
             width : pt2.parent.x + 25
             height : pt2.parent.y + 25
-        border.width:5
-        border.color:"purple"
-        color:"transparent"
+            border.width:5
+            border.color:"purple"
+            color:"transparent"
         }
 
 
@@ -129,13 +129,7 @@ Control{
     function createElement(url)
     {
         var component = Qt.createComponent(url);
-        var obj = component.createObject(slide);
-        //default size and center
-        obj.setWidth( 300)
-        obj.setHeight( 100)
-        obj.setX( (slide.width-obj.width) / 2);
-        obj.setY( (slide.height-obj.height) / 2);
-
+        var obj = component.createObject(slide,{ xRel:0.35, yRel:0.4, widthRel : 0.3, heightRel : 0.2 });
         NavMan.elementItemToModify = obj
     }
 

@@ -35,7 +35,7 @@ Element{
     property alias style : renderer.style
     property alias code : renderer.code
     property alias langage : renderer.langage
-    property alias rendererSource : renderer.rendererSource
+    //property alias rendererSource : renderer.rendererSource
     property alias renderCode : renderer.renderCode
     property alias showEditorPanel :renderer.showEditorPanel
 
@@ -46,7 +46,6 @@ Element{
         dumpedProperties.push( {"name":"style","default":""})
         dumpedProperties.push( {"name":"code","default":""})
         dumpedProperties.push( {"name":"langage","default":""})
-        //dumpedProperties.push( {"name":"rendererSource","default":null})
         dumpedProperties.push( {"name":"renderCode","default":true})
         dumpedProperties.push( {"name":"showEditorPanel","default":""})
     }

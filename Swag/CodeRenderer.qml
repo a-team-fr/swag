@@ -31,7 +31,7 @@ SplitView{
     property alias style : editor.style
     property alias code : editor.code
     property alias langage : editor.langage
-    property alias rendererSource : renderer.source
+    //property alias rendererSource : renderer.source
     property alias rendererComponent : renderer.sourceComponent
     property bool renderCode : true
     property alias showEditorPanel :editor.showEditorPanel
@@ -61,7 +61,7 @@ SplitView{
         SplitView.fillHeight: true
         active : parent.visible
 
-        sourceComponent: coderenderer.rendererSource ? Qt.createComponent(coderenderer.rendererSource) : undefined
+       /// sourceComponent: coderenderer.rendererSource ? Qt.createComponent(coderenderer.rendererSource) : undefined
 
 
         Label{

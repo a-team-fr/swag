@@ -47,8 +47,6 @@ ApplicationWindow {
     Material.primary : NavMan.settings.materialPrimary//pm.loaded ? pm.prezProperties.materialPrimary : NavMan.settings.materialPrimary
     Material.theme : NavMan.settings.materialTheme//pm.loaded ? pm.prezProperties.materialTheme : NavMan.settings.materialTheme
 
-
-    //menuBar:MainMenu{}
     MainMenu{
         onOpenDocument:{
             fileDialog.fileAction = "Open";
@@ -59,8 +57,6 @@ ApplicationWindow {
             fileDialog.open();
         }
     }
-
-
 
     FileDialog{
         id: fileDialog
@@ -80,17 +76,10 @@ ApplicationWindow {
         }
     }
 
-    header:Header{
-        id:toolBar
-        menuOpen: leftMenu.visible
-        onToggleMenu:leftMenu.visible ? leftMenu.close() : leftMenu.open()
-    }
-
     LeftMenu{
         id:leftMenu
         width:60
         height:mainApp.contentItem.height
-        y:toolBar.height
         onOpenDocument:{
             fileDialog.fileAction = "Open";
             fileDialog.open();
@@ -105,7 +94,7 @@ ApplicationWindow {
         id:navigator
         width:Math.min(150, mainApp.contentItem.width * .3)
         height:mainApp.contentItem.height
-        x : leftMenu.width
+        x : leftMenu.visible ? leftMenu.width : 0
         visible : pm.showNavigator && pm.isSlideDisplayed
 
     }
@@ -356,6 +345,9 @@ ApplicationWindow {
         width:mainApp.width
         height:40
         visible:pm.loaded && pm.isSlideDisplayed
+
+        menuToToggle: leftMenu
+        onToggleMenu: leftMenu.visible ? leftMenu.close() : leftMenu.open()
     }
 
 

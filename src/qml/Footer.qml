@@ -34,6 +34,9 @@ Row{
 
     visible:pm.loaded
 
+    signal toggleMenu();
+    property var menuToToggle : null
+
 //    Switch{
 //        text:qsTr("Edit")
 //        checked: pm.editMode
@@ -42,6 +45,19 @@ Row{
 //        height:footer.height
 
 //    }
+    Item{
+        height:parent.height
+        width:footer.menuToToggle ? footer.menuToToggle.width : 0
+        visible : footer.menuToToggle
+        FAButton{
+            icon:( footer.menuToToggle && footer.menuToToggle.visible) ? MaterialIcons.close : MaterialIcons.menu
+            height:parent.height
+            width:height
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: footer.toggleMenu()
+            decorate: false
+        }
+    }
 
     FAButton{
         icon:MaterialIcons.chevron_left

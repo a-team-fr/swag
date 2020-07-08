@@ -370,11 +370,11 @@
     </message>
     <message>
         <source>new document</source>
-        <translation>nouveau document</translation>
+        <translation>Créer un nouveau document swag</translation>
     </message>
     <message>
         <source>open</source>
-        <translation>ouvrir</translation>
+        <translation>ouvrir un document Swag</translation>
     </message>
     <message>
         <source>Edit mode</source>
@@ -386,7 +386,7 @@
     </message>
     <message>
         <source>Live presenting</source>
-        <translation>présentation live</translation>
+        <translation>Présentation live</translation>
     </message>
     <message>
         <source>Navigator</source>
@@ -394,7 +394,7 @@
     </message>
     <message>
         <source>Deck settings</source>
-        <translation>paramètres du document</translation>
+        <translation>paramètres du document Swag</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -402,19 +402,19 @@
     </message>
     <message>
         <source>chat</source>
-        <translation>chat</translation>
+        <translation>Salon de discussion</translation>
     </message>
     <message>
         <source>Swag settings</source>
-        <translation>paramètres Swag</translation>
+        <translation>paramètres de l&apos;application Swag</translation>
     </message>
     <message>
         <source>Sign out</source>
-        <translation>déconnexion</translation>
+        <translation>Se déconnecter</translation>
     </message>
     <message>
         <source>Sign in / register</source>
-        <translation>se connecter / créer un compte</translation>
+        <translation>Se connecter / créer un compte</translation>
     </message>
     <message>
         <source>show profile (%1)</source>
@@ -422,11 +422,11 @@
     </message>
     <message>
         <source>Edit mode (Ctrl+E)</source>
-        <translation>Mode d&apos;édition (Ctrl+E)</translation>
+        <translation>Editer (Ctrl+E)</translation>
     </message>
     <message>
         <source>Preview (Ctrl+E)</source>
-        <translation>Visualisation (Ctrl+E)</translation>
+        <translation>Visualiser (Ctrl+E)</translation>
     </message>
 </context>
 <context>
@@ -452,27 +452,27 @@
     <name>MainMenu</name>
     <message>
         <source>File</source>
-        <translation>dossier</translation>
+        <translation>Fichier</translation>
     </message>
     <message>
         <source>New</source>
-        <translation>nouveau</translation>
+        <translation>Nouveau</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>ouvrir</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation>sauvegarder</translation>
+        <translation>Enregistrer</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>fermer</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <source>Quit</source>
-        <translation>quitter</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -496,7 +496,7 @@
     </message>
     <message>
         <source>View</source>
-        <translation>regarder</translation>
+        <translation>Afficher</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -512,7 +512,7 @@
     </message>
     <message>
         <source>Message</source>
-        <translation>message</translation>
+        <translation>Salons de discussion</translation>
     </message>
     <message>
         <source>?</source>
@@ -1341,7 +1341,9 @@ One can find an example of using these elements with the &quot;Gallery&quot; swa
         <source># Ready ?
 * Open the gallery
 * or create your own sWag !</source>
-        <translation type="unfinished"></translation>
+        <translation># Prêt(e) ?
+* Ouvrez le swag de démo (gallerie)
+* ou commencer à créer votre propre swag !</translation>
     </message>
     <message>
         <source>Register or login</source>
@@ -1349,11 +1351,11 @@ One can find an example of using these elements with the &quot;Gallery&quot; swa
     </message>
     <message>
         <source>Create a new Swag</source>
-        <translation>Créer un nouveau document Swag</translation>
+        <translation>Créer un Swag</translation>
     </message>
     <message>
         <source>Open gallery example</source>
-        <translation>Ouvrir le projet d&apos;example</translation>
+        <translation>Ouvrir le Swag de démo</translation>
     </message>
     <message>
         <source>Follow a live Swag :</source>
@@ -1369,7 +1371,7 @@ One can find an example of using these elements with the &quot;Gallery&quot; swa
     </message>
     <message>
         <source>Recently opened swags </source>
-        <translation>Les documents swags récents </translation>
+        <translation>Les swags récemments ouvert </translation>
     </message>
     <message>
         <source>
@@ -1381,7 +1383,15 @@ sWag provides a set of dynamic elements :
 * Display : charts, dataviz
 
 But sWag is basically interpreting QML file so you can program whatever you like...</source>
-        <translation type="unfinished"></translation>
+        <translation>
+# Swag est un outil de création de présentation en QML
+
+Un document Swag est composé d&apos;un ensemble d&apos;éléments :
+* Des élements de bases comme un rectangle, du texte, une image ...
+* Des élements multimédia comme une video, le flux devotre caméra, une carte
+* ou encore des éléments d&apos;affichage tels que des graphiques, des composants de datavisualisation...
+
+Mais comme Swag est avant tout un interpréteur de code QML, vous pouvez réaliser le document que vous souhaitez...la seule limite est celle de votre imagination...</translation>
     </message>
     <message>
         <source>There is currently no live presentation</source>

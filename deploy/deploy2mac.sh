@@ -20,7 +20,7 @@ cp -Rf ./build/swag.app ./deploy/macos/swag.app
 cp -Rf ./deploy/qt.conf ./deploy/macos/swag.app/Contents/MacOs/qt.conf
 mkdir -p ./deploy/macos/swag.app/Contents/Resources/qml/Swag
 cp -Rf ./Swag ./deploy/macos/swag.app/Contents/Resources/qml
-cp -Rf ./translations ./deploy/macos/swag.app/Contents/
+cp -Rf ./translations ./deploy/macos/swag.app/Contents/MacOs/
 #manual copy of missing qml import (don't know why macdeployqt is not doing it)
 #cp -Rf "$PATH_TO_QT"clang_64/qml/ ./macos/swag.app/Contents/Resources/qml
 

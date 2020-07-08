@@ -30,7 +30,20 @@
 
 int main(int argc, char *argv[])
 {
+
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    /*
+#if defined Q_OS_MACOS
+    QSurfaceFormat surfaceFormat;
+    surfaceFormat.setMajorVersion(4);
+    surfaceFormat.setMinorVersion(3);
+    surfaceFormat.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(surfaceFormat);
+#endif
+    qputenv("QSG_INFO", "1");
+    */
 
     QApplication app(argc, argv);
     app.setOrganizationName("A-Team");
@@ -49,24 +62,27 @@ int main(int argc, char *argv[])
     parser.process(app);
     const QStringList args = parser.positionalArguments();
 
-    PrezManager prezManager;
 
     //----------- TRANSLATOR
+    PrezManager prezManager;
     QTranslator translator;
-    //if (true == translator.load(QLocale(), QLatin1String("swag"), QLatin1String("_"), QLatin1String(":/translations")) ) {
     if (translator.load( QLocale(), QLatin1String("swag"), QLatin1String("_"), prezManager.property("installPath").toString()+"/translations")) {
-        app.installTranslator(&translator);
+            app.installTranslator(&translator);
+            qDebug() << "Translator installed:" << translator.filePath() ;
     } else {
         qDebug() << "Translator couldn't be loaded [Failed]";
         //return 0;
     }
     //----------- TRANSLATOR
+    prezManager.startSwagApp();
 
     if ( (args.count() > 0) && !args[0].isEmpty())
     {
         qInfo() << "opening from command line :" << args[0];
         prezManager.load( args[0] );
     }
+
+
 
     return app.exec();
 }

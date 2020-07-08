@@ -80,13 +80,7 @@ Control{
                 running : false
                 from: 0 ; to:root.width
                 duration:1000
-                onFinished: {
-                    if (root.delayButton)
-                    {
-                    console.log("delay clicked")
-                    root.clicked()
-                    }
-                }
+                onFinished: if (root.delayButton) root.clicked()
             }
 
         }

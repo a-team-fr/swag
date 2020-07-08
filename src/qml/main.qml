@@ -128,26 +128,20 @@ ApplicationWindow {
 
         //Normal view
         Loader{
-            //enabled: (pm.editMode && NavMan.currentSlide)
-            width: NavMan.slideWidth
-            height : NavMan.slideHeight
+            width: pm.isSlideDisplayed ? NavMan.slideWidth : parent.width
+            height : pm.isSlideDisplayed ? NavMan.slideHeight : parent.height
             anchors.centerIn : parent
-            visible : (!pm.editMode && pm.isSlideDisplayed)
+            visible : !renderer.visible
             active : visible
             source : pm.displayUrl
-            enabled : true
-            property int margin : 0
-
-            onItemChanged: {
-                if (visible)
-                    NavMan.currentDocument = item
-            }
+            onItemChanged: if (visible) NavMan.currentDocument = item
 
         }
+
         CodeRenderer{
             id:renderer
             anchors.fill:parent
-            visible : (pm.editMode && pm.isSlideDisplayed)
+            visible : pm.editMode && pm.isSlideDisplayed
             showEditor: pm.showDocumentCode
             style : NavMan.settings.defaultSyntaxHighlightingStyle
             code : pm.readSlideQMLCode( pm.slideSelected)
@@ -163,15 +157,6 @@ ApplicationWindow {
             }
         }
 
-        Loader{
-            anchors.fill : parent
-            //enabled: (pm.editMode && NavMan.currentSlide)
-            visible :!pm.isSlideDisplayed
-            active : visible
-            source: pm.displayUrl
-        }
-
-
         Component{
             id:editModeView
             SplitView{
@@ -182,12 +167,15 @@ ApplicationWindow {
                     color: "#888888"
                     //property bool slideEditing : pm.editMode//(pm.editMode && pm.isSlideDisplayed)
                     //onSlideEditingChanged: fitToPage()
-                    Component.onCompleted: fitToPage()
+                    //Component.onCompleted: fitToPage()
                     function fitToPage()
                     {
                         //incorrect geometry
                         if (world.height === 0 || page.height === 0 || world.width === 0 ||  page.width === 0 )
+                        {
+                            console.log("incorrect geometry : "+world.width + "-" + page.width + "-" +world.height + "-" + page.height)
                             return false;
+                        }
 
                         var margin = 20;
                         // compute scale to adjust page and a margin
@@ -212,10 +200,8 @@ ApplicationWindow {
 
                     Flickable{
                         id:flickable
-                        width:world.width
-                        height:world.height
-                        contentHeight : page.height
-                        contentWidth : page.width + 1 // for some reason +1 is required to get horizontal flicking
+                        width:world.width; height:world.height
+                        contentHeight : page.height; contentWidth : page.width + 1 // for some reason +1 is required to get horizontal flicking
                         clip:true
                         topMargin: page.height * page.scale
                         bottomMargin: page.height * page.scale
@@ -350,10 +336,7 @@ ApplicationWindow {
                     }
                     Component{
                         id:elementToolBox
-                        ToolBox{
-                            //    visible:pm.editMode && NavMan.currentSlide
-                            //    anchors.right: parent.right
-                        }
+                        ToolBox{}
                     }
                 }
 

@@ -163,11 +163,13 @@ Control{
             }
 
         }
+
         FAButton{
             x:root.width - width;
             icon:MaterialIcons.icondelete
             color:"red"
             decorate:false
+            delayButton: true
             //backgroundColor: "red"//NavMan.settings.materialAccent
             ToolTip.text: qsTr("Remove element")
             ToolTip.visible : hovered

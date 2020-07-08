@@ -170,6 +170,7 @@ Frame{
                 iconColor:"red"
                 text:qsTr("Delete slide")
                 enabled : pm.lstSlides.length > 1
+                delayButton: true
                 onClicked: {
                     pm.removeSlide();
                     pm.displayType = PM.Slide;

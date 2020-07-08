@@ -39,6 +39,8 @@ Control{
 
     readonly property bool down : mouseArea.pressed || checked
 
+    property bool delayButton : false
+
     property bool autoFitText : false
 
     property bool toggleButton : false
@@ -55,13 +57,39 @@ Control{
     property bool rounded : false
 
 
-    background: Rectangle {
-        visible:root.decorate
-        color: root.hovered ? root.backgroundHoveredColor : root.backgroundColor
-        opacity: enabled ? 1 : 0.3
-        border.color: root.borderColor
-        border.width: root.borderWidth
-        radius: root.rounded ? root.width / 2 : 2
+    background: Item{
+        Rectangle {
+            visible:root.decorate
+            anchors.fill:parent
+            color: root.hovered ? root.backgroundHoveredColor : root.backgroundColor
+            opacity: enabled ? 1 : 0.3
+            border.color: root.borderColor
+            border.width: root.borderWidth
+            radius: root.rounded ? root.width / 2 : 2
+        }
+
+        Rectangle{
+            color : Material.primaryColor
+            opacity : 0.8
+            height : parent.height
+            //width : parent.width
+            visible : root.delayButton && delayButtonAnimation.running
+
+            NumberAnimation on width {
+                id:delayButtonAnimation
+                running : false
+                from: 0 ; to:root.width
+                duration:1000
+                onFinished: {
+                    if (root.delayButton)
+                    {
+                    console.log("delay clicked")
+                    root.clicked()
+                    }
+                }
+            }
+
+        }
     }
     padding: 3
     horizontalPadding: padding + 2
@@ -121,10 +149,21 @@ Control{
         id:mouseArea
         anchors.fill: parent
         onClicked: {
-            root.clicked()
+            if (!root.delayButton)
+                root.clicked()
+
             if (root.toggleButton)
                 root.checked = !root.checked
         }
+        onPressed: {
+            if (root.delayButton)
+                delayButtonAnimation.start()
+        }
+        onReleased: {
+            if (root.delayButton)
+                delayButtonAnimation.stop()
+        }
+
         onDoubleClicked: root.doubleClicked()
     }
 }

@@ -314,6 +314,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                             decorate: false
                             onClicked : pm.removeLastOpenedFilesEntry(index)
                             icon: MaterialIcons.remove_circle_outline
+                            delayButton: true
                         }
                     }
                 }

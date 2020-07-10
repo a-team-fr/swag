@@ -192,6 +192,13 @@
     </message>
 </context>
 <context>
+    <name>Element</name>
+    <message>
+        <source>Remove element</source>
+        <translation>Supprimer l&apos;élément</translation>
+    </message>
+</context>
+<context>
     <name>ElementEditor</name>
     <message>
         <source>Id</source>
@@ -203,7 +210,7 @@
     </message>
     <message>
         <source>rotation</source>
-        <translation>rotation</translation>
+        <translation type="vanished">rotation</translation>
     </message>
     <message>
         <source>navigationFocus</source>
@@ -215,15 +222,15 @@
     </message>
     <message>
         <source>Resize and reposition</source>
-        <translation>redimensionner et repositionner</translation>
+        <translation type="vanished">redimensionner et repositionner</translation>
     </message>
     <message>
         <source>save slide</source>
-        <translation>sauvegarder</translation>
+        <translation type="vanished">sauvegarder</translation>
     </message>
     <message>
         <source>Remove element</source>
-        <translation>Supprimer l&apos;élément</translation>
+        <translation type="vanished">Supprimer l&apos;élément</translation>
     </message>
     <message>
         <source>x</source>
@@ -241,12 +248,20 @@
         <source>height</source>
         <translation>hauteur</translation>
     </message>
+    <message>
+        <source>opacity</source>
+        <translation>opacité</translation>
+    </message>
 </context>
 <context>
     <name>Entity3DElement</name>
     <message>
         <source>meshPath</source>
         <translation>source</translation>
+    </message>
+    <message>
+        <source>Entity3dElement disabled (known issues reported), you can override from the settings</source>
+        <translation>Elément désactivé (voir les préférences)</translation>
     </message>
 </context>
 <context>

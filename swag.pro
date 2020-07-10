@@ -18,6 +18,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 
 SOURCES += \
         deps/miniz-2.1.0/miniz.c \
+        modalquery.cpp \
         src/networking.cpp \
         src/main.cpp \
         src/pdfexporter.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     deps/miniz-2.1.0/miniz.h \
+    modalquery.h \
     src/networking.h \
     src/pdfexporter.h \
     src/prezmanager.h \

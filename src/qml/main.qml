@@ -20,14 +20,15 @@
 **
 ****************************************************************************/
 import QtQuick 2.12
-import QtQuick.Controls 2.14
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.14
 import QtQuick.Controls.Material 2.14
 import fr.ateam.swag 1.0
 import Swag 1.0
 import MaterialIcons 1.0
-import QtQuick.Dialogs 1.3
+import QtQuick.Dialogs 1.3 as QQD
 import QtGraphicalEffects 1.12
+
 
 ApplicationWindow {
     id: mainApp
@@ -58,7 +59,7 @@ ApplicationWindow {
         }
     }
 
-    FileDialog{
+    QQD.FileDialog{
         id: fileDialog
         visible: false
         nameFilters: [ "Swag document (*.swag)" ]
@@ -332,6 +333,35 @@ ApplicationWindow {
             }
 
         }
+
+    }
+
+    Dialog{
+        id:modalQuery
+        x: 0.5*(mainApp.width - width); y : 0.5*(mainApp.height - height)
+        closePolicy : Popup.NoAutoClose
+        standardButtons: Dialog.Yes | Dialog.No
+        title:"Big question"
+        modal: true
+
+        property string contentText : "Are you in a good mood today ?"
+
+        Label{
+            anchors.fill:parent
+            text : modalQuery.contentText
+        }
+
+        Connections{
+            target:pm.modalQuery
+            function onModalQueryStart(titleText, contentText, buttons){
+                modalQuery.title = titleText;
+                modalQuery.contentText = contentText;
+                modalQuery.standardButtons = buttons;
+                modalQuery.open();
+            }
+        }
+        onAccepted: pm.modalQuery.modalQueryResponse(result)
+        onRejected: pm.modalQuery.modalQueryResponse(result)
 
     }
 

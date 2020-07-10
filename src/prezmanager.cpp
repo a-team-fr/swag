@@ -26,6 +26,7 @@
 #include <QQmlContext>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QMessageBox>
 
 #include "ziputils.hpp"
 
@@ -35,62 +36,104 @@ PrezManager::PrezManager(QObject *parent) : QObject(parent)
 {
     //installPath
 
-    if (m_settings.value("openLastPrezAtStartup").toBool())
-    {
-        m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
-        emit lastOpenedFilesChanged();
 
-        QString pathLastPrezOpened = m_lastOpenedFiles.first();
-        qDebug() << "opened last :" << pathLastPrezOpened;
-        if ( !pathLastPrezOpened.isEmpty() )
-            load( pathLastPrezOpened +".swag");
-    }
 
     m_wp = new Wordprest(this);
     m_net = new WSClient( this);
+    m_pMessageBox = new ModalQuery(this);
 
-    startSwagApp();
+    //startSwagApp();
     m_wp->setHostURI( m_settings.value("swagBackend").toString() );
     setShowNavigator( m_settings.value("showNavigator", true).toBool() );
     connect( m_wp, &Wordprest::loginChanged, this, &PrezManager::loginChanged);
     connect( m_net, &WSClient::channelChanged, this, &PrezManager::documentPositionChanged);
     connect( this, &PrezManager::documentPositionChanged, m_net, &WSClient::notifyDocumentPositionChanged);
 
-    if (m_settings.value("signinAtStartup").toBool())
-        m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
-
-    emit init();
 }
 PrezManager::~PrezManager()
 {
-    if (m_pendingChanges)
-        saveToDisk();
     if (m_loaded)
         unload();
-    delete m_pEngine;
+
+    m_pEngine->deleteLater();
 }
 
 
-
-QDir PrezManager::extractSwag(const QString &localfilePath, bool removeFile) const
+QDir PrezManager::openSwag(const QFileInfo &swagFileToOpen) const
 {
-    QDir extractDir = ZipUtils::unzip(localfilePath);
-    if (removeFile && extractDir != ZipUtils::invalidDir())
+
+    //Check if swag directory already exists
+    bool rebuildSwagFileFromDirectory = false;
+    QDir swagDir = QDir(swagFileToOpen.absolutePath() + QDir::separator() + swagFileToOpen.baseName());
+    if (swagDir.exists())
     {
-        //cleanup no longer needed swag
-        QFile::remove( localfilePath );
+        if (swagFileToOpen.exists())
+        {
+            uint res = m_pMessageBox->messageBox( tr("Found a swag recovery directory, try to recover ?"),
+                                                  tr("Select Yes, to open the recovery directory or No to discard the recovery directory and open the swag normally ?"),
+                                                  QMessageBox::Yes | QMessageBox::No );
+            if (res == QMessageBox::Accepted)
+                rebuildSwagFileFromDirectory = true;
+            else if ( !swagDir.removeRecursively() )
+                qDebug() << "error : couldn't remove existing swag directory";
+        }
+        else {
+            uint res = m_pMessageBox->messageBox( tr("Continue to open Swag ?"),
+                                                  tr("The Swag file does not exist anymore but a recovery folder has been found, would you like to open the document from the recovery data or cancel?"),
+                                                  QMessageBox::Yes | QMessageBox::Cancel );
+            if (res == QMessageBox::Accepted)
+                rebuildSwagFileFromDirectory = true;
+            else {
+                res = m_pMessageBox->messageBox( tr("Would you like to keep the recovery folder ?"),
+                        tr("Select \"Yes\" to keep the folder or \"discard\" to remove it "),
+                        QMessageBox::Yes | QMessageBox::Discard );
+                if (res == QMessageBox::Rejected){
+                    if ( !swagDir.removeRecursively() )
+                        qDebug() << "error : couldn't remove existing swag directory";
+                    return ZipUtils::invalidDir();
+                }
+            }
+        }
     }
-    return extractDir;
+
+    if (rebuildSwagFileFromDirectory)
+    {
+        ZipUtils::zip( swagDir, swagDir.path() + ".swag" );
+        if ( !swagDir.removeRecursively() )
+            qDebug() << "error : couldn't remove existing swag directory";
+    }
+
+    //At this point, we should be in the normal case : swag file exists and the swag directory is not
+    return ZipUtils::unzip( swagFileToOpen.filePath() );
+
 }
 
 
-QString PrezManager::compressSwag(const QString& srcDirectoryPath, bool removeDir) const
+QString PrezManager::closeSwag(const QDir& swagDirToClose)
 {
-    QFileInfo swag = ZipUtils::zip( srcDirectoryPath, srcDirectoryPath + ".swag" );
-    if ( removeDir && ! swag.path().isEmpty() )
+    //TODO : Check if current slide needs to be saved
+    QDir dir = swagDirToClose;
+    if (m_pendingChanges)
+    {
+
+        uint res = m_pMessageBox->messageBox( tr("Keep the changes ?"),
+                                              tr("The swag has been modified. Would you like to save the file or discard the changes"),
+                                              QMessageBox::Yes | QMessageBox::No );
+        if (res == QMessageBox::Accepted)
+            saveToDisk();
+        else {
+            //remove dir
+            dir.removeRecursively();
+            //return original swag file
+            return "";
+        }
+    }
+
+    QFileInfo swag = ZipUtils::zip( swagDirToClose, swagDirToClose.path() + ".swag" );
+    if (!swag.path().isEmpty() )
     {
         //remove no longer needed extracted folder
-        QDir(srcDirectoryPath).removeRecursively();
+        dir.removeRecursively();
     }
     return swag.filePath();
 
@@ -115,6 +158,8 @@ void PrezManager::loginChanged() const{
 
 void PrezManager::startSwagApp()
 {
+    static bool FirstStart = true;
+
     QClearableCacheQmlEngine* pOldEngine = m_pEngine;
     if (pOldEngine)
     {
@@ -149,6 +194,26 @@ void PrezManager::startSwagApp()
     qmlRegisterSingletonType( documentUrl("NavigationSingleton.qml"),"fr.ateam.swag", 1, 0,"NavMan");
 
     m_pEngine->load(documentUrl("main.qml"));
+
+    if (FirstStart)
+    {
+        if (m_settings.value("openLastPrezAtStartup").toBool())
+        {
+            m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
+            emit lastOpenedFilesChanged();
+
+            QString pathLastPrezOpened = m_lastOpenedFiles.first();
+            qDebug() << "opened last :" << pathLastPrezOpened;
+            if ( !pathLastPrezOpened.isEmpty() )
+                load( pathLastPrezOpened +".swag");
+        }
+
+        if (m_settings.value("signinAtStartup").toBool())
+            m_wp->logIn( m_settings.value("lastUserName").toString(), m_settings.value("lastPassword").toString());
+
+        FirstStart = false;
+    }
+
 
     emit init();
 
@@ -303,17 +368,24 @@ QString PrezManager::readSlideQMLCode(int idxSlide) const
     if (-1 == idxSlide) idxSlide = m_selectedSlide;
     if (-1 == idxSlide) return "";
 
-    return readDocument( urlSlide( idxSlide ) );
+    //return cache if available for the current slide
+    if (idxSlide == m_selectedSlide){
+        if ( m_currentSlideQMLCode.isEmpty() )
+            m_currentSlideQMLCode = readFile( urlSlide( idxSlide ) );
+        return m_currentSlideQMLCode;
+    }
+
+    return readFile( urlSlide( idxSlide ) );
 }
 
-QString PrezManager::readDocument(QUrl documentUrl) const
+QString PrezManager::readFile(QUrl documentUrl) const
 {
     if (documentUrl.isEmpty()) return "";
 
-    return readDocument(documentUrl.toLocalFile());
+    return readFile(documentUrl.toLocalFile());
 }
 
-QString PrezManager::readDocument(QString documentPath) const
+QString PrezManager::readFile(QString documentPath) const
 {
     QFile file( documentPath );
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -324,6 +396,23 @@ QString PrezManager::readDocument(QString documentPath) const
 
 void PrezManager::writeSlideDocument(const QString& slideContent)
 {
+    //simple compare is not working as the children order might change
+    QByteArray orig = m_currentSlideQMLCode.simplified().toLatin1();
+    std::sort( orig.begin(), orig.end());
+    QByteArray current = slideContent.simplified().toLatin1();
+    std::sort( current.begin(), current.end());
+    if ( orig == current)
+    {
+        //qDebug() << "nothing to write";
+        return;
+    }
+    else{
+        //qDebug() << m_currentSlideQMLCode.simplified();
+        //qDebug() << slideContent.simplified();
+    }
+
+    //slide has been actually modified, proceed with the changes.
+
     QFile file( urlSlide().toLocalFile() );
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -331,17 +420,12 @@ void PrezManager::writeSlideDocument(const QString& slideContent)
         return;
     }
     file.write(slideContent.toUtf8());
+    m_currentSlideQMLCode = slideContent;
 
     if (!m_pendingChanges)
     {
         m_pendingChanges = true;
         emit pendingChangesChanged();
-    }
-
-    if (m_slideHasBeenEdited && !m_editMode)
-    {
-        m_slideHasBeenEdited = false;
-        emit slideHasBeenEditedChanged();
     }
 }
 
@@ -354,6 +438,7 @@ bool PrezManager::saveToDisk( QString folderPath, QJsonObject obj)
     QFile file( folderPath + "/content.json" );
     QJsonDocument doc;
     doc.setObject(obj);
+
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
               return false;
     file.write( doc.toJson() );
@@ -450,10 +535,7 @@ void PrezManager::unload()
 {
     if (!m_loaded) return;
 
-    if (m_pendingChanges)
-        saveToDisk();
-
-    compressSwag( m_currentSlideDeckPath);
+    closeSwag( m_currentSlideDeckPath);
     m_prezProperties = QJsonObject();
     m_currentSlideDeckPath = QString();
     m_loaded = false;
@@ -463,6 +545,7 @@ void PrezManager::unload()
 
     //Slide is updated as a side effect
     m_selectedSlide = -1;
+    m_currentSlideQMLCode = "";
     emit documentPositionChanged();
     emit slideChanged();
 
@@ -476,17 +559,35 @@ bool PrezManager::uploadPrez()
     //do nothing when no document is opened or the user is not connected
     if (!m_loaded || !m_wp->isLoggedIn()) return false;
 
+    QDir swagDir = m_currentSlideDeckPath;
+    QFileInfo swagFile = swagDir.path() + ".swag";
+    if (m_pendingChanges)
+    {
+        uint res = m_pMessageBox->messageBox( tr("Save the swag before upload ?"),
+                                              tr("The swag has been modified. Select \"yes\" to save the Swag before uploading it or \"no\" to upload its original version"),
+                                              QMessageBox::Yes | QMessageBox::No );
+        if (res == QMessageBox::Accepted)
+        {
+            saveToDisk();
+            ZipUtils::zip( swagDir, swagFile );
+        }
+    }
 
-    QFileInfo swagPath = compressSwag( m_currentSlideDeckPath, false);
 
-    QString uploadSwagName = QString("%1_%2").arg( m_wp->property("userId").toUInt() ).arg( swagPath.fileName() );
-    UploadJob* up = new UploadJob( swagPath.filePath(), uploadSwagName);
+    if (!swagFile.exists())
+    {
+        qDebug() << "File to upload does not exist : " << swagFile.filePath();
+        return false;
+    }
+
+    QString uploadSwagName = QString("%1_%2").arg( m_wp->property("userId").toUInt() ).arg( swagFile.fileName() );
+    UploadJob* up = new UploadJob( swagFile.filePath(), uploadSwagName);
     connect(up, &UploadJob::finish, this, [=](const QUrl& url){
         m_uploadUrl = url;
         emit uploadURLChanged();
-        emit transfertCompleted( swagPath.filePath() );
+        emit transfertCompleted( swagFile.filePath() );
         emit documentPositionChanged();
-        QFile::remove( swagPath.filePath() );
+        //QFile::remove( swagPath.filePath() );
     });
 
     connect(up, &UploadJob::progressed, this, [=](const QString& localfilePath, qint64 percProgress){
@@ -599,6 +700,10 @@ void PrezManager::selectSlide(int slideIdx)
 {
     if ( (slideIdx < 0) || (slideIdx == m_selectedSlide) || (slideIdx >= lstSlides().count() )) return;
     m_selectedSlide = slideIdx ;
+
+    //cache QMLCode of the current slide
+    m_currentSlideQMLCode = "";
+    //m_currentSlideQMLCode = readSlideQMLCode();
 
     emit slideChanged();
     emit documentPositionChanged();
@@ -714,12 +819,6 @@ void PrezManager::setEditMode(bool mode)
     if ( (mode == m_editMode) || m_viewWorldMode)  return;
 
     m_editMode = mode;
-
-    if (m_editMode && !m_slideHasBeenEdited)
-    {
-        m_slideHasBeenEdited = true;
-        emit slideHasBeenEditedChanged();
-    }
 
     emit editModeChanged();
 }
@@ -856,6 +955,8 @@ void PrezManager::removeSlide(int idxSlide)
     saveToDisk();
 
     m_selectedSlide = std::min(m_selectedSlide,slides.count()-1);
+    m_currentSlideQMLCode = "";
+
     emit slidesReordered();
     emit documentPositionChanged();
 
@@ -914,16 +1015,16 @@ void copyPath(QString src, QString dst)
 
 bool PrezManager::loadGalleryDocument()
 {
-    QFile galleryPath( slideDecksFolderPath() + "/gallery.swag");
+    QFileInfo galleryPath( slideDecksFolderPath() + "/gallery.swag");
     //QDir galleryPath( slideDecksFolderPath() + "/Gallery");
     if (!galleryPath.exists())
     {
         //std::filesystem::copy( QString(installPath()+"examples/Gallery").toStdString(), galleryPath.path().toStdString(), std::filesystem::copy_options::recursive);
         //copyPath(installPath()+"/examples/Gallery" , galleryPath.path());
-        QFile::copy(installPath()+"/examples/gallery.swag", slideDecksFolderPath() + "/gallery.swag");
+        QFile::copy(installPath()+"/examples/gallery.swag", galleryPath.filePath() );
     }
     //return load( galleryPath);
-    return loadDirectory( extractSwag(slideDecksFolderPath() + "/gallery.swag") );
+    return loadDirectory( openSwag(galleryPath) );
 }
 
 bool PrezManager::load(const QUrl& url)
@@ -933,14 +1034,14 @@ bool PrezManager::load(const QUrl& url)
 
     QFileInfo file( url.toLocalFile() );
     if ( file.exists() ) {
-        return loadDirectory( extractSwag( file.filePath() ));
+        return loadDirectory( openSwag( file ));
     }
     else{
         //
         QUrl newUrl = QUrl::fromLocalFile(url.path());
         file = newUrl.toLocalFile( );
         if (file.exists())
-            return loadDirectory( extractSwag( file.filePath() ));
+            return loadDirectory( openSwag( file ));
     }
 
     return false;

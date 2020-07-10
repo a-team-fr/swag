@@ -109,8 +109,7 @@ Item {
 
     function actionNext(ForcetoSlide)
     {
-        if (pm.slideHasBeenEdited)
-            actionSaveSlide()
+        actionSaveSlide()
 
         if (root.navigationManagedBySlide)
             sigNext(ForcetoSlide)
@@ -119,8 +118,7 @@ Item {
 
     function actionPrevious(ForcetoSlide)
     {
-        if (pm.slideHasBeenEdited)
-            actionSaveSlide()
+        actionSaveSlide()
 
         if (root.navigationManagedBySlide)
             sigPrevious(ForcetoSlide)

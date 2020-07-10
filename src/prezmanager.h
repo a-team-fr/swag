@@ -37,7 +37,7 @@
 #include "src/qclearablecacheqmlengine.hpp"
 #include "wordprest.h"
 #include "networking.h"
-
+#include "modalquery.h"
 
 /**
  * @brief The PrezManager class (the Swag C++ backend, available in QML engine as "pm")
@@ -49,6 +49,8 @@ class PrezManager : public QObject
 
     Q_PROPERTY(Wordprest* wp MEMBER m_wp NOTIFY init)
     Q_PROPERTY(WSClient* net MEMBER m_net NOTIFY init)
+    Q_PROPERTY(ModalQuery* modalQuery MEMBER m_pMessageBox NOTIFY init)
+
 
     /**
      * @brief root of the installation : default applicationDirectory
@@ -66,7 +68,6 @@ class PrezManager : public QObject
      * @brief pendingChanges is true when the swag document has been (potentially) modified since the last saving
      */
     Q_PROPERTY(bool pendingChanges MEMBER m_pendingChanges NOTIFY pendingChangesChanged)
-    Q_PROPERTY(bool slideHasBeenEdited MEMBER m_slideHasBeenEdited NOTIFY slideHasBeenEditedChanged)
     /**
      * @brief full path to the currently opened swag document
      */
@@ -120,7 +121,6 @@ signals:
     void slidesReordered();
     void installPathChanged();
     void pendingChangesChanged();
-    void slideHasBeenEditedChanged();
     void slideExported();
     void slideDecksFolderPathChanged();
 
@@ -140,16 +140,20 @@ signals:
     void slidePageRatioChanged();
 
 
+
 public slots:
+
     void reload(bool restartApp = false);
     void loginChanged() const;
     /**
-     * @brief readDocument - low level document reading
+     * @brief readFile - low level document reading. It is needed for instance to load styling css by the code element
      * @param documentPath
      * @return file content
      */
-    QString readDocument(QString documentPath) const;
-    QString readDocument(QUrl documentUrl) const;                                           ///overload provided for conveniency
+    QString readFile(QString documentPath) const;
+
+    bool load(const QUrl& url);
+    void unload();
     void writeSlideDocument(const QString&);
 
     /**
@@ -164,8 +168,8 @@ public slots:
      * @param url : file path to the document to open. If empty, the Gallery will be opened
      * @return false in case of error
      */
-    bool load(const QUrl& url);
-    void unload();
+
+
 
     bool uploadPrez();
     bool downloadPrez(const QUrl& url , int slideIdx = -1);
@@ -213,11 +217,10 @@ public slots:
 
 private:
 
-    /**
-     * @brief addDirectoryContentToArchive
-     */
-    QDir extractSwag(const QString& localfilePath, bool removeFile= true) const;
-    QString compressSwag(const QString& srcDirectoryPath, bool removeDir = true) const;
+
+    QString readFile(QUrl documentUrl) const;                                           ///overload provided for conveniency
+
+    mutable QString m_currentSlideQMLCode ="";
 
     QString installPath() const;
     void setInstallPath(QString newPath) ;
@@ -241,6 +244,8 @@ private:
     QString defaultTextColor() const;
 
 
+    QDir openSwag(const QFileInfo& swagFileToOpen) const;
+    QString closeSwag(const QDir& swagDirToClose);
     bool loadDirectory(QDir prezFolder);
     bool m_loaded = false;
     QString m_currentSlideDeckPath = QString();
@@ -274,12 +279,11 @@ private:
 
     Wordprest* m_wp = nullptr;
     WSClient* m_net = nullptr;
+    ModalQuery* m_pMessageBox = nullptr;
 
     QUrl m_uploadUrl;
 
     QStringList m_lastOpenedFiles;
-
-    bool m_slideHasBeenEdited = false;
 
 };
 

@@ -137,7 +137,7 @@ return tmp
         }
     }
 
-    property string css: pm ? pm.readDocument(
+    property string css: pm ? pm.readFile(
                                   pm.installPath + "/deps/hljs/styles/"
                                   + style + ".css") : ""
     color: {

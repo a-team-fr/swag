@@ -79,7 +79,7 @@ Control{
                 id:delayButtonAnimation
                 running : false
                 from: 0 ; to:root.width
-                duration:1000
+                duration:350
                 onFinished: if (root.delayButton) root.clicked()
             }
 

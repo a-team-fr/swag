@@ -28,8 +28,6 @@ import QtPositioning 5.12
 
 Element{
     id:root
-    height : 480
-    width : 640
     property double centerLatitude: 47.096800
     property double centerLongitude: 1.636867
     property alias usePositionSource: positionSource.active

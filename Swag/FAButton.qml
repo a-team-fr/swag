@@ -55,6 +55,7 @@ Control{
     property color backgroundColor : Qt.lighter(Material.backgroundColor,1.5 * (down ? 2 :1))
 
     property bool rounded : false
+    property int defaultRadius : 2
 
 
     background: Item{
@@ -65,7 +66,7 @@ Control{
             opacity: enabled ? 1 : 0.3
             border.color: root.borderColor
             border.width: root.borderWidth
-            radius: root.rounded ? root.width / 2 : 2
+            radius: root.rounded ? root.width / 2 : root.defaultRadius
         }
 
         Rectangle{

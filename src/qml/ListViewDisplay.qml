@@ -33,7 +33,7 @@ ListView{
     highlightRangeMode:ListView.StrictlyEnforceRange
     onCurrentIndexChanged:pm.selectSlide(currentIndex)
     delegate: Loader{
-        onItemChanged : NavMan.currentDocument = item
+        onItemChanged : pm.updateCurrentLoadedItem(item) //NavMan.currentDocument = item
         source: pm.urlSlide( index )
     }
 }

@@ -71,9 +71,9 @@ ApplicationWindow {
 
         onAccepted: {
             if (fileAction == "Open")
-                pm.load( fileUrl )
+                pm.openSwag( fileUrl )
             else if (fileAction == "New")
-                pm.create( fileUrl )
+                pm.createSwag( fileUrl )
         }
     }
 
@@ -124,7 +124,7 @@ ApplicationWindow {
             visible : !renderer.visible
             active : visible
             source : pm.displayUrl
-            onItemChanged: if (visible) NavMan.currentDocument = item
+            onItemChanged: if (visible) pm.updateCurrentLoadedItem(item) //NavMan.currentDocument = item
 
         }
 
@@ -139,10 +139,10 @@ ApplicationWindow {
             renderCode : false
             showSaveButton: true
             onSaveButtonClicked: {
-                pm.writeSlideDocument(renderer.code)
+                pm.saveSlide( renderer.code )
                 renderer.rendererComponent = null
 
-                pm.reload()
+                pm.hotReload()
                 renderer.rendererComponent = editModeView
             }
         }
@@ -219,7 +219,8 @@ ApplicationWindow {
                                 source : pm.displayUrl
                                 onSourceChanged: {
                                     if (pm.prezProperties.displayMode!=="Loader") return;
-                                    NavMan.currentDocument = item
+                                    pm.updateCurrentLoadedItem(item)
+                                    //NavMan.currentDocument = item
                                 }
                             }
 
@@ -267,7 +268,7 @@ ApplicationWindow {
                                 width:height
                                 icon: MaterialIcons.settings
                                 iconColor: NavMan.settings.materialAccent
-                                onClicked: pm.editSlide(pm.slideSelected)
+                                onClicked: pm.editSlideSettings(pm.slideSelected)
                                 decorate:false
                             }
                             FAButton {

@@ -63,13 +63,16 @@ Frame {
                                 //TODO : enforce naming policy
                                 target.idAsAString = text
                                 //save & reload right away to get a proper id
-                                NavMan.actionReloadSlide(true);
+                                pm.saveSlide();
+                                pm.hotReload();
+
                             }
                             showButton:true
                             onConfirmed: {
                                 target.idAsAString = text
                                 //save & reload right away to get a proper id
-                                NavMan.actionReloadSlide(true);
+                                pm.saveSlide();
+                                pm.hotReload();
                             }
                         }
                         RowLayout{
@@ -207,7 +210,7 @@ Frame {
 //            icon:MaterialIcons.save
 //            ToolTip.text: qsTr("save slide")
 //            ToolTip.visible : hovered
-//            onClicked: NavMan.actionSaveSlide()
+//            onClicked: pm.saveSlide();
 //        }
 
 //        FAButton{
@@ -217,7 +220,7 @@ Frame {
 //            ToolTip.visible : hovered
 //            onClicked: {
 //                target.destroy()
-//                NavMan.actionReloadSlide(false);
+//                pm.saveSlide();
 //            }
 
 //        }

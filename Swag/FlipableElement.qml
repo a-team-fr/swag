@@ -68,7 +68,7 @@ Element {
         id:flipable
         clip:true
         front:  Frame{
-            anchors.fill:parent
+            //anchors.fill:parent
             anchors.margins:5
             background:Rectangle{
                 color:"grey"
@@ -99,7 +99,7 @@ Element {
             }
         }
         back:  Frame{
-            anchors.fill:parent
+            //anchors.fill:parent
             anchors.margins:5
             background:Rectangle{
                 color:"grey"

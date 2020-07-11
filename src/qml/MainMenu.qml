@@ -46,11 +46,6 @@ MenuBar {
             onTriggered: menuBar.openDocument()
             shortcut:"Ctrl+O"
         }
-
-        /*MenuItem {
-            text: qsTr("Save current slide")
-            onTriggered: NavMan.saveCurrentSlide()//pm.saveToDisk()
-        }*/
         MenuItem {
             text: qsTr("PrintPdf")
             onTriggered:pm.displayType = PM.SlideExport
@@ -58,7 +53,7 @@ MenuBar {
         }
         MenuItem {
             text: qsTr("Save")
-            onTriggered: NavMan.actionSave()
+            onTriggered: pm.saveSwag()
             enabled:pm.loaded &&  !pm.net.following
 
             shortcut:"Ctrl+S"
@@ -66,7 +61,7 @@ MenuBar {
         }
         MenuItem {
             text: qsTr("Close")
-            onTriggered: pm.unload()
+            onTriggered: pm.closeSwag()
             enabled:pm.loaded &&  !pm.net.following
             shortcut:"Ctrl+W"
         }

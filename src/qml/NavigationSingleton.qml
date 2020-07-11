@@ -64,13 +64,11 @@ Item {
         property real defaultPageRatio : 16/9
     }
 
-    property var currentDocument : null //the object is either a slide, or prezSettings or slideSettings...
+    //property var currentDocument : null //the object is either a slide, or prezSettings or slideSettings...
         //onCurrentDocumentChanged: console.log("currentDocument:"+currentDocument)
-    readonly property var currentSlide : pm.isSlideDisplayed ? currentDocument : null
+    //readonly property var currentSlide : pm.isSlideDisplayed ? currentDocument : null
         //onCurrentSlideChanged: console.log("currentSlide:"+currentSlide)
 
-    signal sigPrevious(bool ForcetoSlide);
-    signal sigNext(bool ForcetoSlide);
     signal navigationFocusChanged(var item );
 
     //signal rebuildNavigationFocusList( );
@@ -80,50 +78,6 @@ Item {
 
     property var elementItemToModify : null
 
-    function actionSave()
-    {
-        actionSaveSlide();
-        console.log("save swag document..")
-        pm.saveToDisk()
-    }
-    function actionSaveSlide()
-    {
-        if (currentSlide )
-        {
-            console.log("save current slide...")
-            currentSlide.saveDocument( );
-        }
-        else console.log("Fail to save : no current slide!")
-    }
-
-
-    function actionReloadSlide(reloadIfNeeded)
-    {
-        if (currentSlide )
-        {
-            currentSlide.saveDocument( );
-            if (reloadIfNeeded)
-                pm.reload();
-        }
-    }
-
-    function actionNext(ForcetoSlide)
-    {
-        actionSaveSlide()
-
-        if (root.navigationManagedBySlide)
-            sigNext(ForcetoSlide)
-        else pm.nextSlide();
-    }
-
-    function actionPrevious(ForcetoSlide)
-    {
-        actionSaveSlide()
-
-        if (root.navigationManagedBySlide)
-            sigPrevious(ForcetoSlide)
-        else pm.previousSlide();
-    }
 
     function actionCancel()
     {
@@ -141,12 +95,12 @@ Item {
     Shortcut {
         sequence: StandardKey.MoveToPreviousChar
         context: Qt.ApplicationShortcut
-        onActivated: actionPrevious(false)
+        onActivated: pm.previousSlide( false );
     }
     Shortcut {
         sequence: StandardKey.MoveToNextChar
         context: Qt.ApplicationShortcut
-        onActivated: actionNext(false)
+        onActivated: pm.nextSlide( false );
     }
     Shortcut {
         sequence: StandardKey.Cancel
@@ -157,7 +111,7 @@ Item {
     Shortcut {
         sequence: "Ctrl+R"
         context: Qt.ApplicationShortcut
-        onActivated: pm.reload(true);
+        onActivated: pm.hotReload(true);
     }
 
 

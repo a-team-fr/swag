@@ -114,7 +114,7 @@ Drawer {
             LeftMenuButton{
                 icon: MaterialIcons.home
                 toolTip.text:qsTr("Home")
-                onClicked: { pm.unload(); pm.displayType = PM.Welcome}
+                onClicked: pm.closeSwag()
                 enabled : !pm.net.following
                 //visible:pm.loaded
             }
@@ -188,7 +188,7 @@ Drawer {
             LeftMenuButton{
                 icon: MaterialIcons.file_upload
                 toolTip.text:qsTr("Upload")
-                onClicked: pm.unload()
+                onClicked: pm.uploadSwag()
                 enabled:pm.loaded
                 visible: pm.loaded
             }

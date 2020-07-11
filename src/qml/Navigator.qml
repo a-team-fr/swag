@@ -170,7 +170,7 @@ Popup {
                                 height: width
                                 enabled: true
                                 onClicked: {
-                                    pm.editSlide(index)
+                                    pm.editSlideSettings(index)
                                     root.close()
                                 }
                                 anchors.verticalCenter: parent.verticalCenter

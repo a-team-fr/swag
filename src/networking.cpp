@@ -551,7 +551,7 @@ void WSClient::notifyDocumentPositionChanged()
 
     //upload document if it is not already done
     if (uploadURL.isEmpty() && !documentName.isEmpty())
-            pSender->uploadPrez();
+            pSender->uploadSwag();
 
     QJsonObject obj;
     obj["docUrl"] = QJsonValue::fromVariant( uploadURL);
@@ -713,9 +713,9 @@ bool WSClient::processMessage(WSClient::WS_ActionsType action, const QJsonValue 
         if (!m_isPresenting){
         docUrl = data["docUrl"].toVariant().toUrl();
         if (docUrl.isEmpty())
-            pm->unload();
+            pm->closeSwag();
         else if (pm->property("uploadURL").toUrl() != docUrl)
-            pm->downloadPrez( docUrl, data["slideIdx"].toInt());
+            pm->downloadSwag( docUrl, data["slideIdx"].toInt());
         else pm->selectSlide( data["slideIdx"].toInt());
 
         }

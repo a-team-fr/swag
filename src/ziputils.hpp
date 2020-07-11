@@ -48,7 +48,7 @@ public:
             archiveFileName = sourceDir.dir().path() + QDir::separator() + sourceDir.fileName() + ".zip";
 
         //remove already existing archive if any
-        QFile::remove( archiveFileName.path() );
+        QFile::remove( archiveFileName.absoluteFilePath() );
 
         //get the list of all files to archive
         QFileInfoList lstFiles = directoryToArchive.entryInfoList( QDir::Filter::Files | QDir::Filter::Readable );

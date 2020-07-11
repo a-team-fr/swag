@@ -52,7 +52,6 @@ Element{
 
     contentItem:CodeRenderer{
         id:renderer
-        anchors.fill:parent
         code : "Text{ text:'Hello world'}"
 
     }

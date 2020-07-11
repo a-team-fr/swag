@@ -61,7 +61,7 @@ Row{
 
     FAButton{
         icon:MaterialIcons.chevron_left
-        onClicked:NavMan.actionPrevious(true)
+        onClicked:pm.previousSlide( true );
         visible :  !pm.net.following
         enabled : pm.slideSelected > 0
         opacity : enabled ? 1 : 0
@@ -70,7 +70,7 @@ Row{
     }
     FAButton{
         icon:MaterialIcons.keyboard_arrow_left
-        onClicked: NavMan.actionPrevious(false)
+        onClicked: pm.previousSlide( false );
         visible : NavMan.navigationManagedBySlide && !pm.viewWorldMode && !pm.net.following
         decorate:false
         height:parent.height
@@ -106,14 +106,14 @@ Row{
     FAButton{
         height:parent.height
         icon:MaterialIcons.keyboard_arrow_right
-        onClicked:NavMan.actionNext(false)
+        onClicked:pm.nextSlide( false );
         visible : NavMan.navigationManagedBySlide  && !pm.viewWorldMode && !pm.net.following
         decorate:false
     }
     FAButton{
         height:parent.height
         icon:MaterialIcons.chevron_right
-        onClicked:NavMan.actionNext(true)
+        onClicked:pm.nextSlide( true );
         visible :  !pm.net.following
         decorate:false
         opacity : enabled ? 1 : 0
@@ -128,7 +128,7 @@ Row{
 //    TextField{
 //        Layout.fillWidth: true
 //        text:pm.loaded ? pm.prezProperties.title : ""
-//        onTextEdited: pm.savePrezSettings("title", pm.prezProperties.title)
+//        onTextEdited: pm.saveSwagSetting("title", pm.prezProperties.title)
 //        visible:pm.editMode
 //    }
 

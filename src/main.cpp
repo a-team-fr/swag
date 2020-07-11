@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     if ( (args.count() > 0) && !args[0].isEmpty())
     {
         qInfo() << "opening from command line :" << args[0];
-        prezManager.load( args[0] );
+        prezManager.openSwag( QUrl(  args[0] ) );
     }
 
 

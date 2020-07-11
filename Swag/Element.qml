@@ -175,7 +175,7 @@ Control{
             ToolTip.visible : hovered
             onClicked: {
                 root.destroy()
-                NavMan.actionReloadSlide(false);
+                pm.saveSlide()
             }
 
         }

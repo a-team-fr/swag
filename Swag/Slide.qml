@@ -88,7 +88,7 @@ Control{
     }
 
 
-    property bool isSelected : slide === NavMan.currentSlide
+    property bool isSelected : slide === pm.currentSlideItem//NavMan.currentSlide
     enabled: isSelected //|| pm.viewWorldMode
     //parent.z : isSelected ? 50 : 0
     //opacity : isSelected ? 1 : 0.7
@@ -121,9 +121,9 @@ Control{
 
     SlideDumper{ id:dumper; target:slide }
 
-    function saveDocument()
+    function qmlCode()
     {
-        dumper.saveDocument();
+        return dumper.qmlCode();
     }
 
     function createElement(url)

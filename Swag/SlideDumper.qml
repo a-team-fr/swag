@@ -27,13 +27,12 @@ QtObject{
     id:root
     property string slideDump : ""
     property var target : null
-    function saveDocument()
+
+    function qmlCode()
     {
-        //create header
         slideDump ="import QtQuick 2.6\nimport QtQuick.Controls 2.12\nimport Swag 1.0\n";
         dumpObject(target, 0)
-        //console.log("slidedump:"+slideDump)
-        pm.writeSlideDocument(slideDump)
+        return slideDump
     }
 
     function addTabulation(rank)

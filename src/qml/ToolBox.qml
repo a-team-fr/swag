@@ -164,7 +164,7 @@ Frame{
                     icon:model.icon
                     width: content.width //(content.width - 2*content.spacing) / 3
                     height : 75//width
-                    onClicked:NavMan.currentSlide.createElement(model.elementType)
+                    onClicked:pm.currentSlideItem.createElement(model.elementType) //NavMan.currentSlide.createElement(model.elementType)
                     hoverEnabled:true
                     //ToolTip.visible: hovered
                     //ToolTip.text: model.tooltip

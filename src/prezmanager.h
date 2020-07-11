@@ -93,6 +93,7 @@ class PrezManager : public QObject
 
     Q_PROPERTY(QStringList lastOpenedFiles MEMBER m_lastOpenedFiles NOTIFY lastOpenedFilesChanged)
 
+    Q_PROPERTY(QQuickItem* currentSlideItem MEMBER m_pCurrentSlideItem NOTIFY currentSlideItemChanged)
 
 public:
     /**
@@ -139,11 +140,14 @@ signals:
 
     void slidePageRatioChanged();
 
+    void currentSlideItemChanged();
 
+    void previousNavigationFocus(bool forceToSlide);
+    void nextNavigationFocus(bool forceToSlide);
 
 public slots:
 
-    void reload(bool restartApp = false);
+    void hotReload(bool restartApp = false);
     void loginChanged() const;
     /**
      * @brief readFile - low level document reading. It is needed for instance to load styling css by the code element
@@ -152,9 +156,21 @@ public slots:
      */
     QString readFile(QString documentPath) const;
 
-    bool load(const QUrl& url);
-    void unload();
-    void writeSlideDocument(const QString&);
+    bool openSwagExample();
+    /**
+     * @brief load a swag (high level document reading)
+     * @param url : file path to the document to open. If empty, the Gallery will be opened
+     * @return false in case of error
+     */
+    bool openSwag(const QUrl& url);
+
+
+    bool createSwag(const QUrl& swagDocumentPath);
+
+    bool saveSwag();
+    bool closeSwag();
+
+
 
     /**
      * @brief startPDFExport (WIP)
@@ -163,19 +179,28 @@ public slots:
     void addSlidePDFExport(QQuickItem* slide);
     void endPDFExport();
 
+
+    bool uploadSwag();
+    bool downloadSwag(const QUrl& url , int slideIdx = -1);
+
+    void updateCurrentLoadedItem(QQuickItem* pCurrentLoadedItem){
+        if ( isSlideDisplayed() &&  m_pCurrentSlideItem!= pCurrentLoadedItem)
+        {
+            m_pCurrentSlideItem = pCurrentLoadedItem;
+            emit currentSlideItemChanged();
+        }
+    }
+
+    void saveSwagSetting(QString key, QVariant value);
+    void saveSlideSetting(QString key, QVariant value);
+
     /**
-     * @brief load a swag (high level document reading)
-     * @param url : file path to the document to open. If empty, the Gallery will be opened
-     * @return false in case of error
+     * @brief saveSlide
+     * get the update qml code of the current slide and compare with the cache to see if the slide needs to be saved on disk
+     * @param code : bypass code to use for saving the slide. If empty, the current slide content will be retrieved
+     * @return true when the slide has actually been modifed - or false if not (use cache version of current slide code to determine when the slide needs to be updated)
      */
-
-
-
-    bool uploadPrez();
-    bool downloadPrez(const QUrl& url , int slideIdx = -1);
-
-    void savePrezSettings(QString key, QVariant value);
-    void saveSlideSettings(QString key, QVariant value);
+    bool saveSlide(const QString& code = "");
 
     QUrl urlSlide(int idxSlide = -1) const;
     QVariantList urlSlides() const;
@@ -187,17 +212,16 @@ public slots:
 
     void changeSlideOrder(int selectedSlide, int newPos);
 
-    void nextSlide(){ selectSlide( m_selectedSlide+1); }
-    void previousSlide(){ selectSlide( m_selectedSlide-1); }
+    void nextSlide( bool ForcetoSlide = true);
+    void previousSlide( bool ForcetoSlide = true);
 
-    void create(const QUrl& swagDocumentPath);
     void createSlide();
     void cloneSlide(int idxSlide = -1);
     void removeSlide(int idxSlide = -1);
-    void editSlide(int idxSlide = -1);
+    void editSlideSettings(int idxSlide = -1);
 
 
-    bool saveToDisk( QString folderPath={}, QJsonObject obj={});
+
 
     /**
      * @brief lookForLocalFile
@@ -216,7 +240,7 @@ public slots:
     void removeLastOpenedFilesEntry( int index);
 
 private:
-
+    bool openSwag(const QFileInfo& file);
 
     QString readFile(QUrl documentUrl) const;                                           ///overload provided for conveniency
 
@@ -244,12 +268,10 @@ private:
     QString defaultTextColor() const;
 
 
-    QDir openSwag(const QFileInfo& swagFileToOpen) const;
-    QString closeSwag(const QDir& swagDirToClose);
-    bool loadDirectory(QDir prezFolder);
+
+
     bool m_loaded = false;
     QString m_currentSlideDeckPath = QString();
-    bool loadGalleryDocument();
 
     QString proposeNewNameAvailable(int retry = 0) const;
 
@@ -284,6 +306,8 @@ private:
     QUrl m_uploadUrl;
 
     QStringList m_lastOpenedFiles;
+
+    QQuickItem* m_pCurrentSlideItem = nullptr;
 
 };
 

@@ -81,7 +81,7 @@ Item{
         height:childrenRect.height
 
         property var currentSlide : repeater.count ? repeater.itemAt(pm.slideSelected).item : null
-        onCurrentSlideChanged: NavMan.currentDocument = currentSlide
+        onCurrentSlideChanged: pm.updateCurrentLoadedItem(currentSlide) //NavMan.currentDocument = currentSlide
 
         FocusNavigator{
             id:focusNav
@@ -97,12 +97,18 @@ Item{
 
         Connections{
             target:NavMan
-            onSigPrevious:focusNav.previous(ForcetoSlide)
-            onSigNext:focusNav.next(ForcetoSlide)
             onViewWorldModeChanged:applyViewWorldMode()
             //onRebuildNavigationFocusList:world.currentSlide.rebuildNavigationFocusList()
             //onTriggerElementPositionner:world.currentSlide.triggerElementPositionner(element)
         }
+        Connections{
+            target:pm
+            function onPreviousNavigationFocus( ForceToSlide) { focusNav.previous(ForcetoSlide) }
+            function onNextNavigationFocus( ForceToSlide) { focusNav.next(ForcetoSlide) }
+        }
+
+
+
 
         transform: focusNav.transform
 
@@ -185,10 +191,10 @@ Item{
                     Dial{
                         from:0
                         to:360
-                        onValueChanged: NavMan.currentSlide.rotation=value
+                        onValueChanged: pm.currentSlideItem.rotation = value //NavMan.currentSlide.rotation=value
                         Label{
                             anchors.centerIn: parent
-                            text:NavMan.currentSlide.rotation ? NavMan.currentSlide.rotation.toPrecision(2)+" °" : ""
+                            text:pm.currentSlideItem.rotation ? pm.currentSlideItem.rotation.toPrecision(2)+" °" : ""
                         }
                     }
                 }
@@ -198,15 +204,15 @@ Item{
                     text:qsTr("Save changes")
                     onClicked: {
                         //FIXME : move to slide properties (needs modifying transformation in FocusNavigator)
-                        pm.saveSlideSettings("x", NavMan.currentSlide.x);
-                        pm.saveSlideSettings("y", NavMan.currentSlide.y);
-                        pm.saveSlideSettings("width", NavMan.currentSlide.width);
-                        pm.saveSlideSettings("height", NavMan.currentSlide.height);
-                        pm.saveSlideSettings("rotation", NavMan.currentSlide.rotation);
+                        pm.saveSlideSetting("x", pm.currentSlideItem.x);
+                        pm.saveSlideSetting("y", pm.currentSlideItem.y);
+                        pm.saveSlideSetting("width", pm.currentSlideItem.width);
+                        pm.saveSlideSetting("height", pm.currentSlideItem.height);
+                        pm.saveSlideSetting("rotation", pm.currentSlideItem.rotation);
 
-                        NavMan.currentSlide.x = 0
-                        NavMan.currentSlide.y = 0
-                        NavMan.currentSlide.rotation = 0
+                        pm.currentSlideItem.x = 0
+                        pm.currentSlideItem.y = 0
+                        pm.currentSlideItem.rotation = 0
                     }
                 }
 
@@ -217,7 +223,8 @@ Item{
                     text:qsTr("Return to normal view")
                     onClicked: {
                         pm.viewWorldMode = false
-                        NavMan.actionReloadSlide(true)
+                        pm.saveSlide();
+                        pm.hotReload();
                     }
                 }
 

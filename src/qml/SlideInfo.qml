@@ -51,7 +51,7 @@ Frame{
                 Layout.fillWidth: true
 
                 text:pm.lstSlides[pm.slideSelected].title
-                onTextEdited: pm.saveSlideSettings("title", text)
+                onTextEdited: pm.saveSlideSetting("title", text)
 
             }
             RowLayout{
@@ -60,21 +60,21 @@ Frame{
                     title:qsTr("x")
 
                     text:pm.lstSlides[pm.slideSelected].x
-                    onTextEdited: pm.saveSlideSettings("x", Number(text))
+                    onTextEdited: pm.saveSlideSetting("x", Number(text))
 
                 }
                 FormItem{
                     title:qsTr("y")
 
                     text:pm.lstSlides[pm.slideSelected].y
-                    onTextEdited: pm.saveSlideSettings("y", Number(text))
+                    onTextEdited: pm.saveSlideSetting("y", Number(text))
 
                 }
                 FormItem{
                     title:qsTr("rotation")
 
                     text:pm.lstSlides[pm.slideSelected].rotation
-                    onTextEdited: pm.saveSlideSettings("rotation", Number(text))
+                    onTextEdited: pm.saveSlideSetting("rotation", Number(text))
 
                 }
             }
@@ -90,42 +90,42 @@ Frame{
                             ToolTip.text:qsTr("16/9 or 9/16")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 16/9 || root.pageRatio === 9/16
-                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 16/9 : 9/16 )
+                            onClicked:pm.saveSlideSetting( "pageRatio", root.isLandscape ? 16/9 : 9/16 )
                         }
                         FAButton{
                             icon: MaterialIcons.crop_3_2
                             ToolTip.text:qsTr("3/2 or 2/3")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 3/2 || root.pageRatio === 2/3
-                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 3/2 : 2/3)
+                            onClicked:pm.saveSlideSetting( "pageRatio", root.isLandscape ? 3/2 : 2/3)
                         }
                         FAButton{
                             icon: MaterialIcons.crop_5_4
                             ToolTip.text:qsTr("5/4 or 4/5")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 5/4 || root.pageRatio === 4/5
-                            onClicked:pm.saveSlideSettings( "pageRatio",  root.isLandscape ? 5/4 : 4/5 )
+                            onClicked:pm.saveSlideSetting( "pageRatio",  root.isLandscape ? 5/4 : 4/5 )
                         }
                         FAButton{
                             icon: MaterialIcons.crop_5_4
                             ToolTip.text:qsTr("4/3 or 3/4")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 4/3 || root.pageRatio === 3/4
-                            onClicked:pm.saveSlideSettings( "pageRatio",  root.isLandscape ? 4/3 : 3/4 )
+                            onClicked:pm.saveSlideSetting( "pageRatio",  root.isLandscape ? 4/3 : 3/4 )
                         }
                         FAButton{
                             icon: MaterialIcons.crop_7_5
                             ToolTip.text:qsTr("7/5 or 5/7")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 7/5 || root.pageRatio === 5/7
-                            onClicked:pm.saveSlideSettings( "pageRatio", root.isLandscape ? 7/5 : 5/7)
+                            onClicked:pm.saveSlideSetting( "pageRatio", root.isLandscape ? 7/5 : 5/7)
                         }
                         FAButton{
                             icon: MaterialIcons.crop_din
                             ToolTip.text:qsTr("square")
                             ToolTip.visible : hovered
                             checked : root.pageRatio === 1
-                            onClicked:pm.saveSlideSettings( "pageRatio", 1.)
+                            onClicked:pm.saveSlideSetting( "pageRatio", 1.)
                         }
                     }}
 
@@ -144,14 +144,14 @@ Frame{
                             ToolTip.text:qsTr("Landscape")
                             ToolTip.visible : hovered
                             checked : root.isLandscape
-                            onClicked: pm.saveSlideSettings( "pageRatio",  1 / root.pageRatio)
+                            onClicked: pm.saveSlideSetting( "pageRatio",  1 / root.pageRatio)
                         }
                         FAButton{
                             icon: MaterialIcons.portrait
                             ToolTip.text:qsTr("Portrait")
                             ToolTip.visible : hovered
                             checked : !root.isLandscape
-                            onClicked: pm.saveSlideSettings( "pageRatio", 1 / root.pageRatio)
+                            onClicked: pm.saveSlideSetting( "pageRatio", 1 / root.pageRatio)
                         }
                     }}
 

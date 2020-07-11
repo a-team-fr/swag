@@ -238,7 +238,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                 color: Material.accent
                 icon : MaterialIcons.create_new_folder
                 text:qsTr("Create a new Swag")
-                onClicked:pm.create("")
+                onClicked:pm.createSwag("")
             }
 
             FAButton{
@@ -249,7 +249,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                 color: Material.accent
                 icon : MaterialIcons.stars
                 text:qsTr("Open gallery example")
-                onClicked:pm.load("")
+                onClicked:pm.openSwagExample()
             }
 
 
@@ -304,7 +304,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                     delegate: ItemDelegate{
                         width : lstLastOpened.width
                         text:modelData.replace(pm.slideDecksFolderPath+'/',"") + ".swag"
-                        onClicked:pm.load(modelData+".swag")
+                        onClicked:pm.openSwag(modelData+".swag")
 
                         FAButton{
                             anchors.right:parent.right

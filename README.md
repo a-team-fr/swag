@@ -8,7 +8,7 @@ Swag is an effort to create a presentation system in QML.
   * [FAQ](https://faq.swagsoftware.net)
   * [chat](https://framateam.org/swagsoftware/)
   
-![SlideThumbnails](https://user-images.githubusercontent.com/9682519/78081707-7bb3ad80-73b1-11ea-9567-9df20ddebe70.png)    
+![SlideThumbnails](https://user-images.githubusercontent.com/9682519/87463597-faa3bd80-c611-11ea-9175-5f7ff86b83bd.png)    
 
 ## Installing from standalone binary packages [![last release](https://img.shields.io/github/v/release/a-team-fr/swag)](https://github.com/a-team-fr/swag/releases/latest)
 

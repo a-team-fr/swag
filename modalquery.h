@@ -23,6 +23,7 @@
 #define MODALQUERY_H
 
 #include <QObject>
+#include <QEventLoop>
 
 class ModalQuery : public QObject
 {
@@ -44,6 +45,8 @@ public slots:
 
 private :
     uint m_modalQueryResult = -1;
+    QEventLoop loop;
+    QMutex mutex;
 };
 
 #endif // MODALQUERY_H

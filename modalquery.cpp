@@ -20,7 +20,7 @@
 **
 ****************************************************************************/
 #include "modalquery.h"
-#include <QEventLoop>
+
 #include <QDebug>
 #include <QMessageBox>
 
@@ -31,10 +31,11 @@ ModalQuery::ModalQuery(QObject *parent) : QObject(parent)
 
 uint ModalQuery::messageBox(QString titleText, QString contentText, uint buttons)
 {
-    QEventLoop loop;
-    connect(this, &ModalQuery::modalQueryEnded, &loop, &QEventLoop::quit);
+    mutex.lock();
+
+    connect(this, &ModalQuery::modalQueryEnded, &loop, &QEventLoop::quit, Qt::DirectConnection);
     emit modalQueryStart( titleText, contentText, buttons);
     loop.exec();
-    qDebug() << "dialog result is :" << m_modalQueryResult;
+    mutex.unlock();
     return m_modalQueryResult;
 }

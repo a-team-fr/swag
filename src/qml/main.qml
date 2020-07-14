@@ -101,7 +101,7 @@ ApplicationWindow {
     }
 
     Item{
-
+        enabled: !modalQuery.visible
         x:leftMenu.position * leftMenu.width +  (navigator.visible ? navigator.width : 0)
         width:parent.width - x //- elementToolBox.width
         height:parent.height
@@ -337,13 +337,16 @@ ApplicationWindow {
 
     }
 
+
     Dialog{
         id:modalQuery
-        x: 0.5*(mainApp.width - width); y : 0.5*(mainApp.height - height)
+        anchors.centerIn:parent
+        //x: 0.5*(mainApp.width - width); y : 0.5*(mainApp.height - height)
         closePolicy : Popup.NoAutoClose
         standardButtons: Dialog.Yes | Dialog.No
         title:"Big question"
         modal: true
+        focus : true
 
         property string contentText : "Are you in a good mood today ?"
 
@@ -359,12 +362,18 @@ ApplicationWindow {
                 modalQuery.contentText = contentText;
                 modalQuery.standardButtons = buttons;
                 modalQuery.open();
+                modalQuery.forceActiveFocus();
             }
         }
-        onAccepted: pm.modalQuery.modalQueryResponse(result)
-        onRejected: pm.modalQuery.modalQueryResponse(result)
+        onClosed: pm.modalQuery.modalQueryResponse(result)
+        onAccepted: close()
+        onRejected: close()
+        onDiscarded: close()
+        onApplied: close()
 
     }
+
+
 
 
     FileTransfertView{

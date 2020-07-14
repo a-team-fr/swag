@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QEventLoop>
+#include <QMutex>
 
 class ModalQuery : public QObject
 {

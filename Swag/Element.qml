@@ -67,6 +67,7 @@ Control{
     property string elementType : "Element"
     property var dumpedProperties:[ {"name":"navigationFocus","default":false},
         {"name":"idAsAString","default":""},
+        {"name":"rotation","default":0},
         {"name":"opacity","default":1},
         {"name":"xRel","default":0},
         {"name":"yRel","default":0},

@@ -198,9 +198,6 @@ void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 
 void PrezManager::previousSlide( bool ForcetoSlide )
 {
-    //ensure current slide does not contains unsaved modification
-    saveSlide();
-
     if (m_displayType == DisplayType::Slide_FlatView)
         emit previousNavigationFocus(ForcetoSlide);
     else
@@ -210,9 +207,6 @@ void PrezManager::previousSlide( bool ForcetoSlide )
 
 void PrezManager::nextSlide(  bool ForcetoSlide )
 {
-    //ensure current slide does not contains unsaved modification
-    saveSlide();
-
     if (m_displayType == DisplayType::Slide_FlatView)
         emit nextNavigationFocus(ForcetoSlide);
     else
@@ -749,6 +743,9 @@ double PrezManager::slidePageRatio(int slideIdx) const
 void PrezManager::selectSlide(int slideIdx)
 {
     if ( (slideIdx < 0) || (slideIdx == m_selectedSlide) || (slideIdx >= lstSlides().count() )) return;
+    //ensure current slide does not contains unsaved modification
+    saveSlide();
+
     m_selectedSlide = slideIdx ;
 
     //cache QMLCode of the current slide

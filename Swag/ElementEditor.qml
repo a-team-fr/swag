@@ -88,7 +88,7 @@ Frame {
                                 title: qsTr("y")
                                 Layout.fillWidth: true
                                 text: target.y.toFixed(0)
-                                onEditingFinished: target.setX( Number(text) )
+                                onEditingFinished: target.setY( Number(text) )
                                 textField.validator: IntValidator{}
                             }
                             FormItem{

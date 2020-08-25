@@ -184,6 +184,7 @@ public slots:
     bool downloadSwag(const QUrl& url , int slideIdx = -1);
 
     void updateCurrentLoadedItem(QQuickItem* pCurrentLoadedItem){
+        m_pCurrentSlideItem = nullptr;
         if ( isSlideDisplayed() &&  m_pCurrentSlideItem!= pCurrentLoadedItem)
         {
             m_pCurrentSlideItem = pCurrentLoadedItem;

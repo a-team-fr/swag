@@ -45,7 +45,7 @@ Frame{
                 title:qsTr("Title")
                 Layout.fillWidth: true
                 text:pm.prezProperties.title
-                onEditingFinished: pm.saveSwagSetting("title", pm.prezProperties.title)
+                onEditingFinished: pm.writeDocumentProperty("title", pm.prezProperties.title)
 
             }
 
@@ -63,7 +63,7 @@ Frame{
             //                  ComboBox{
             //                      width:parent.width
             //                      model: ["Loader", "ListView", "FlatView"]
-            //                      onActivated: pm.saveSwagSetting("displayMode", currentText)
+            //                      onActivated: pm.writeDocumentProperty("displayMode", currentText)
             //                      Component.onCompleted: currentIndex = find(pm.prezProperties.displayMode)
             //                  }
             //              }
@@ -77,13 +77,13 @@ Frame{
                         title:qsTr("Background image")
                         width:parent.width / 2
                         comboBox.model: ["desert-279862_1920.jpg", "desert-790640_1920.jpg", "road-1303617_1920.jpg"]
-                        onActivated: pm.saveSwagSetting("defaultBackground", "import QtQuick 2.14;Image{ source:'qrc:/res/"+comboBox.currentText+"';}")
+                        onActivated: pm.writeDocumentProperty("defaultBackground", "import QtQuick 2.14;Image{ source:'qrc:/res/"+comboBox.currentText+"';}")
                     }
                     FormItem{
                         title:qsTr("Background flat color")
                         width:parent.width / 2
                         showColorSelector: true
-                        onColorPicked: pm.saveSwagSetting("defaultBackground", "import QtQuick 2.14;Rectangle{ color:'"+selectedColor+"';}");
+                        onColorPicked: pm.writeDocumentProperty("defaultBackground", "import QtQuick 2.14;Rectangle{ color:'"+selectedColor+"';}");
                         pickerParent : root
                     }
                 }
@@ -91,7 +91,7 @@ Frame{
                 CodeEditor{
                     width:parent.width
                     style:NavMan.settings.defaultSyntaxHighlightingStyle
-                    onEditingFinish: pm.saveSwagSetting("defaultBackground", code)
+                    onEditingFinish: pm.writeDocumentProperty("defaultBackground", code)
                     code:pm.prezProperties.defaultBackground
                 }
             }

@@ -171,6 +171,32 @@ public slots:
     bool closeSwag();
 
 
+    /**
+     * @brief readDocumentProperty - retrieve the value of property name from the swag document json file
+     * @param propertyName : name of the property to read
+     * @return the property value
+     */
+    QVariant readDocumentProperty(const QString& propertyName ) const;
+    /**
+     * @brief writeDocumentProperty - update value of a property from the swag document json file
+     * @param propertyName : name of the property to update
+     * @param propertyValue : new value
+     * @return true if the property value changed
+     */
+    bool writeDocumentProperty(const QString& propertyName, const QVariant& propertyValue );
+    /**
+     * @brief readSlideProperty - retrieve the value of property name from the current slide
+     * @param propertyName : name of the property to read
+     * @return the property value
+     */
+    QVariant readSlideProperty(const QString& propertyName ) const;
+    /**
+     * @brief writeSlideProperty - update value of a property from the current slide
+     * @param propertyName : name of the property to update
+     * @param propertyValue : new value
+     * @return true if the property value changed
+     */
+    bool writeSlideProperty(const QString& propertyName, const QVariant& propertyValue);
 
     /**
      * @brief startPDFExport (WIP)
@@ -192,8 +218,8 @@ public slots:
         }
     }
 
-    void saveSwagSetting(QString key, QVariant value);
-    void saveSlideSetting(QString key, QVariant value);
+
+
 
     /**
      * @brief saveSlide

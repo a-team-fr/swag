@@ -128,7 +128,7 @@ Row{
 //    TextField{
 //        Layout.fillWidth: true
 //        text:pm.loaded ? pm.prezProperties.title : ""
-//        onTextEdited: pm.saveSwagSetting("title", pm.prezProperties.title)
+//        onTextEdited: pm.writeDocumentProperty("title", pm.prezProperties.title)
 //        visible:pm.editMode
 //    }
 

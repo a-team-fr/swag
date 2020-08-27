@@ -140,38 +140,6 @@ void PrezManager::startSwagApp()
 
 }
 
-void PrezManager::saveSwagSetting(QString key, QVariant value)
-{
-    m_prezProperties.insert(key, QJsonValue::fromVariant( value));
-
-    //Reload
-    emit prezLoaded();
-    emit slideChanged();
-
-    m_pendingChanges = true;
-    emit pendingChangesChanged();
-}
-
-void PrezManager::saveSlideSetting(QString key, QVariant value)
-{
-
-    QJsonArray slides = lstSlides();
-    QJsonObject slide = slides[m_selectedSlide].toObject();
-    slide.insert(key, QJsonValue::fromVariant(value));
-    slides.replace(m_selectedSlide, slide);
-    m_prezProperties.insert("slides", slides);
-
-    //m_showSlideProperty = false;
-    emit slideChanged();
-    emit slidesReordered();
-
-    if (key == "pageRatio" )
-        emit slidePageRatioChanged();
-
-    m_pendingChanges = true;
-    emit pendingChangesChanged();
-}
-
 
 void PrezManager::changeSlideOrder(int selectedSlide, int newPos)
 {
@@ -596,6 +564,61 @@ bool PrezManager::closeSwag()
     emit uploadURLChanged();
     return true;
 
+}
+
+QVariant PrezManager::readDocumentProperty(const QString &propertyName) const
+{
+    return m_prezProperties.value( propertyName );
+
+}
+
+bool PrezManager::writeDocumentProperty(const QString &propertyName, const QVariant &propertyValue)
+{
+    //check if the property needs update
+    if ( m_prezProperties.value(propertyName) == propertyValue) return false;
+
+    m_prezProperties.insert(propertyName, QJsonValue::fromVariant( propertyValue));
+
+    //Reload
+    emit prezLoaded();
+    emit slideChanged();
+
+    m_pendingChanges = true;
+    emit pendingChangesChanged();
+    return true;
+
+}
+
+QVariant PrezManager::readSlideProperty(const QString &propertyName) const
+{
+    QJsonArray slides = lstSlides();
+    if (m_selectedSlide >= slides.count()) return false;
+    QJsonObject slide = slides[m_selectedSlide].toObject();
+    return slide.value( propertyName );
+}
+
+bool PrezManager::writeSlideProperty(const QString& propertyName, const QVariant& propertyValue)
+{
+    QJsonArray slides = lstSlides();
+    if (m_selectedSlide >= slides.count()) return false;
+    QJsonObject slide = slides[m_selectedSlide].toObject();
+
+    //check if the property needs update
+    if ( slide.value(propertyName) == propertyValue) return false;
+
+    slide.insert( propertyName, QJsonValue::fromVariant(propertyValue));
+    slides.replace(m_selectedSlide, slide);
+    m_prezProperties.insert("slides", slides);
+
+    emit slideChanged();
+    emit slidesReordered();
+
+    if ( propertyName == "pageRatio" )
+        emit slidePageRatioChanged();
+
+    m_pendingChanges = true;
+    emit pendingChangesChanged();
+    return true;
 }
 
 bool PrezManager::uploadSwag()

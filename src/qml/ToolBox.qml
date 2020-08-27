@@ -137,7 +137,6 @@ Frame{
         height : 75
         width : parent.width
         text:qsTr("Toolbox")
-        //color: NavMan.settings.materialAccent
         font.pointSize: 50
         minimumPointSize: 1
         fontSizeMode: Text.Fit
@@ -147,7 +146,7 @@ Frame{
     }
 
     Flickable {
-        contentHeight: content.childrenRect.height + 50
+        contentHeight: lstTools.count * 90 //90 :content spacing(15) + item height(75)
         anchors.fill : parent
         anchors.topMargin: header.height
         anchors.margins: 1
@@ -162,12 +161,10 @@ Frame{
                 model:lstTools
                 delegate:FAButton{
                     icon:model.icon
-                    width: content.width //(content.width - 2*content.spacing) / 3
-                    height : 75//width
-                    onClicked:pm.currentSlideItem.createElement(model.elementType) //NavMan.currentSlide.createElement(model.elementType)
+                    width: content.width
+                    height : 75
+                    onClicked:pm.currentSlideItem.createElement(model.elementType)
                     hoverEnabled:true
-                    //ToolTip.visible: hovered
-                    //ToolTip.text: model.tooltip
                     text: model.text
                     defaultRadius : 10
                 }

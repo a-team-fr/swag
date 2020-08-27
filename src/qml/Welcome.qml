@@ -301,6 +301,7 @@ One can find an example of using these elements with the \"Gallery\" swag.")
                     id:lstLastOpened
                     anchors.fill : parent
                     model : pm.lastOpenedFiles
+                    clip:true
                     delegate: ItemDelegate{
                         width : lstLastOpened.width
                         text:modelData.replace(pm.slideDecksFolderPath+'/',"") + ".swag"

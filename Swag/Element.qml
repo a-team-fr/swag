@@ -63,10 +63,12 @@ Control{
 
     //Element properties
     property string idAsAString:""
+    property string onCompletedCode:""
     property bool notToBeSaved : false //Skip during saving (implemented but not used)
     property string elementType : "Element"
     property var dumpedProperties:[ {"name":"navigationFocus","default":false},
         {"name":"idAsAString","default":""},
+        {"name":"onCompletedCode","default":""},
         {"name":"rotation","default":0},
         {"name":"opacity","default":1},
         {"name":"xRel","default":0},
@@ -83,6 +85,8 @@ Control{
     property bool navigationFocus : false
 
 
+
+
     property double xRel : 0
     property double yRel : 0
     property double widthRel : 0
@@ -95,11 +99,19 @@ Control{
     height: slideHeight * heightRel
 
 
+    function doitnow(code){
+        return eval(code);
+    }
+
     readonly property bool isMe : root === NavMan.elementItemToModify
 
     property var editorComponent : null
 
 
+    Component.onCompleted:{
+        if ( onCompletedCode.length > 0)
+            doitnow(onCompletedCode);
+    }
 
     background:Item{
         visible:(isMe || root.hovered) && pm.editMode && root.editable

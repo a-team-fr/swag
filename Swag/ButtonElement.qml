@@ -54,13 +54,13 @@ Element{
     contentItem:FAButton{
         id:button
         text:"Hey, I am a button!"
-        function doitnow(code){
-            return eval(code);
-        }
+//        function doitnow(code){
+//            return eval(code);
+//        }
 
         onClicked: {
             try{
-                doitnow(root.onClicked)
+                root.doitnow(root.onClicked)
                }
             catch(error) {
                 console.log(error)

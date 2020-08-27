@@ -163,6 +163,9 @@ Frame {
 
                         }
 
+
+
+
                         //DEACTIVATED FOR NOW
                         //            SwitchDelegate {
                         //                width: parent.width
@@ -185,6 +188,24 @@ Frame {
                 active : root.target
                 property var target : root.target
                 sourceComponent: root.target ? root.target.editorComponent : null
+            }
+
+            ToolSeparator{ orientation: Qt.Horizontal; width: parent.width; anchors.horizontalCenter : parent.horizontalCenter}
+
+            GroupBox{
+                title:qsTr("Init action")
+                width:parent.width
+                CodeEditor{
+                    langage: "json"
+                    showLineNumber: true
+                    width:parent.width
+                    height:200
+                    code:root.target.onCompletedCode
+                    onEditingFinish: {
+                        root.target.onCompletedCode = code
+                        if (code.length>0) root.target.doitnow(code)
+                    }
+                }
             }
         }
     }

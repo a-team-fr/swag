@@ -204,11 +204,11 @@ Item{
                     text:qsTr("Save changes")
                     onClicked: {
                         //FIXME : move to slide properties (needs modifying transformation in FocusNavigator)
-                        pm.saveSlideSetting("x", pm.currentSlideItem.x);
-                        pm.saveSlideSetting("y", pm.currentSlideItem.y);
-                        pm.saveSlideSetting("width", pm.currentSlideItem.width);
-                        pm.saveSlideSetting("height", pm.currentSlideItem.height);
-                        pm.saveSlideSetting("rotation", pm.currentSlideItem.rotation);
+                        pm.writeSlideProperty("x", pm.currentSlideItem.x);
+                        pm.writeSlideProperty("y", pm.currentSlideItem.y);
+                        pm.writeSlideProperty("width", pm.currentSlideItem.width);
+                        pm.writeSlideProperty("height", pm.currentSlideItem.height);
+                        pm.writeSlideProperty("rotation", pm.currentSlideItem.rotation);
 
                         pm.currentSlideItem.x = 0
                         pm.currentSlideItem.y = 0

@@ -58,7 +58,7 @@ ToolBar{
 //                height:parent.height
 //                visible:pm.editMode && pm.isSlideDisplayed
 //                text: pm.title
-//                onEditingFinished: pm.saveSlideSetting("title", text)
+//                onEditingFinished: pm.writeSlideProperty("title", text)
 //            }
         }
 

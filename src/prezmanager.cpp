@@ -763,6 +763,21 @@ double PrezManager::slidePageRatio(int slideIdx) const
 
 }
 
+void PrezManager::selectSlide(const QString& slideUID)
+{
+    QJsonArray slides = lstSlides();
+    QString slideUrl = slideUID +".qml";
+    int rank = 0;
+    for (QJsonValue slide : slides)
+    {
+        if ( slideUrl == slide.toObject().value("source").toString() )
+            return selectSlide(rank);
+        rank++;
+    }
+    //not a valid uid : try
+    qDebug() << "Error : not a valid slide uid";
+}
+
 void PrezManager::selectSlide(int slideIdx)
 {
     if ( (slideIdx < 0) || (slideIdx == m_selectedSlide) || (slideIdx >= lstSlides().count() )) return;

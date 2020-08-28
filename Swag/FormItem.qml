@@ -127,6 +127,7 @@ Control{
         TextField{
             id:input
             Layout.fillWidth: true
+            selectByMouse: true
             onEditingFinished : root.editingFinished()
             onAccepted: root.editingFinished()
             onTextEdited : root.textEdited()

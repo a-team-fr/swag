@@ -235,6 +235,8 @@ public slots:
     double slidePageRatio(int slideIdx = -1) const;
 
     void selectSlide(int slideIdx);
+    void selectSlide(const QString& slideUID);
+
     QString readSlideQMLCode(int idxSlide = -1) const;
 
     void changeSlideOrder(int selectedSlide, int newPos);

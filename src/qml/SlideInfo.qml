@@ -54,6 +54,13 @@ Frame{
                 onTextEdited: pm.saveSlideSetting("title", text)
 
             }
+            FormItem{
+                title:qsTr("Slide path")
+                Layout.fillWidth: true
+                readOnly: true
+                text:pm.lstSlides[pm.slideSelected].source
+
+            }
             RowLayout{
                 Layout.fillWidth: true
                 FormItem{

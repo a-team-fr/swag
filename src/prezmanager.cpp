@@ -118,10 +118,12 @@ void PrezManager::startSwagApp()
 
     if (FirstStart)
     {
+        m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
+        emit lastOpenedFilesChanged();
+
         if (m_settings.value("openLastPrezAtStartup").toBool())
         {
-            m_lastOpenedFiles = m_settings.value("pathLastPrezOpened").toStringList();
-            emit lastOpenedFilesChanged();
+
 
             QString pathLastPrezOpened = m_lastOpenedFiles.first();
             qDebug() << "opened last :" << pathLastPrezOpened;

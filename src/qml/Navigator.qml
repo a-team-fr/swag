@@ -22,7 +22,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 //import QtQuick.Layouts 1.0
-//import QtQuick.Controls.Material 2.2
+import QtQuick.Controls.Material 2.2
 import MaterialIcons 1.0
 import fr.ateam.swag 1.0
 import Swag 1.0
@@ -66,6 +66,7 @@ Popup {
 
             clip: true
             model: pm.lstSlides.length
+            currentIndex: pm.slideSelected
 
             delegate: Item {
                 id: content
@@ -110,21 +111,19 @@ Popup {
                     Rectangle{
                         width: parent.width
                         height: content.thumbHeight - listView.bottomPanel
+                        color : content.ListView.isCurrentItem  ? Material.accent : "white"
                         ShaderEffectSource {
                             anchors.fill:parent
+                            anchors.margins: 3 //'colored border to show currently selected slide
                             sourceItem: Loader {
                                 visible:false
+                                width:NavMan.slideWidth
+                                height:NavMan.slideHeight
                                 source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
                             }
                             live: true
-                            hideSource: true
+                            hideSource: false
                         }
-//                        Loader {
-//                            enabled:false
-//                            anchors.fill:parent
-//                            source: scroll.getSlideUrl(index, scroll.forceRedrawNumber)
-//                            clip : true
-//                        }
 
                     }
 

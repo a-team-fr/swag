@@ -126,12 +126,15 @@ Control{
 
         TextField{
             id:input
+            property bool modified : false
             Layout.fillWidth: true
             selectByMouse: true
-            onEditingFinished : root.editingFinished()
-            onAccepted: root.editingFinished()
-            onTextEdited : root.textEdited()
+            onEditingFinished : { modified = false; root.editingFinished()}
+            onAccepted: { modified = false; root.editingFinished()}
+            onTextEdited : { modified = true; root.textEdited() }
             visible: root.showTextField
+            font.bold : modified
+            color : modified ? Material.primaryColor : Material.foreground
             passwordMaskDelay: 1000
         }
 

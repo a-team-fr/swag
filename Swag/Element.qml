@@ -73,6 +73,7 @@ Control{
         {"name":"opacity","default":1},
         {"name":"xRel","default":0},
         {"name":"yRel","default":0},
+        {"name":"z","default":0},
         {"name":"widthRel","default":0},
         {"name":"heightRel","default":0}]
 //    property var dumpedProperties:[ {"name":"navigationFocus","default":false},
